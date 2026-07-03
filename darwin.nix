@@ -7,6 +7,10 @@
 
   nix.enable = false;
 
+  users.users.maxwellsagax = {
+    home = "/Users/maxwellsagax";  # ⭐关键
+  };
+
   environment.systemPackages = with pkgs; [
     git
     vim
