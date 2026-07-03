@@ -8,7 +8,6 @@
 
 {
   home.stateVersion = "24.05";
-
   xdg.enable = true;
 
   # Copy Home Manager GUI apps into ~/Applications so Spotlight can index them.
@@ -17,14 +16,11 @@
     copyApps.enable = true;
   };
 
-  programs.home-manager.enable = true;
-
-  # curl and wget do not have Home Manager modules, so keep them as packages.
   home.packages = with pkgs; [
-    curl
-    wget
+    chatgpt
   ];
 
+  programs.home-manager.enable = true;
   programs.bat.enable = true;
   programs.eza.enable = true;
   programs.fd.enable = true;
@@ -36,7 +32,17 @@
   programs.obsidian.enable = true;
   programs.uv.enable = true;
   programs.codex.enable = true;
-
+  programs.tealdeer.enable = true;
+  programs.zoxide.enable = true;
+  programs.nushell.enable = true;
+  programs.starship.enable = true;
+  programs.bun.enable = true;
+  
+  programs.yazi = {
+    enable = true;
+    shellWrapperName = "y";
+  };
+  
   programs.vim = {
     enable = true;
     packageConfigurable = pkgs.vim;
