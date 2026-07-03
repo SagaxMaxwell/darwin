@@ -33,11 +33,12 @@
 
         home-manager.useUserPackages = true;
 
-         home-manager.users.maxwellsagax = {
+        home-manager.users.maxwellsagax = import ./home.nix;
+        home-manager.extraSpecialArgs = {
 
-          imports = [ ./home.nix ];
+    inherit (inputs) self;
 
-        };
+  };
 
       }
       ];
