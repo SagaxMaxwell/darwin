@@ -1,24 +1,28 @@
-{ config, pkgs, ... }:
+{
+  computerName,
+  hostName,
+  userName,
+  ...
+}:
 
 {
   system.stateVersion = 5;
 
-  system.primaryUser = "maxwellsagax";
+  # Uses the macOS short user name placeholder from flake.nix.
+  system.primaryUser = userName;
 
   nix.enable = false;
+  nixpkgs.config.allowUnfree = true;
 
-  users.users.maxwellsagax = {
-    home = "/Users/maxwellsagax";  # ⭐关键
+  # Uses the HostName and ComputerName placeholders from flake.nix.
+  networking = {
+    inherit computerName hostName;
   };
 
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    curl
-    wget
-    fzf
-    eza
-  ];
+  # Uses the macOS short user name placeholder from flake.nix.
+  users.users.${userName} = {
+    home = "/Users/${userName}";
+  };
 
   system.defaults = {
     dock.autohide = true;

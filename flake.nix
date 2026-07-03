@@ -1,5 +1,5 @@
 {
-  description = "Maxwell's macOS configuration";
+  description = "macOS configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -13,35 +13,45 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-};
-
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
-  let
-    system = "aarch64-darwin";
-  in
-  {
-    darwinConfigurations."Maxwells-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-      inherit system;
-
-      modules = [
-        ./darwin.nix
-        home-manager.darwinModules.home-manager
-
-      {
-
-        home-manager.useGlobalPkgs = true;
-
-        home-manager.useUserPackages = true;
-
-        home-manager.users.maxwellsagax = import ./home.nix;
-        home-manager.extraSpecialArgs = {
-
-    inherit (inputs) self;
-
   };
 
-      }
-      ];
+  outputs =
+    { nix-darwin, home-manager, ... }:
+    let
+      # TODO: Host placeholder: replace with this Mac's nix-darwin configuration name and HostName.
+      hostName = "Maxwells-MacBook-Pro";
+
+      # TODO: Computer name placeholder: replace with the macOS ComputerName shown in System Settings > Sharing.
+      computerName = "Maxwell's MacBook Pro";
+
+      # TODO: User placeholder: replace with your macOS short user name, for example "maxwellSagax".
+      userName = "maxwellsagax";
+
+      # TODO: Git identity placeholder: replace with the Git author name and email for this user.
+      gitUserName = "Maxwell";
+      gitUserEmail = "sagax.maxwell@gmail.com";
+    in
+    {
+      darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        specialArgs = {
+          inherit computerName hostName userName;
+        };
+
+        modules = [
+          ./darwin.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = {
+                inherit gitUserEmail gitUserName;
+              };
+              users.${userName} = import ./home.nix;
+            };
+          }
+        ];
+      };
     };
-  };
 }
