@@ -17,7 +17,13 @@
   };
 
   home.packages = with pkgs; [
+    source-han-sans
+    source-han-serif
+    source-han-mono
+    lxgw-wenkai
+    ibm-plex
     chatgpt
+    rustup
   ];
 
   programs.home-manager.enable = true;
@@ -37,6 +43,7 @@
   programs.nushell.enable = true;
   programs.starship.enable = true;
   programs.bun.enable = true;
+  programs.ruff.enable = false;
   
   programs.yazi = {
     enable = true;
