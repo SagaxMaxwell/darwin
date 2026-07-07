@@ -27,40 +27,18 @@
       nix-index-database,
       ...
     }:
-    let
-      hostName = "Maxwells-MacBook-Pro";
-
-      computerName = "Maxwell's MacBook Pro";
-
-      userName = "maxwellsagax";
-
-      gitUserName = "Maxwell";
-      gitUserEmail = "sagax.maxwell@gmail.com";
-    in
     {
-      darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
+      # Match darwin.nix hostName.
+      darwinConfigurations."Maxwells-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        specialArgs = {
-          inherit computerName hostName userName;
-        };
 
         modules = [
           ./darwin.nix
           home-manager.darwinModules.home-manager
           {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = {
-                inherit gitUserEmail gitUserName;
-              };
-              users.${userName} = {
-                imports = [
-                  nix-index-database.homeModules.nix-index
-                  ./home.nix
-                ];
-              };
-            };
+            home-manager.sharedModules = [
+              nix-index-database.homeModules.nix-index
+            ];
           }
         ];
       };

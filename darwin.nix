@@ -1,12 +1,26 @@
 {
-  computerName,
-  hostName,
   pkgs,
-  userName,
   ...
 }:
 
+let
+  # Edit for this Mac.
+  hostName = "Maxwells-MacBook-Pro";
+  computerName = "Maxwell's MacBook Pro";
+  userName = "maxwellsagax";
+in
 {
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+
+    users.${userName} = {
+      imports = [
+        ./home.nix
+      ];
+    };
+  };
+
   nix = {
     enable = false;
   };

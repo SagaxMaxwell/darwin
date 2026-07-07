@@ -1,11 +1,14 @@
 {
   config,
-  gitUserEmail,
-  gitUserName,
   pkgs,
   ...
 }:
 
+let
+  # Edit Git identity.
+  gitUserName = "Maxwell";
+  gitUserEmail = "sagax.maxwell@gmail.com";
+in
 {
   home = {
     stateVersion = "24.05";
@@ -130,7 +133,7 @@
     };
   };
 
-  # Copy Home Manager GUI apps into ~/Applications for Spotlight.
+  # Expose GUI apps to Spotlight.
   targets.darwin = {
     linkApps = {
       enable = false;
