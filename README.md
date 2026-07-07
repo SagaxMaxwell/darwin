@@ -22,3 +22,9 @@ nix run nix-darwin/master#darwin-rebuild -- switch --flake .
 - wezterm
 
 > 移动到 `~/.config` 下
+
+## 后续构建
+
+```zsh
+darwin-rebuild switch --flake .
+```
