@@ -7,65 +7,152 @@
 }:
 
 {
-  home.stateVersion = "24.05";
-  xdg.enable = true;
+  home = {
+    stateVersion = "24.05";
 
-  # Copy Home Manager GUI apps into ~/Applications so Spotlight can index them.
-  targets.darwin = {
-    linkApps.enable = false;
-    copyApps.enable = true;
+    packages = with pkgs; [
+      source-han-sans
+      source-han-serif
+      source-han-mono
+      lxgw-wenkai
+      ibm-plex
+      nerd-fonts.jetbrains-mono
+      rustup
+      xh
+      nixd
+      nixfmt
+      chatgpt
+      nix-tree
+      nix-output-monitor
+    ];
   };
 
-  home.packages = with pkgs; [
-    source-han-sans
-    source-han-serif
-    source-han-mono
-    lxgw-wenkai
-    ibm-plex
-    chatgpt
-    rustup
-  ];
+  programs = {
+    bat = {
+      enable = true;
+    };
 
-  programs.home-manager.enable = true;
-  programs.bat.enable = true;
-  programs.eza.enable = true;
-  programs.fd.enable = true;
-  programs.ripgrep.enable = true;
-  programs.fzf.enable = true;
-  programs.wezterm.enable = true;
-  programs.helix.enable = true;
-  programs.vscode.enable = true;
-  programs.obsidian.enable = true;
-  programs.uv.enable = true;
-  programs.codex.enable = true;
-  programs.tealdeer.enable = true;
-  programs.zoxide.enable = true;
-  programs.nushell.enable = true;
-  programs.starship.enable = true;
-  programs.bun.enable = true;
-  programs.ruff.enable = false;
-  
-  programs.yazi = {
-    enable = true;
-    shellWrapperName = "y";
-  };
-  
-  programs.vim = {
-    enable = true;
-    packageConfigurable = pkgs.vim;
-  };
+    bun = {
+      enable = true;
+    };
 
-  # Uses the Git identity placeholders from flake.nix.
-  programs.git = {
-    enable = true;
-    settings.user = {
-      name = gitUserName;
-      email = gitUserEmail;
+    codex = {
+      enable = true;
+    };
+
+    command-not-found = {
+      enable = false;
+    };
+
+    direnv = {
+      enable = true;
+
+      nix-direnv = {
+        enable = true;
+      };
+    };
+
+    eza = {
+      enable = true;
+    };
+
+    fd = {
+      enable = true;
+    };
+
+    fzf = {
+      enable = true;
+    };
+
+    # Uses the Git identity placeholders from flake.nix.
+    git = {
+      enable = true;
+
+      settings.user = {
+        name = gitUserName;
+        email = gitUserEmail;
+      };
+    };
+
+    helix = {
+      enable = true;
+    };
+
+    home-manager = {
+      enable = true;
+    };
+
+    nix-index = {
+      enable = true;
+    };
+
+    nix-index-database = {
+      comma = {
+        enable = true;
+      };
+    };
+
+    nushell = {
+      enable = true;
+    };
+
+    obsidian = {
+      enable = true;
+    };
+
+    ripgrep = {
+      enable = true;
+    };
+
+    starship = {
+      enable = true;
+    };
+
+    tealdeer = {
+      enable = true;
+    };
+
+    uv = {
+      enable = true;
+    };
+
+    vscode = {
+      enable = true;
+    };
+
+    wezterm = {
+      enable = true;
+    };
+
+    yazi = {
+      enable = true;
+      shellWrapperName = "y";
+    };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      enableNushellIntegration = true;
+    };
+
+    zsh = {
+      enable = true;
+      dotDir = "${config.xdg.configHome}/zsh";
     };
   };
 
-  programs.zsh = {
+  # Copy Home Manager GUI apps into ~/Applications for Spotlight.
+  targets.darwin = {
+    linkApps = {
+      enable = false;
+    };
+
+    copyApps = {
+      enable = true;
+    };
+  };
+
+  xdg = {
     enable = true;
-    dotDir = "${config.xdg.configHome}/zsh";
   };
 }

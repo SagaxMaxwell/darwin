@@ -13,10 +13,20 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nix-darwin, home-manager, ... }:
+    {
+      nix-darwin,
+      home-manager,
+      nix-index-database,
+      ...
+    }:
     let
       # TODO: Host placeholder: replace with this Mac's nix-darwin configuration name and HostName.
       hostName = "Maxwells-MacBook-Pro";
@@ -48,7 +58,12 @@
               extraSpecialArgs = {
                 inherit gitUserEmail gitUserName;
               };
-              users.${userName} = import ./home.nix;
+              users.${userName} = {
+                imports = [
+                  nix-index-database.homeModules.nix-index
+                  ./home.nix
+                ];
+              };
             };
           }
         ];
