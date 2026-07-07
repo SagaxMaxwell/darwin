@@ -1,6 +1,7 @@
 {
   computerName,
   hostName,
+  pkgs,
   userName,
   ...
 }:
@@ -14,7 +15,15 @@
     config.allowUnfree = true;
   };
 
-  # Uses the HostName and ComputerName placeholders from flake.nix.
+  fonts.packages = with pkgs; [
+    source-han-sans
+    source-han-serif
+    source-han-mono
+    lxgw-wenkai
+    ibm-plex
+    nerd-fonts.jetbrains-mono
+  ];
+
   networking = {
     inherit computerName hostName;
   };
@@ -22,7 +31,6 @@
   system = {
     stateVersion = 5;
 
-    # Uses the macOS short user name placeholder from flake.nix.
     primaryUser = userName;
 
     defaults = {
@@ -32,7 +40,6 @@
     };
   };
 
-  # Uses the macOS short user name placeholder from flake.nix.
   users.users.${userName} = {
     home = "/Users/${userName}";
   };

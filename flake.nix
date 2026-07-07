@@ -28,16 +28,12 @@
       ...
     }:
     let
-      # TODO: Host placeholder: replace with this Mac's nix-darwin configuration name and HostName.
       hostName = "Maxwells-MacBook-Pro";
 
-      # TODO: Computer name placeholder: replace with the macOS ComputerName shown in System Settings > Sharing.
       computerName = "Maxwell's MacBook Pro";
 
-      # TODO: User placeholder: replace with your macOS short user name, for example "maxwellSagax".
       userName = "maxwellsagax";
 
-      # TODO: Git identity placeholder: replace with the Git author name and email for this user.
       gitUserName = "Maxwell";
       gitUserEmail = "sagax.maxwell@gmail.com";
     in

@@ -11,12 +11,6 @@
     stateVersion = "24.05";
 
     packages = with pkgs; [
-      source-han-sans
-      source-han-serif
-      source-han-mono
-      lxgw-wenkai
-      ibm-plex
-      nerd-fonts.jetbrains-mono
       rustup
       xh
       nixd
@@ -40,10 +34,6 @@
       enable = true;
     };
 
-    command-not-found = {
-      enable = false;
-    };
-
     direnv = {
       enable = true;
 
@@ -64,7 +54,6 @@
       enable = true;
     };
 
-    # Uses the Git identity placeholders from flake.nix.
     git = {
       enable = true;
 
