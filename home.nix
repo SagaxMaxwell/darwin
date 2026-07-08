@@ -84,6 +84,10 @@ in
       };
     };
 
+    fish = {
+      enable = true;
+    };
+
     nushell = {
       enable = true;
     };
@@ -98,6 +102,9 @@ in
 
     starship = {
       enable = true;
+      enableZshIntegration = true;
+      enableNushellIntegration = true;
+      enableFishIntegration = true;
     };
 
     tealdeer = {
