@@ -23,6 +23,7 @@ in
 
   nix = {
     enable = false;
+    package = pkgs.nixVersions.latest;
   };
 
   nixpkgs = {

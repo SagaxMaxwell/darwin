@@ -14,35 +14,62 @@ in
     stateVersion = "24.05";
 
     packages = with pkgs; [
-      rustup
-      xh
+      # Nix tooling.
+      nix-output-monitor
+      nix-tree
       nixd
       nixfmt
+
+      # Command-line tools.
+      xh
+
+      # Development environments.
+      rustup
+
+      # GUI apps.
       chatgpt
-      nix-tree
-      nix-output-monitor
     ];
   };
 
   programs = {
-    bat = {
+    # Shells.
+    bash = {
       enable = true;
     };
 
-    bun = {
+    fish = {
       enable = true;
     };
 
-    codex = {
+    nushell = {
       enable = true;
     };
 
+    zsh = {
+      enable = true;
+      dotDir = "${config.xdg.configHome}/zsh";
+    };
+
+    # Shell environment.
     direnv = {
       enable = true;
 
       nix-direnv = {
         enable = true;
       };
+    };
+
+    starship = {
+      enable = true;
+      enableZshIntegration = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+    };
+
+    # Command-line tools.
+    bat = {
+      enable = true;
     };
 
     eza = {
@@ -57,6 +84,40 @@ in
       enable = true;
     };
 
+    ripgrep = {
+      enable = true;
+    };
+
+    tealdeer = {
+      enable = true;
+    };
+
+    yazi = {
+      enable = true;
+      shellWrapperName = "y";
+      enableZshIntegration = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+    };
+
+    # Development tools.
+    bun = {
+      enable = true;
+    };
+
+    codex = {
+      enable = true;
+    };
+
     git = {
       enable = true;
 
@@ -64,10 +125,6 @@ in
         name = gitUserName;
         email = gitUserEmail;
       };
-    };
-
-    helix = {
-      enable = true;
     };
 
     home-manager = {
@@ -84,34 +141,12 @@ in
       };
     };
 
-    fish = {
-      enable = true;
-    };
-
-    nushell = {
-      enable = true;
-    };
-
-    obsidian = {
-      enable = true;
-    };
-
-    ripgrep = {
-      enable = true;
-    };
-
-    starship = {
-      enable = true;
-      enableZshIntegration = true;
-      enableNushellIntegration = true;
-      enableFishIntegration = true;
-    };
-
-    tealdeer = {
-      enable = true;
-    };
-
     uv = {
+      enable = true;
+    };
+
+    # Editors.
+    helix = {
       enable = true;
     };
 
@@ -119,25 +154,15 @@ in
       enable = true;
     };
 
+    # GUI apps.
+    obsidian = {
+      enable = true;
+    };
+
     wezterm = {
       enable = true;
-    };
-
-    yazi = {
-      enable = true;
-      shellWrapperName = "y";
-    };
-
-    zoxide = {
-      enable = true;
       enableZshIntegration = true;
-      enableNushellIntegration = true;
-      enableFishIntegration = true;
-    };
-
-    zsh = {
-      enable = true;
-      dotDir = "${config.xdg.configHome}/zsh";
+      enableBashIntegration = true;
     };
   };
 
