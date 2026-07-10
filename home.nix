@@ -28,6 +28,7 @@ in
 
       # GUI apps.
       chatgpt
+      google-chrome
     ];
   };
 
