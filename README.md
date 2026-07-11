@@ -17,5 +17,6 @@ nix run nix-darwin/master#darwin-rebuild -- switch --flake .
 ## 后续构建
 
 ```zsh
+nix flake update
 darwin-rebuild switch --flake .
 ```

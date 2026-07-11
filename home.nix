@@ -1,14 +1,5 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ config, pkgs, ... }:
 
-let
-  # Edit Git identity.
-  gitUserName = "Maxwell";
-  gitUserEmail = "sagax.maxwell@gmail.com";
-in
 {
   home = {
     stateVersion = "24.05";
@@ -123,8 +114,8 @@ in
       enable = true;
 
       settings.user = {
-        name = gitUserName;
-        email = gitUserEmail;
+        name = "Maxwell";
+        email = "sagax.maxwell@gmail.com";
       };
     };
 
@@ -160,10 +151,14 @@ in
       enable = true;
     };
 
-    wezterm = {
+    ghostty = {
       enable = true;
+      systemd.enable = true;
+      installBatSyntax = true;
+      installVimSyntax = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
+      enableFishIntegration = true;
     };
   };
 
@@ -180,5 +175,12 @@ in
 
   xdg = {
     enable = true;
+
+    configFile = {
+      "helix/config.toml" = {
+        source = ./helix/config.toml;
+        force = true;
+      };
+    };
   };
 }
