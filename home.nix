@@ -152,10 +152,7 @@
     };
 
     ghostty = {
-      enable = true;
-      systemd.enable = true;
-      installBatSyntax = true;
-      installVimSyntax = true;
+      enable = false;
       enableZshIntegration = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
