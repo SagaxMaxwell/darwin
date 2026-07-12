@@ -20,6 +20,7 @@
       # GUI apps.
       chatgpt
       google-chrome
+      ghostty-bin
     ];
   };
 
@@ -149,16 +150,6 @@
     # GUI apps.
     obsidian = {
       enable = true;
-    };
-
-    ghostty = {
-      enable = true;
-      package = pkgs.ghostty-bin;
-      installBatSyntax = true;
-      installVimSyntax = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
     };
   };
 
