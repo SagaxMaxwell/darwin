@@ -152,7 +152,14 @@
     };
 
     ghostty = {
+<<<<<<< Updated upstream
       enable = false;
+=======
+      enable = true;
+      package = pkgs.ghostty-bin;
+      installBatSyntax = true;
+      installVimSyntax = true;
+>>>>>>> Stashed changes
       enableZshIntegration = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
