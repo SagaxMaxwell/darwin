@@ -21,6 +21,7 @@
       chatgpt
       google-chrome
       ghostty-bin
+      shottr
     ];
   };
 
