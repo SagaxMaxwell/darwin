@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -21,18 +21,33 @@
   };
 
   outputs =
-    {
+    inputs@{
+      nixpkgs,
       nix-darwin,
       home-manager,
       nix-index-database,
       ...
     }:
+    let
+      system = "aarch64-darwin";
+      hostName = "Maxwells-MacBook-Pro";
+    in
     {
-      # Match darwin.nix hostName.
-      darwinConfigurations."Maxwells-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
+      apps.${system}.darwin-rebuild = {
+        type = "app";
+        program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
+      };
 
+      darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
         modules = [
+          {
+            nixpkgs = {
+              hostPlatform = system;
+              flake.source = nixpkgs.outPath;
+            };
+
+            system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+          }
           ./darwin.nix
           home-manager.darwinModules.home-manager
           {

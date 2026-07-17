@@ -24,7 +24,6 @@ in
 
   nix = {
     enable = false;
-    package = pkgs.nixVersions.latest;
   };
 
   nixpkgs = {
@@ -45,7 +44,7 @@ in
   };
 
   system = {
-    stateVersion = 5;
+    stateVersion = 7;
 
     primaryUser = userName;
 

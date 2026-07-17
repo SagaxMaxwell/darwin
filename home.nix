@@ -2,7 +2,7 @@
 
 {
   home = {
-    stateVersion = "24.05";
+    stateVersion = "26.11";
 
     packages = with pkgs; [
       # Nix tooling.
@@ -19,8 +19,6 @@
 
       # GUI apps.
       chatgpt
-      google-chrome
-      ghostty-bin
       shottr
     ];
   };
@@ -41,7 +39,6 @@
 
     zsh = {
       enable = true;
-      dotDir = "${config.xdg.configHome}/zsh";
     };
 
     # Shell environment.
@@ -76,6 +73,10 @@
 
     fzf = {
       enable = true;
+    };
+
+    man = {
+      generateCaches = false;
     };
 
     ripgrep = {
@@ -125,6 +126,15 @@
       enable = true;
     };
 
+    ghostty = {
+      enable = true;
+      package = pkgs.ghostty-bin;
+    };
+
+    google-chrome = {
+      enable = true;
+    };
+
     nix-index = {
       enable = true;
     };
@@ -142,6 +152,114 @@
     # Editors.
     helix = {
       enable = true;
+
+      settings = {
+        theme = "onedark";
+
+        editor = {
+          "true-color" = true;
+          "line-number" = "relative";
+          mouse = true;
+          cursorline = true;
+          cursorcolumn = false;
+          "auto-format" = true;
+          bufferline = "never";
+          "auto-pairs" = true;
+
+          statusline = {
+            left = [
+              "mode"
+              "spinner"
+              "file-name"
+              "read-only-indicator"
+              "file-modification-indicator"
+            ];
+            center = [ ];
+            right = [
+              "diagnostics"
+              "selections"
+              "register"
+              "position"
+              "file-encoding"
+              "file-line-ending"
+              "file-type"
+            ];
+            separator = "💤";
+
+            mode = {
+              normal = "🥳";
+              insert = "🤯";
+              select = "🤔";
+            };
+          };
+
+          lsp = {
+            enable = true;
+            "display-messages" = true;
+            "auto-signature-help" = true;
+            "display-inlay-hints" = true;
+            "display-signature-help-docs" = true;
+            snippets = true;
+            "goto-reference-include-declaration" = true;
+          };
+
+          "cursor-shape" = {
+            insert = "bar";
+            normal = "block";
+            select = "underline";
+          };
+
+          "file-picker" = {
+            hidden = false;
+            "follow-symlinks" = true;
+            "deduplicate-links" = true;
+            parents = true;
+            ignore = true;
+            "git-ignore" = true;
+            "git-global" = true;
+            "git-exclude" = true;
+          };
+
+          search = {
+            "smart-case" = true;
+            "wrap-around" = true;
+          };
+
+          whitespace = {
+            render = "none";
+          };
+
+          "indent-guides" = {
+            render = false;
+          };
+
+          gutters = {
+            layout = [
+              "diff"
+              "diagnostics"
+              "line-numbers"
+              "spacer"
+            ];
+
+            "line-numbers" = {
+              "min-width" = 3;
+            };
+          };
+
+          "soft-wrap" = {
+            enable = true;
+            "max-wrap" = 20;
+            "max-indent-retain" = 40;
+            "wrap-indicator" = "";
+            "wrap-at-text-width" = false;
+          };
+
+          "smart-tab" = {
+            enable = true;
+            "supersede-menu" = false;
+          };
+        };
+      };
     };
 
     vscode = {
@@ -156,10 +274,6 @@
 
   # Expose GUI apps to Spotlight.
   targets.darwin = {
-    linkApps = {
-      enable = false;
-    };
-
     copyApps = {
       enable = true;
     };
@@ -167,12 +281,5 @@
 
   xdg = {
     enable = true;
-
-    configFile = {
-      "helix/config.toml" = {
-        source = ./helix/config.toml;
-        force = true;
-      };
-    };
   };
 }
