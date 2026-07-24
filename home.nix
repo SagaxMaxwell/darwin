@@ -129,6 +129,9 @@
     ghostty = {
       enable = true;
       package = pkgs.ghostty-bin;
+      settings = {
+        theme = "Atom One Dark";
+      };
     };
 
     google-chrome = {
