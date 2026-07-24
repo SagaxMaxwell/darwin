@@ -269,6 +269,10 @@
       enable = true;
     };
 
+    zed-editor = {
+      enable = true;
+    };
+
     # GUI apps.
     obsidian = {
       enable = true;
