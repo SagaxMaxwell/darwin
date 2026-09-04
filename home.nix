@@ -39,6 +39,10 @@
 
     zsh = {
       enable = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting = {
+        enable = true;
+      };
     };
 
     # Shell environment.
@@ -75,16 +79,22 @@
       enable = true;
     };
 
-    man = {
-      generateCaches = false;
-    };
-
     ripgrep = {
       enable = true;
     };
 
     tealdeer = {
       enable = true;
+    };
+
+    atuin = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableZshIntegration = true;
+      flags = [
+        "--disable-up-arrow"
+      ];
     };
 
     yazi = {
@@ -113,6 +123,18 @@
       enable = true;
     };
 
+    delta = {
+      enable = true;
+    };
+
+    difftastic = {
+      enable = true;
+      git = {
+        enable = true;
+        mode = "difftool";
+      };
+    };
+
     git = {
       enable = true;
 
@@ -132,10 +154,6 @@
       settings = {
         theme = "Atom One Dark";
       };
-    };
-
-    google-chrome = {
-      enable = true;
     };
 
     nix-index = {
