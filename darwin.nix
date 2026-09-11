@@ -1,10 +1,10 @@
 {
+  lib,
   pkgs,
   ...
 }:
 
 let
-  # Edit for this Mac.
   hostName = "Maxwells-MacBook-Pro";
   computerName = "Maxwell's MacBook Pro";
   userName = "maxwellsagax";
@@ -23,12 +23,19 @@ in
   };
 
   nix = {
+    # Determinate Nix owns the Nix installation and daemon.
     enable = false;
   };
 
-  nixpkgs = {
-    config.allowUnfree = true;
-  };
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "chatgpt"
+      "google-chrome"
+      "obsidian"
+      "shottr"
+      "vscode"
+    ];
 
   fonts.packages = with pkgs; [
     source-han-sans

@@ -22,7 +22,6 @@
 
   outputs =
     inputs@{
-      nixpkgs,
       nix-darwin,
       home-manager,
       nix-index-database,
@@ -30,7 +29,6 @@
     }:
     let
       system = "aarch64-darwin";
-      hostName = "Maxwells-MacBook-Pro";
     in
     {
       apps.${system}.darwin-rebuild = {
@@ -38,14 +36,10 @@
         program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
       };
 
-      darwinConfigurations.${hostName} = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Maxwells-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         modules = [
           {
-            nixpkgs = {
-              hostPlatform = system;
-              flake.source = nixpkgs.outPath;
-            };
-
+            nixpkgs.hostPlatform = system;
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }
           ./darwin.nix

@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   home = {
@@ -35,6 +40,20 @@
 
     nushell = {
       enable = true;
+
+      # Atuin 18.19.0 gives Ctrl-R and Up the same name; Nu 0.115 warns.
+      extraConfig = lib.mkOrder 2000 ''
+        source ${
+          pkgs.runCommand "atuin-nushell-config.nu"
+            {
+              nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
+            }
+            ''
+              ${lib.getExe config.programs.atuin.package} init nu ${lib.escapeShellArgs config.programs.atuin.flags} > atuin.nu
+              awk '/name: atuin$/ { sub(/atuin$/, "atuin_" ++binding) } { print }' atuin.nu > "$out"
+            ''
+        }
+      '';
     };
 
     zsh = {
@@ -71,11 +90,11 @@
       enable = true;
     };
 
-    fd = {
-      enable = true;
+    man = {
+      generateCaches = false;
     };
 
-    fzf = {
+    fd = {
       enable = true;
     };
 
@@ -91,10 +110,9 @@
       enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
+      # Loaded above with unique keybinding names.
+      enableNushellIntegration = false;
       enableZshIntegration = true;
-      flags = [
-        "--disable-up-arrow"
-      ];
     };
 
     yazi = {
@@ -281,6 +299,14 @@
           };
         };
       };
+
+      languages.language = [
+        {
+          name = "nix";
+          "language-servers" = [ "nixd" ];
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+      ];
     };
 
     vscode = {
@@ -295,11 +321,8 @@
     obsidian = {
       enable = true;
     };
-  };
 
-  # Expose GUI apps to Spotlight.
-  targets.darwin = {
-    copyApps = {
+    google-chrome = {
       enable = true;
     };
   };
