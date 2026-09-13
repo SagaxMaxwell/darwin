@@ -36,7 +36,7 @@
         program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
       };
 
-      darwinConfigurations."Maxwells-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
         modules = [
           {
             nixpkgs.hostPlatform = system;

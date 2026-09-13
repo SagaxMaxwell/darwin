@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -40,20 +38,6 @@
 
     nushell = {
       enable = true;
-
-      # Atuin 18.19.0 gives Ctrl-R and Up the same name; Nu 0.115 warns.
-      extraConfig = lib.mkOrder 2000 ''
-        source ${
-          pkgs.runCommand "atuin-nushell-config.nu"
-            {
-              nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
-            }
-            ''
-              ${lib.getExe config.programs.atuin.package} init nu ${lib.escapeShellArgs config.programs.atuin.flags} > atuin.nu
-              awk '/name: atuin$/ { sub(/atuin$/, "atuin_" ++binding) } { print }' atuin.nu > "$out"
-            ''
-        }
-      '';
     };
 
     zsh = {
@@ -110,8 +94,7 @@
       enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
-      # Loaded above with unique keybinding names.
-      enableNushellIntegration = false;
+      enableNushellIntegration = true;
       enableZshIntegration = true;
     };
 
@@ -157,7 +140,7 @@
       enable = true;
 
       settings.user = {
-        name = "Maxwell";
+        name = "maxwellsagax";
         email = "sagax.maxwell@gmail.com";
       };
     };
@@ -198,24 +181,17 @@
         editor = {
           "true-color" = true;
           "line-number" = "relative";
-          mouse = true;
           cursorline = true;
-          cursorcolumn = false;
-          "auto-format" = true;
-          bufferline = "never";
-          "auto-pairs" = true;
+
+          "end-of-line-diagnostics" = "hint";
+          "inline-diagnostics" = {
+            "cursor-line" = "warning";
+          };
 
           statusline = {
-            left = [
-              "mode"
-              "spinner"
-              "file-name"
-              "read-only-indicator"
-              "file-modification-indicator"
-            ];
-            center = [ ];
             right = [
               "diagnostics"
+              "separator"
               "selections"
               "register"
               "position"
@@ -233,69 +209,28 @@
           };
 
           lsp = {
-            enable = true;
-            "display-messages" = true;
-            "auto-signature-help" = true;
             "display-inlay-hints" = true;
-            "display-signature-help-docs" = true;
-            snippets = true;
-            "goto-reference-include-declaration" = true;
           };
 
           "cursor-shape" = {
             insert = "bar";
-            normal = "block";
             select = "underline";
           };
 
           "file-picker" = {
             hidden = false;
-            "follow-symlinks" = true;
-            "deduplicate-links" = true;
-            parents = true;
-            ignore = true;
-            "git-ignore" = true;
-            "git-global" = true;
-            "git-exclude" = true;
           };
 
-          search = {
-            "smart-case" = true;
-            "wrap-around" = true;
-          };
-
-          whitespace = {
-            render = "none";
-          };
-
-          "indent-guides" = {
-            render = false;
-          };
-
-          gutters = {
-            layout = [
-              "diff"
-              "diagnostics"
-              "line-numbers"
-              "spacer"
-            ];
-
-            "line-numbers" = {
-              "min-width" = 3;
-            };
-          };
+          gutters = [
+            "diff"
+            "diagnostics"
+            "line-numbers"
+            "spacer"
+          ];
 
           "soft-wrap" = {
             enable = true;
-            "max-wrap" = 20;
-            "max-indent-retain" = 40;
             "wrap-indicator" = "";
-            "wrap-at-text-width" = false;
-          };
-
-          "smart-tab" = {
-            enable = true;
-            "supersede-menu" = false;
           };
         };
       };
@@ -303,6 +238,7 @@
       languages.language = [
         {
           name = "nix";
+          "auto-format" = true;
           "language-servers" = [ "nixd" ];
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
         }

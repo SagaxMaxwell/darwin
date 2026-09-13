@@ -5,8 +5,8 @@
 }:
 
 let
-  hostName = "Maxwells-MacBook-Pro";
-  computerName = "Maxwell's MacBook Pro";
+  hostName = "Macbook";
+  computerName = "Macbook";
   userName = "maxwellsagax";
 in
 {
