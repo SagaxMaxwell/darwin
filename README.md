@@ -11,12 +11,12 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 ## 构建
 
 ```zsh
-sudo nix run .#darwin-rebuild -- switch --flake .#Maxwells-MacBook-Pro
+sudo -H nix run .#darwin-rebuild -- switch --flake .#MacBook
 ```
 
 ## 后续构建
 
 ```zsh
 nix flake update
-sudo nix run .#darwin-rebuild -- switch --flake .#Maxwells-MacBook-Pro
+sudo -H nix run .#darwin-rebuild -- switch --flake .#MacBook
 ```

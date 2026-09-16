@@ -96,6 +96,7 @@
       enableFishIntegration = true;
       enableNushellIntegration = true;
       enableZshIntegration = true;
+      flags = [ "--disable-up-arrow" ];
     };
 
     yazi = {
