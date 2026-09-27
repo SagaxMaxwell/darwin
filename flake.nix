@@ -18,6 +18,17 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    obsidian-extensions = {
+      # Use Git transport to avoid GitHub API rate limits.
+      url = "git+https://github.com/karaolidis/nix-obsidian-extensions?shallow=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    vscode-extensions = {
+      url = "git+https://github.com/nix-community/nix-vscode-extensions?shallow=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -25,6 +36,8 @@
       nix-darwin,
       home-manager,
       nix-index-database,
+      obsidian-extensions,
+      vscode-extensions,
       ...
     }:
     let
@@ -40,6 +53,10 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
+            nixpkgs.overlays = [
+              obsidian-extensions.overlays.default
+              vscode-extensions.overlays.default
+            ];
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }
           ./darwin.nix

@@ -15,12 +15,18 @@
       nixfmt
 
       # Command-line tools.
+      oxfmt
       xh
 
       # Development environments.
+      dotnet-sdk_10
       rustup
+      (godot-mono.overrideAttrs {
+        dotnet-sdk = pkgs.dotnet-sdk_10;
+      })
 
       # GUI apps.
+      blender
       chatgpt
       shottr
     ];
@@ -153,6 +159,7 @@
     ghostty = {
       enable = true;
       package = pkgs.ghostty-bin;
+
       settings = {
         theme = "Atom One Dark";
       };
@@ -243,24 +250,75 @@
           "language-servers" = [ "nixd" ];
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
         }
+        {
+          name = "c-sharp";
+          "language-servers" = [ "roslyn" ];
+        }
       ];
+
+      languages.language-server.roslyn = {
+        command = "${pkgs.roslyn-ls}/bin/Microsoft.CodeAnalysis.LanguageServer";
+        args = [ "--stdio" ];
+      };
+
+      languages.language-server.ty = {
+        command = "${pkgs.ty}/bin/ty";
+        args = [ "server" ];
+      };
+
+      languages.language-server.ruff = {
+        command = "${pkgs.ruff}/bin/ruff";
+        args = [ "server" ];
+      };
+
+      languages.language-server.rust-analyzer.command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
     };
 
     vscode = {
       enable = true;
-    };
 
-    zed-editor = {
-      enable = true;
+      profiles.default.extensions = with pkgs.nix-vscode-extensions.vscode-marketplace-release; [
+        analytic-signal.preview-pdf
+        charliermarsh.ruff
+        csharpier.csharpier-vscode
+        github.github-vscode-theme
+        ms-python.debugpy
+        ms-python.isort
+        ms-python.python
+        ms-python.vscode-python-envs
+        ms-toolsai.jupyter
+        ms-toolsai.jupyter-keymap
+        ms-toolsai.jupyter-renderers
+        ms-toolsai.vscode-jupyter-cell-tags
+        ms-toolsai.vscode-jupyter-slideshow
+        ms-dotnettools.csharp
+        # Oxc's current releases are universal; platform-specific builds are older.
+        pkgs.nix-vscode-extensions.vscode-marketplace-release-universal.oxc.oxc-vscode
+        rust-lang.rust-analyzer
+      ];
     };
 
     # GUI apps.
     obsidian = {
       enable = true;
+
+      defaultSettings.communityPlugins = with pkgs.obsidianPlugins; [
+        obsidian-linter
+        templater-obsidian
+        dataview
+        homepage
+        notebook-navigator
+        advanced-canvas
+        tldraw
+      ];
     };
 
     google-chrome = {
       enable = true;
+
+      extensions = [
+        "bgnkhhnnamicmpeenaelnjfhikgbkllg" # AdGuard AdBlocker
+      ];
     };
   };
 
