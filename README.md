@@ -57,6 +57,10 @@ C# 文件由 CSharpier 格式化，Python 使用 Ruff，TOML 使用 Oxfmt。CSha
 `home.nix` 安装 `godot-mono` 和 `dotnet-sdk_10`；C# 外部编辑器为 VS Code。
 通过 `overrideAttrs` 将 Godot 启动脚本使用的 SDK 指定为 `pkgs.dotnet-sdk_10`，
 与终端使用的 SDK 保持一致，覆盖 nixpkgs 默认选择的 .NET 8。
+Godot 4.7.2 创建 C# 项目时仍会在 `.csproj` 中写入桌面 `net8.0`、Android `net9.0`；
+这是项目的目标框架，不是 Godot 实际调用的 SDK 版本。重建系统不会改变 Godot 的项目模板。
+当前 .NET 10 SDK 可以编译这个 `net8.0` 项目。用 `dotnet --version` 检查命令行 SDK；
+如需项目本身以 .NET 10 为目标，创建后再修改 `.csproj` 的 `TargetFramework`。
 
 ### Metal 闪退
 
