@@ -302,6 +302,11 @@
     obsidian = {
       enable = true;
 
+      vaults.Documents = {
+        target = "Documents";
+        settings.app.restrictedMode = false;
+      };
+
       defaultSettings.communityPlugins = with pkgs.obsidianPlugins; [
         obsidian-linter
         templater-obsidian
