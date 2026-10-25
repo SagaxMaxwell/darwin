@@ -8,13 +8,37 @@
     stateVersion = "26.11";
 
     file."Documents/.obsidian/snippets/jupyter-viewer.css".text = ''
+      .jv-container {
+        max-width: 1080px;
+        padding: 2rem clamp(1.25rem, 4vw, 3rem);
+      }
+
+      .jv-cell {
+        margin-bottom: 1.5rem;
+      }
+
+      .jv-markdown-cell {
+        line-height: 1.75;
+      }
+
+      .jv-code-cell {
+        grid-template-columns: 1fr;
+        border: 1px solid var(--background-modifier-border);
+        border-radius: 8px;
+        background: var(--background-secondary);
+      }
+
       .jv-code-source {
         position: relative;
         grid-column: 1;
       }
 
-      .jv-code-cell {
-        grid-template-columns: 1fr;
+      .jv-code-source pre {
+        padding: 0.9rem 3rem 0.9rem 1rem;
+      }
+
+      .jv-code-source pre code {
+        line-height: 1.6;
       }
 
       .jv-exec-count {
@@ -23,10 +47,14 @@
 
       .jv-code-source .copy-code-button {
         position: absolute;
-        top: 0.35rem;
-        right: 0.35rem;
+        top: 0.5rem;
+        right: 0.5rem;
         bottom: auto;
         left: auto;
+      }
+
+      .jv-output {
+        padding: 0.75rem 1rem;
       }
     '';
 
