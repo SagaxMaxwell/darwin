@@ -15,20 +15,19 @@
       nixfmt
 
       # Command-line tools.
+      gh
       oxfmt
       xh
 
       # Development environments.
       dotnet-sdk_10
       rustup
-      (godot-mono.overrideAttrs {
-        dotnet-sdk = pkgs.dotnet-sdk_10;
-      })
 
       # GUI apps.
       blender
       chatgpt
       shottr
+      tabularis
     ];
   };
 
