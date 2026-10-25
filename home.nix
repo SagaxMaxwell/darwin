@@ -7,6 +7,29 @@
   home = {
     stateVersion = "26.11";
 
+    file."Documents/.obsidian/snippets/jupyter-viewer.css".text = ''
+      .jv-code-source {
+        position: relative;
+        grid-column: 1;
+      }
+
+      .jv-code-cell {
+        grid-template-columns: 1fr;
+      }
+
+      .jv-exec-count {
+        display: none;
+      }
+
+      .jv-code-source .copy-code-button {
+        position: absolute;
+        top: 0.35rem;
+        right: 0.35rem;
+        bottom: auto;
+        left: auto;
+      }
+    '';
+
     packages = with pkgs; [
       # Nix tooling.
       nix-output-monitor
@@ -304,6 +327,7 @@
       vaults.Documents = {
         target = "Documents";
         settings.app.restrictedMode = false;
+        settings.appearance.enabledCssSnippets = [ "jupyter-viewer" ];
       };
 
       defaultSettings.communityPlugins = with pkgs.obsidianPlugins; [
@@ -312,6 +336,7 @@
         dataview
         homepage
         notebook-navigator
+        jupyter-viewer
         advanced-canvas
         tldraw
       ];
