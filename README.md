@@ -14,14 +14,15 @@
 ## 安装
 
 ```zsh
-curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
 ## 构建
 
 ```zsh
-sudo darwin-rebuild switch --flake .#MacBook
-nix flake update
+sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 ```
+
+需要更新依赖时运行 `nix flake update`。
 
 其余专题说明见本文件原有章节。
