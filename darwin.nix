@@ -23,7 +23,7 @@ in
   };
 
   nix = {
-    # Determinate Nix owns the Nix installation and daemon.
+    # Lix owns the package manager installation and daemon.
     enable = false;
   };
 

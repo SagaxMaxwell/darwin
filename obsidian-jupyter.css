@@ -1,0 +1,45 @@
+.jv-container {
+  max-width: 1080px;
+  padding: 2rem clamp(1.25rem, 4vw, 3rem);
+}
+
+.jv-cell {
+  margin-bottom: 1.5rem;
+}
+
+.jv-markdown-cell {
+  line-height: 1.75;
+}
+
+.jv-code-cell {
+  grid-template-columns: 1fr;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+
+.jv-code-source {
+  position: relative;
+  grid-column: 1;
+}
+
+.jv-code-source pre {
+  padding: 0.9rem 3rem 0.9rem 1rem;
+}
+
+.jv-code-source pre code {
+  line-height: 1.6;
+}
+
+.jv-exec-count {
+  display: none;
+}
+
+.jv-code-source .copy-code-button {
+  position: absolute;
+  inset: 0.5rem 0.5rem auto auto;
+}
+
+.jv-output {
+  padding: 0.75rem 1rem;
+}

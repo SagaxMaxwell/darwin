@@ -20,7 +20,6 @@
     };
 
     obsidian-extensions = {
-      # Use Git transport to avoid GitHub API rate limits.
       url = "git+https://github.com/karaolidis/nix-obsidian-extensions?shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
