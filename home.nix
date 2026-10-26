@@ -307,6 +307,13 @@
 
       defaultSettings.communityPlugins = with pkgs.obsidianPlugins; [
         obsidian-linter
+        {
+          pkg = update-time;
+          settings = {
+            createdPropertyName = "date created";
+            updatedPropertyName = "date updated";
+          };
+        }
         templater-obsidian
         dataview
         notebook-navigator
