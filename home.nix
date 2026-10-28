@@ -4,6 +4,10 @@
 }:
 
 {
+  imports = [
+    ./modules/omniwm
+  ];
+
   home = {
     stateVersion = "26.11";
 
@@ -33,33 +37,23 @@
 
   programs = {
     # Shells.
-    bash = {
-      enable = true;
-    };
+    bash.enable = true;
 
-    fish = {
-      enable = true;
-    };
+    fish.enable = true;
 
-    nushell = {
-      enable = true;
-    };
+    nushell.enable = true;
 
     zsh = {
       enable = true;
       autosuggestion.enable = true;
-      syntaxHighlighting = {
-        enable = true;
-      };
+      syntaxHighlighting.enable = true;
     };
 
     # Shell environment.
     direnv = {
       enable = true;
 
-      nix-direnv = {
-        enable = true;
-      };
+      nix-direnv.enable = true;
     };
 
     starship = {
@@ -71,29 +65,17 @@
     };
 
     # Command-line tools.
-    bat = {
-      enable = true;
-    };
+    bat.enable = true;
 
-    eza = {
-      enable = true;
-    };
+    eza.enable = true;
 
-    man = {
-      generateCaches = false;
-    };
+    man.generateCaches = false;
 
-    fd = {
-      enable = true;
-    };
+    fd.enable = true;
 
-    ripgrep = {
-      enable = true;
-    };
+    ripgrep.enable = true;
 
-    tealdeer = {
-      enable = true;
-    };
+    tealdeer.enable = true;
 
     atuin = {
       enable = true;
@@ -121,17 +103,11 @@
     };
 
     # Development tools.
-    bun = {
-      enable = true;
-    };
+    bun.enable = true;
 
-    codex = {
-      enable = true;
-    };
+    codex.enable = true;
 
-    delta = {
-      enable = true;
-    };
+    delta.enable = true;
 
     difftastic = {
       enable = true;
@@ -150,150 +126,73 @@
       };
     };
 
-    home-manager = {
-      enable = true;
-    };
+    home-manager.enable = true;
 
     ghostty = {
       enable = true;
       package = pkgs.ghostty-bin;
 
-      settings = {
-        theme = "Atom One Dark";
-      };
+      settings.theme = "Atom One Dark";
     };
 
-    nix-index = {
-      enable = true;
-    };
+    nix-index.enable = true;
 
     nix-index-database = {
-      comma = {
-        enable = true;
-      };
+      comma.enable = true;
     };
 
-    uv = {
-      enable = true;
-    };
+    uv.enable = true;
 
     # Editors.
-    helix = {
+    zed-editor = {
       enable = true;
-
-      settings = {
-        theme = "onedark";
-
-        editor = {
-          "true-color" = true;
-          "line-number" = "relative";
-          cursorline = true;
-
-          "end-of-line-diagnostics" = "hint";
-          "inline-diagnostics" = {
-            "cursor-line" = "warning";
-          };
-
-          statusline = {
-            right = [
-              "diagnostics"
-              "separator"
-              "selections"
-              "register"
-              "position"
-              "file-encoding"
-              "file-line-ending"
-              "file-type"
-            ];
-            separator = "💤";
-
-            mode = {
-              normal = "🥳";
-              insert = "🤯";
-              select = "🤔";
-            };
-          };
-
-          lsp = {
-            "display-inlay-hints" = true;
-          };
-
-          "cursor-shape" = {
-            insert = "bar";
-            select = "underline";
-          };
-
-          "file-picker" = {
-            hidden = false;
-          };
-
-          gutters = [
-            "diff"
-            "diagnostics"
-            "line-numbers"
-            "spacer"
-          ];
-
-          "soft-wrap" = {
-            enable = true;
-            "wrap-indicator" = "";
-          };
-        };
-      };
-
-      languages.language = [
-        {
-          name = "nix";
-          "auto-format" = true;
-          "language-servers" = [ "nixd" ];
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-        }
-        {
-          name = "c-sharp";
-          "language-servers" = [ "roslyn" ];
-        }
+      extensions = [
+        "csharp"
+        "github-theme"
+        "nix"
+        "oxc"
+        "tombi"
       ];
-
-      languages.language-server.roslyn = {
-        command = "${pkgs.roslyn-ls}/bin/Microsoft.CodeAnalysis.LanguageServer";
-        args = [ "--stdio" ];
+      userSettings.diagnostics.inline.enabled = true;
+      userSettings.autosave = "on_window_change";
+      userSettings.format_on_save = "on";
+      userSettings.languages.Nix = {
+        language_servers = [ "nixd" ];
+        formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
       };
-
-      languages.language-server.ty = {
-        command = "${pkgs.ty}/bin/ty";
-        args = [ "server" ];
+      userSettings.lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
+      userSettings.lsp.oxlint.initialization_options.settings.fixKind = "safe_fix";
+      userSettings.languages.JavaScript.code_actions_on_format = {
+        "source.organizeImports" = true;
+        "source.fixAll.oxc" = true;
       };
-
-      languages.language-server.ruff = {
-        command = "${pkgs.ruff}/bin/ruff";
-        args = [ "server" ];
+      userSettings.languages.JSX.code_actions_on_format = {
+        "source.organizeImports" = true;
+        "source.fixAll.oxc" = true;
       };
-
-      languages.language-server.rust-analyzer.command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
-    };
-
-    vscode = {
-      enable = true;
-
-      profiles.default.extensions = with pkgs.nix-vscode-extensions.vscode-marketplace-release; [
-        analytic-signal.preview-pdf
-        charliermarsh.ruff
-        csharpier.csharpier-vscode
-        github.github-vscode-theme
-        ms-python.debugpy
-        ms-python.isort
-        ms-python.python
-        ms-python.vscode-python-envs
-        ms-toolsai.jupyter
-        ms-toolsai.jupyter-keymap
-        ms-toolsai.jupyter-renderers
-        ms-toolsai.vscode-jupyter-cell-tags
-        ms-toolsai.vscode-jupyter-slideshow
-        ms-dotnettools.csharp
-        # Oxc's current releases are universal; platform-specific builds are older.
-        pkgs.nix-vscode-extensions.vscode-marketplace-release-universal.oxc.oxc-vscode
-        rust-lang.rust-analyzer
-      ];
+      userSettings.languages.TypeScript.code_actions_on_format = {
+        "source.organizeImports" = true;
+        "source.fixAll.oxc" = true;
+      };
+      userSettings.languages.TSX.code_actions_on_format = {
+        "source.organizeImports" = true;
+        "source.fixAll.oxc" = true;
+      };
+      userSettings.languages.CSharp.code_actions_on_format."source.organizeImports" = true;
+      userSettings.languages.CSharp.formatter.external = {
+        command = "${pkgs.csharpier}/bin/csharpier";
+        arguments = [
+          "format"
+          "--write-stdout"
+        ];
+      };
+      userSettings.languages.Python = {
+        language_servers = [
+          "ty"
+          "ruff"
+        ];
+        code_actions_on_format."source.fixAll.ruff" = true;
+      };
     };
 
     # GUI apps.
@@ -334,7 +233,5 @@
     };
   };
 
-  xdg = {
-    enable = true;
-  };
+  xdg.enable = true;
 }

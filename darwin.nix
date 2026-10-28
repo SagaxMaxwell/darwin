@@ -34,8 +34,6 @@ in
       "google-chrome"
       "obsidian"
       "shottr"
-      "vscode-extension-ms-dotnettools-csharp"
-      "vscode"
     ];
 
   fonts.packages = with pkgs; [

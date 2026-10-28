@@ -24,10 +24,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vscode-extensions = {
-      url = "git+https://github.com/nix-community/nix-vscode-extensions?shallow=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -36,7 +32,6 @@
       home-manager,
       nix-index-database,
       obsidian-extensions,
-      vscode-extensions,
       ...
     }:
     let
@@ -54,7 +49,6 @@
             nixpkgs.hostPlatform = system;
             nixpkgs.overlays = [
               obsidian-extensions.overlays.default
-              vscode-extensions.overlays.default
             ];
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }
