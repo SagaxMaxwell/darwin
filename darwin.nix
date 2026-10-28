@@ -56,6 +56,11 @@ in
 
     defaults = {
       dock.autohide = true;
+      dock.showMissionControlGestureEnabled = true;
+      dock.showAppExposeGestureEnabled = true;
+      # Reserve three-finger vertical swipes for OmniWM workspaces.
+      trackpad.TrackpadThreeFingerVertSwipeGesture = 0;
+      trackpad.TrackpadFourFingerVertSwipeGesture = 2;
       finder.FXPreferredViewStyle = "clmv";
       NSGlobalDomain.AppleShowAllExtensions = true;
     };

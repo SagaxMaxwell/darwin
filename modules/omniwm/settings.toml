@@ -139,10 +139,10 @@ animationSpeed = 1.0
 animationsEnabled = true
 defaultLayoutType = "niri"
 hotkeysEnabled = true
-hyperKeyModifiers = "Control+Option+Shift+Command"
+hyperKeyModifiers = "Control+Option+Command"
 ipcEnabled = true
 preventSleepEnabled = false
-systemHyperTrigger = "None"
+systemHyperTrigger = "Caps Lock"
 updateChecksEnabled = false
 
 [gestures]
@@ -170,76 +170,78 @@ enabled = true
 hiddenBundleIDs = []
 rehideIntervalSeconds = 5.0
 
+# Hold Caps Lock for daily window/workspace shortcuts; Shift moves instead of focusing.
+# Control-based advanced shortcuts retain their existing bindings.
 [[hotkeys]]
-binding = "Option+1"
+binding = "Hyper+1"
 id = "switchWorkspace.0"
 
 [[hotkeys]]
-binding = "Option+Shift+1"
+binding = "Hyper+Shift+1"
 id = "moveToWorkspace.0"
 
 [[hotkeys]]
-binding = "Option+2"
+binding = "Hyper+2"
 id = "switchWorkspace.1"
 
 [[hotkeys]]
-binding = "Option+Shift+2"
+binding = "Hyper+Shift+2"
 id = "moveToWorkspace.1"
 
 [[hotkeys]]
-binding = "Option+3"
+binding = "Hyper+3"
 id = "switchWorkspace.2"
 
 [[hotkeys]]
-binding = "Option+Shift+3"
+binding = "Hyper+Shift+3"
 id = "moveToWorkspace.2"
 
 [[hotkeys]]
-binding = "Option+4"
+binding = "Hyper+4"
 id = "switchWorkspace.3"
 
 [[hotkeys]]
-binding = "Option+Shift+4"
+binding = "Hyper+Shift+4"
 id = "moveToWorkspace.3"
 
 [[hotkeys]]
-binding = "Option+5"
+binding = "Hyper+5"
 id = "switchWorkspace.4"
 
 [[hotkeys]]
-binding = "Option+Shift+5"
+binding = "Hyper+Shift+5"
 id = "moveToWorkspace.4"
 
 [[hotkeys]]
-binding = "Option+6"
+binding = "Hyper+6"
 id = "switchWorkspace.5"
 
 [[hotkeys]]
-binding = "Option+Shift+6"
+binding = "Hyper+Shift+6"
 id = "moveToWorkspace.5"
 
 [[hotkeys]]
-binding = "Option+7"
+binding = "Hyper+7"
 id = "switchWorkspace.6"
 
 [[hotkeys]]
-binding = "Option+Shift+7"
+binding = "Hyper+Shift+7"
 id = "moveToWorkspace.6"
 
 [[hotkeys]]
-binding = "Option+8"
+binding = "Hyper+8"
 id = "switchWorkspace.7"
 
 [[hotkeys]]
-binding = "Option+Shift+8"
+binding = "Hyper+Shift+8"
 id = "moveToWorkspace.7"
 
 [[hotkeys]]
-binding = "Option+9"
+binding = "Hyper+9"
 id = "switchWorkspace.8"
 
 [[hotkeys]]
-binding = "Option+Shift+9"
+binding = "Hyper+Shift+9"
 id = "moveToWorkspace.8"
 
 [[hotkeys]]
@@ -247,23 +249,23 @@ binding = "Control+Option+Tab"
 id = "workspaceBackAndForth"
 
 [[hotkeys]]
-binding = "Option+Left Arrow"
+binding = "Hyper+Left Arrow"
 id = "focus.left"
 
 [[hotkeys]]
-binding = "Option+Down Arrow"
+binding = "Hyper+Down Arrow"
 id = "focus.down"
 
 [[hotkeys]]
-binding = "Option+Up Arrow"
+binding = "Hyper+Up Arrow"
 id = "focus.up"
 
 [[hotkeys]]
-binding = "Option+Right Arrow"
+binding = "Hyper+Right Arrow"
 id = "focus.right"
 
 [[hotkeys]]
-binding = "Option+Tab"
+binding = "Hyper+Tab"
 id = "focusPrevious"
 
 [[hotkeys]]
@@ -283,19 +285,19 @@ binding = "Control+Option+Shift+Page Down"
 id = "moveColumnToWorkspaceDown"
 
 [[hotkeys]]
-binding = "Option+Shift+Left Arrow"
+binding = "Hyper+Shift+Left Arrow"
 id = "move.left"
 
 [[hotkeys]]
-binding = "Option+Shift+Down Arrow"
+binding = "Hyper+Shift+Down Arrow"
 id = "move.down"
 
 [[hotkeys]]
-binding = "Option+Shift+Up Arrow"
+binding = "Hyper+Shift+Up Arrow"
 id = "move.up"
 
 [[hotkeys]]
-binding = "Option+Shift+Right Arrow"
+binding = "Hyper+Shift+Right Arrow"
 id = "move.right"
 
 [[hotkeys]]
@@ -307,7 +309,7 @@ binding = "Control+Command+Grave"
 id = "focusMonitorLast"
 
 [[hotkeys]]
-binding = "Option+Return"
+binding = "Hyper+Return"
 id = "toggleFullscreen"
 
 [[hotkeys]]
@@ -327,15 +329,15 @@ binding = "Control+Option+End"
 id = "moveColumnToLast"
 
 [[hotkeys]]
-binding = "Option+T"
+binding = "Hyper+T"
 id = "toggleColumnTabbed"
 
 [[hotkeys]]
-binding = "Option+Home"
+binding = "Hyper+Home"
 id = "focusColumnFirst"
 
 [[hotkeys]]
-binding = "Option+End"
+binding = "Hyper+End"
 id = "focusColumnLast"
 
 [[hotkeys]]
@@ -375,15 +377,15 @@ binding = "Control+Option+9"
 id = "focusColumn.8"
 
 [[hotkeys]]
-binding = "Option+Period"
+binding = "Hyper+Period"
 id = "cycleSizeForward"
 
 [[hotkeys]]
-binding = "Option+Comma"
+binding = "Hyper+Comma"
 id = "cycleSizeBackward"
 
 [[hotkeys]]
-binding = "Option+Shift+F"
+binding = "Hyper+Shift+F"
 id = "toggleContainerFullPrimarySpan"
 
 [[hotkeys]]
@@ -395,31 +397,31 @@ binding = "Control+Option+R"
 id = "resetWindowSecondarySpan"
 
 [[hotkeys]]
-binding = "Option+Minus"
+binding = "Hyper+Minus"
 id = "setContainerPrimarySpan.decrease10Percent"
 
 [[hotkeys]]
-binding = "Option+Equal"
+binding = "Hyper+Equal"
 id = "setContainerPrimarySpan.increase10Percent"
 
 [[hotkeys]]
-binding = "Option+Shift+Minus"
+binding = "Hyper+Shift+Minus"
 id = "setWindowSecondarySpan.decrease10Percent"
 
 [[hotkeys]]
-binding = "Option+Shift+Equal"
+binding = "Hyper+Shift+Equal"
 id = "setWindowSecondarySpan.increase10Percent"
 
 [[hotkeys]]
-binding = "Option+Shift+B"
+binding = "Hyper+Shift+B"
 id = "balanceSizes"
 
 [[hotkeys]]
-binding = "Control+Option+Space"
+binding = "Hyper+Space"
 id = "openCommandPalette"
 
 [[hotkeys]]
-binding = "Option+Shift+R"
+binding = "Hyper+Shift+R"
 id = "raiseAllFloatingWindows"
 
 [[hotkeys]]
@@ -427,15 +429,15 @@ binding = "Control+Option+M"
 id = "openMenuAnywhere"
 
 [[hotkeys]]
-binding = "Option+Grave"
+binding = "Hyper+Grave"
 id = "toggleQuakeTerminal"
 
 [[hotkeys]]
-binding = "Option+Shift+L"
+binding = "Hyper+Shift+L"
 id = "toggleWorkspaceLayout"
 
 [[hotkeys]]
-binding = "Option+Shift+O"
+binding = "Hyper+Shift+O"
 id = "toggleOverview"
 
 [mouseWarp]
