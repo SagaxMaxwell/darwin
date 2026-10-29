@@ -92,7 +92,7 @@ tabRailAppIcons = false
 
 [borders]
 enabled = true
-width = 5.0
+width = 4.0
 
 [borders.color]
 alpha = 1.0
@@ -126,13 +126,13 @@ raiseOnMouseFocus = false
 
 [gaps]
 fullscreenUsesOuterGaps = false
-size = 16.0
+size = 12.0
 
 [gaps.outer]
-bottom = 0.0
-left = 0.0
-right = 0.0
-top = 0.0
+bottom = 12.0
+left = 12.0
+right = 12.0
+top = 45.0
 
 [general]
 animationSpeed = 1.0
@@ -449,11 +449,11 @@ margin = 1
 alwaysCenterSingleColumn = false
 centerFocusedColumn = "never"
 containerPrimarySpanPresets = [0.50, 0.70, 1.0]
-defaultContainerPrimarySpan = 0.70
-edgeGaps = true
+defaultContainerPrimarySpan = 1.0
+edgeGaps = false
 infiniteLoop = true
 resizeStepPercent = 5
-singleWindowFit = "fill"
+singleWindowFit = "container_primary_span"
 visibleContainerCount = 2
 
 [overview]
