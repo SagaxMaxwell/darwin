@@ -107,8 +107,6 @@
 
     codex.enable = true;
 
-    delta.enable = true;
-
     difftastic = {
       enable = true;
       git = {
@@ -144,47 +142,160 @@
     uv.enable = true;
 
     # Editors.
+    helix = {
+      enable = true;
+
+      settings = {
+        theme = "onedark";
+
+        editor = {
+          "true-color" = true;
+          "line-number" = "relative";
+          cursorline = true;
+
+          "end-of-line-diagnostics" = "hint";
+          "inline-diagnostics" = {
+            "cursor-line" = "warning";
+          };
+
+          statusline = {
+            right = [
+              "diagnostics"
+              "separator"
+              "selections"
+              "register"
+              "position"
+              "file-encoding"
+              "file-line-ending"
+              "file-type"
+            ];
+            separator = "💤";
+
+            mode = {
+              normal = "🦄";
+              insert = "🐣";
+              select = "🐧";
+            };
+          };
+
+          lsp = {
+            "display-inlay-hints" = true;
+          };
+
+          "cursor-shape" = {
+            insert = "bar";
+            select = "underline";
+          };
+
+          "file-picker" = {
+            hidden = false;
+          };
+
+          gutters = [
+            "diff"
+            "diagnostics"
+            "line-numbers"
+            "spacer"
+          ];
+
+          "soft-wrap" = {
+            enable = true;
+            "wrap-indicator" = "";
+          };
+        };
+      };
+
+      languages.language = [
+        {
+          name = "nix";
+          "auto-format" = true;
+          "language-servers" = [ "nixd" ];
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+        {
+          name = "c-sharp";
+          "language-servers" = [ "roslyn" ];
+        }
+      ];
+
+      languages.language-server.roslyn = {
+        command = "${pkgs.roslyn-ls}/bin/Microsoft.CodeAnalysis.LanguageServer";
+        args = [ "--stdio" ];
+      };
+
+      languages.language-server.ty = {
+        command = "${pkgs.ty}/bin/ty";
+        args = [ "server" ];
+      };
+
+      languages.language-server.ruff = {
+        command = "${pkgs.ruff}/bin/ruff";
+        args = [ "server" ];
+      };
+
+      languages.language-server.rust-analyzer.command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+    };
+
     zed-editor = {
       enable = true;
-      extensions = [
-        "csharp"
-        "github-theme"
-        "nix"
-        "oxc"
-        "tombi"
-      ];
+      userSettings.auto_install_extensions = {
+        csharp = true;
+        nix = true;
+        oxc = true;
+        tombi = true;
+        toml = false;
+        github-theme = false;
+      };
       userSettings.diagnostics.inline.enabled = true;
       userSettings.autosave = "on_window_change";
       userSettings.format_on_save = "on";
+      userSettings.lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
+      userSettings.lsp.oxfmt.binary = {
+        path = "${pkgs.oxfmt}/bin/oxfmt";
+        arguments = [ "--lsp" ];
+      };
+      userSettings.lsp.oxlint.initialization_options.settings.fixKind = "safe_fix";
+      userSettings.languages.JavaScript = {
+        code_actions_on_format = {
+          "source.organizeImports" = true;
+          "source.fixAll.oxc" = true;
+        };
+      };
+      userSettings.languages.JSX = {
+        code_actions_on_format = {
+          "source.organizeImports" = true;
+          "source.fixAll.oxc" = true;
+        };
+      };
+      userSettings.languages.TypeScript = {
+        code_actions_on_format = {
+          "source.organizeImports" = true;
+          "source.fixAll.oxc" = true;
+        };
+      };
+      userSettings.languages.TSX = {
+        code_actions_on_format = {
+          "source.organizeImports" = true;
+          "source.fixAll.oxc" = true;
+        };
+      };
       userSettings.languages.Nix = {
         language_servers = [ "nixd" ];
         formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
       };
-      userSettings.lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
-      userSettings.lsp.oxlint.initialization_options.settings.fixKind = "safe_fix";
-      userSettings.languages.JavaScript.code_actions_on_format = {
-        "source.organizeImports" = true;
-        "source.fixAll.oxc" = true;
+      userSettings.languages.TOML = {
+        language_servers = [ "tombi" ];
+        formatter.language_server.name = "tombi";
       };
-      userSettings.languages.JSX.code_actions_on_format = {
-        "source.organizeImports" = true;
-        "source.fixAll.oxc" = true;
-      };
-      userSettings.languages.TypeScript.code_actions_on_format = {
-        "source.organizeImports" = true;
-        "source.fixAll.oxc" = true;
-      };
-      userSettings.languages.TSX.code_actions_on_format = {
-        "source.organizeImports" = true;
-        "source.fixAll.oxc" = true;
-      };
-      userSettings.languages.CSharp.code_actions_on_format."source.organizeImports" = true;
-      userSettings.languages.CSharp.formatter.external = {
-        command = "${pkgs.csharpier}/bin/csharpier";
-        arguments = [
-          "format"
-          "--write-stdout"
-        ];
+      userSettings.languages.CSharp = {
+        code_actions_on_format."source.organizeImports" = true;
+        formatter.external = {
+          command = "${pkgs.csharpier}/bin/csharpier";
+          arguments = [
+            "format"
+            "--write-stdout"
+          ];
+        };
       };
       userSettings.languages.Python = {
         language_servers = [
@@ -198,6 +309,7 @@
     # GUI apps.
     obsidian = {
       enable = true;
+      cli.enable = true;
 
       vaults.Documents = {
         target = "Documents";

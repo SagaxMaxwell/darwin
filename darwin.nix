@@ -55,6 +55,7 @@ in
     primaryUser = userName;
 
     defaults = {
+      WindowManager.GloballyEnabled = false;
       dock.autohide = true;
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
