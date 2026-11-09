@@ -312,7 +312,7 @@
       cli.enable = true;
 
       vaults.Documents = {
-        target = "Documents";
+        target = "Documents/notes";
         settings.app.restrictedMode = false;
       };
 
