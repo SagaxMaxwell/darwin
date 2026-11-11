@@ -21,11 +21,27 @@ curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 
 ## 构建
 
+检查并构建：
+
+```zsh
+nix flake check path:. --show-trace
+nix build path:.#darwinConfigurations.MacBook.system --no-link
+```
+
+应用配置：
+
 ```zsh
 sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 ```
 
 需要更新依赖时运行 `nix flake update`。
+
+## 应用
+
+- Ghostty 与 Zed 跟随系统浅深外观，背景为 80% 不透明并开启原生毛玻璃；文字不做整窗淡化。Ghostty 应用后需重启，原生全屏模式下不透明。
+- Ghostty、Zed 使用原生 Metal 渲染；Chrome 保留默认硬件加速，Blender 的 Cycles 渲染设备在应用内选择 Metal。
+- Helix 与 Zed 使用 Nix 提供的语言服务器；Python 使用 ty＋ruff，TOML 使用 Tombi。
+- Obsidian 笔记库为 `~/Documents/notes`。
 
 ## OmniWM
 

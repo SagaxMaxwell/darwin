@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -56,13 +57,7 @@
       nix-direnv.enable = true;
     };
 
-    starship = {
-      enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-    };
+    starship.enable = true;
 
     # Command-line tools.
     bat.enable = true;
@@ -77,30 +72,11 @@
 
     tealdeer.enable = true;
 
-    atuin = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-      enableZshIntegration = true;
-    };
+    atuin.enable = true;
 
-    yazi = {
-      enable = true;
-      shellWrapperName = "y";
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-    };
+    yazi.enable = true;
 
-    zoxide = {
-      enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-    };
+    zoxide.enable = true;
 
     # Development tools.
     bun.enable = true;
@@ -130,7 +106,12 @@
       enable = true;
       package = pkgs.ghostty-bin;
 
-      settings.theme = "Atom One Dark";
+      settings = {
+        theme = "light:GitHub Light Default,dark:Atom One Dark";
+        background-opacity = 0.8;
+        background-opacity-cells = true;
+        background-blur = true;
+      };
     };
 
     nix-index.enable = true;
@@ -213,6 +194,17 @@
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
         }
         {
+          name = "python";
+          "language-servers" = [
+            "ty"
+            "ruff"
+          ];
+        }
+        {
+          name = "toml";
+          "language-servers" = [ "tombi" ];
+        }
+        {
           name = "c-sharp";
           "language-servers" = [ "roslyn" ];
         }
@@ -223,21 +215,43 @@
         args = [ "--stdio" ];
       };
 
-      languages.language-server.ty = {
-        command = "${pkgs.ty}/bin/ty";
-        args = [ "server" ];
-      };
+      languages.language-server.ty.command = "${pkgs.ty}/bin/ty";
 
-      languages.language-server.ruff = {
-        command = "${pkgs.ruff}/bin/ruff";
-        args = [ "server" ];
-      };
+      languages.language-server.ruff.command = "${pkgs.ruff}/bin/ruff";
 
       languages.language-server.rust-analyzer.command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+      languages.language-server.tombi.command = "${pkgs.tombi}/bin/tombi";
     };
 
     zed-editor = {
       enable = true;
+      # Paint opacity once; nested surfaces must not accumulate alpha.
+      userSettings.theme_overrides =
+        lib.mapAttrs
+          (
+            _: background:
+            {
+              "background.appearance" = "blurred";
+              inherit background;
+              "title_bar.background" = background;
+              "title_bar.inactive_background" = background;
+              "status_bar.background" = background;
+            }
+            // lib.genAttrs [
+              "editor.background"
+              "editor.gutter.background"
+              "panel.background"
+              "terminal.background"
+              "toolbar.background"
+              "tab_bar.background"
+              "tab.active_background"
+              "tab.inactive_background"
+            ] (_: "#00000000")
+          )
+          {
+            "One Light" = "#fafafacc";
+            "One Dark" = "#282c33cc";
+          };
       userSettings.auto_install_extensions = {
         csharp = true;
         nix = true;
@@ -255,55 +269,58 @@
         arguments = [ "--lsp" ];
       };
       userSettings.lsp.oxlint.initialization_options.settings.fixKind = "safe_fix";
-      userSettings.languages.JavaScript = {
-        code_actions_on_format = {
-          "source.organizeImports" = true;
-          "source.fixAll.oxc" = true;
+      userSettings.lsp.oxlint.binary = {
+        path = "${pkgs.oxlint}/bin/oxlint";
+        arguments = [ "--lsp" ];
+      };
+      userSettings.lsp.ruff.binary = {
+        path = "${pkgs.ruff}/bin/ruff";
+        arguments = [ "server" ];
+      };
+      userSettings.lsp.ty.binary = {
+        path = "${pkgs.ty}/bin/ty";
+        arguments = [ "server" ];
+      };
+      userSettings.lsp.tombi.binary = {
+        path = "${pkgs.tombi}/bin/tombi";
+        arguments = [ "lsp" ];
+      };
+      userSettings.lsp.rust-analyzer.binary.path = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+      userSettings.languages =
+        lib.genAttrs [ "JavaScript" "JSX" "TypeScript" "TSX" ] (_: {
+          formatter.language_server.name = "oxfmt";
+          code_actions_on_format = {
+            "source.organizeImports" = true;
+            "source.fixAll.oxc" = true;
+          };
+        })
+        // {
+          Nix = {
+            language_servers = [ "nixd" ];
+            formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
+          };
+          TOML = {
+            language_servers = [ "tombi" ];
+            formatter.language_server.name = "tombi";
+          };
+          CSharp = {
+            code_actions_on_format."source.organizeImports" = true;
+            formatter.external = {
+              command = "${pkgs.csharpier}/bin/csharpier";
+              arguments = [
+                "format"
+                "--write-stdout"
+              ];
+            };
+          };
+          Python = {
+            language_servers = [
+              "ty"
+              "ruff"
+            ];
+            code_actions_on_format."source.fixAll.ruff" = true;
+          };
         };
-      };
-      userSettings.languages.JSX = {
-        code_actions_on_format = {
-          "source.organizeImports" = true;
-          "source.fixAll.oxc" = true;
-        };
-      };
-      userSettings.languages.TypeScript = {
-        code_actions_on_format = {
-          "source.organizeImports" = true;
-          "source.fixAll.oxc" = true;
-        };
-      };
-      userSettings.languages.TSX = {
-        code_actions_on_format = {
-          "source.organizeImports" = true;
-          "source.fixAll.oxc" = true;
-        };
-      };
-      userSettings.languages.Nix = {
-        language_servers = [ "nixd" ];
-        formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
-      };
-      userSettings.languages.TOML = {
-        language_servers = [ "tombi" ];
-        formatter.language_server.name = "tombi";
-      };
-      userSettings.languages.CSharp = {
-        code_actions_on_format."source.organizeImports" = true;
-        formatter.external = {
-          command = "${pkgs.csharpier}/bin/csharpier";
-          arguments = [
-            "format"
-            "--write-stdout"
-          ];
-        };
-      };
-      userSettings.languages.Python = {
-        language_servers = [
-          "ty"
-          "ruff"
-        ];
-        code_actions_on_format."source.fixAll.ruff" = true;
-      };
     };
 
     # GUI apps.
