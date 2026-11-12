@@ -15,9 +15,13 @@
 
 ## 安装
 
+仅首次安装、系统尚无 Nix/Lix 时执行；已有安装则跳过：
+
 ```zsh
 curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
+
+安装器初始化 `/nix`；应用本配置后，Lix 版本、后台服务和设置由 nix-darwin 管理。
 
 ## 构建
 
@@ -34,7 +38,7 @@ nix build path:.#darwinConfigurations.MacBook.system --no-link
 sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 ```
 
-需要更新依赖时运行 `nix flake update`。
+需要更新依赖（包括 Lix）时运行 `nix flake update`，再构建并应用配置。
 
 ## 应用
 

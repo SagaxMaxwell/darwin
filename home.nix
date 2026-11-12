@@ -25,7 +25,6 @@
       xh
 
       # Development environments.
-      dotnet-sdk_10
       rustup
 
       # GUI apps.
@@ -204,16 +203,7 @@
           name = "toml";
           "language-servers" = [ "tombi" ];
         }
-        {
-          name = "c-sharp";
-          "language-servers" = [ "roslyn" ];
-        }
       ];
-
-      languages.language-server.roslyn = {
-        command = "${pkgs.roslyn-ls}/bin/Microsoft.CodeAnalysis.LanguageServer";
-        args = [ "--stdio" ];
-      };
 
       languages.language-server.ty.command = "${pkgs.ty}/bin/ty";
 
@@ -253,7 +243,6 @@
             "One Dark" = "#282c33cc";
           };
       userSettings.auto_install_extensions = {
-        csharp = true;
         nix = true;
         oxc = true;
         tombi = true;
@@ -302,16 +291,6 @@
           TOML = {
             language_servers = [ "tombi" ];
             formatter.language_server.name = "tombi";
-          };
-          CSharp = {
-            code_actions_on_format."source.organizeImports" = true;
-            formatter.external = {
-              command = "${pkgs.csharpier}/bin/csharpier";
-              arguments = [
-                "format"
-                "--write-stdout"
-              ];
-            };
           };
           Python = {
             language_servers = [

@@ -23,8 +23,11 @@ in
   };
 
   nix = {
-    # Lix owns the package manager installation and daemon.
-    enable = false;
+    package = pkgs.lix;
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   nixpkgs.config.allowUnfreePredicate =
