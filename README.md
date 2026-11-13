@@ -13,32 +13,46 @@
 - `README.md`：构建方式与配置说明。
 - `LICENSE`、`.gitignore`：许可证和 Git 忽略规则。
 
-## 安装
+## 首次使用
 
 仅首次安装、系统尚无 Nix/Lix 时执行；已有安装则跳过：
 
-```zsh
+```sh
 curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
-安装器初始化 `/nix`；应用本配置后，Lix 版本、后台服务和设置由 nix-darwin 管理。
+安装后重新打开终端。安装器自动准备 `/nix`，无需手动挂载；之后由 nix-darwin 管理 Lix。
 
-## 构建
+若尚无 `darwin-rebuild`，在仓库目录首次构建并应用：
 
-检查并构建：
-
-```zsh
-nix flake check path:. --show-trace
-nix build path:.#darwinConfigurations.MacBook.system --no-link
+```sh
+nix build .#darwinConfigurations.MacBook.system
+sudo ./result/sw/bin/darwin-rebuild switch --flake .#MacBook
 ```
 
-应用配置：
+## 常用命令
 
-```zsh
-sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
+均在仓库目录执行。应用配置：
+
+```sh
+sudo darwin-rebuild switch --flake .#MacBook
 ```
 
-需要更新依赖（包括 Lix）时运行 `nix flake update`，再构建并应用配置。
+升级软件：先运行 `nix flake update`，再应用配置。新增配置文件先 `git add 文件路径`；不必提交。
+
+<details>
+<summary>检查、构建与回滚（按需执行）</summary>
+
+| 用途 | 命令 |
+| --- | --- |
+| 检查 flake 求值，不编译 | `nix flake check --no-build` |
+| 查看构建计划，不编译 | `nix build --dry-run --no-link .#darwinConfigurations.MacBook.system` |
+| 完整构建，不应用 | `nix build --no-link .#darwinConfigurations.MacBook.system` |
+| 回到上一代系统 | `sudo darwin-rebuild switch --rollback` |
+
+回滚不修改仓库文件。
+
+</details>
 
 ## 应用
 
