@@ -14,6 +14,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-claude-code = {
+      url = "github:ryoppippi/nix-claude-code";
+    };
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,6 +40,8 @@
     }:
     let
       system = "aarch64-darwin";
+      # Background opacity shared by every translucent surface.
+      opacity = 0.8;
     in
     {
       apps.${system}.darwin-rebuild = {
@@ -44,6 +50,7 @@
       };
 
       darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit opacity; };
         modules = [
           {
             nixpkgs.hostPlatform = system;

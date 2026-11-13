@@ -4,7 +4,7 @@
 
 ## 文件
 
-- `flake.nix`：声明依赖、系统目标 `aarch64-darwin` 和 `MacBook` 配置入口。
+- `flake.nix`：声明依赖、系统目标 `aarch64-darwin`、`MacBook` 配置入口，以及所有半透明界面共用的 `opacity`。
 - `flake.lock`：锁定 flake 依赖版本。
 - `darwin.nix`：系统级设置、字体、网络名称、macOS 默认项和用户信息。
 - `home.nix`：用户级软件包、Shell、开发工具、编辑器、Obsidian 和 GUI 应用。
@@ -42,7 +42,8 @@ sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 
 ## 应用
 
-- Ghostty 与 Zed 跟随系统浅深外观，背景为 80% 不透明并开启原生毛玻璃；文字不做整窗淡化。Ghostty 应用后需重启，原生全屏模式下不透明。
+- 系统外观自动切换浅深色；Ghostty、Zed、mpv 和 OmniWM 跟随系统外观。
+- 半透明统一用 `flake.nix` 里的 `opacity`（当前 0.8）：Ghostty、Zed、mpv 背景按此值淡化并开启原生毛玻璃，文字不做整窗淡化。Ghostty 应用后需重启，原生全屏模式下不透明。
 - Ghostty、Zed 使用原生 Metal 渲染；Chrome 保留默认硬件加速，Blender 的 Cycles 渲染设备在应用内选择 Metal。
 - Helix 与 Zed 使用 Nix 提供的语言服务器；Python 使用 ty＋ruff，TOML 使用 Tombi。
 - Obsidian 笔记库为 `~/Documents/notes`。
@@ -50,6 +51,8 @@ sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 ## OmniWM
 
 修改 `modules/omniwm/settings.toml` 后，运行上面的构建命令应用配置。
+
+间距、边框宽度、焦点行为和窗口宽度与 NixOS 上的 Umbriel 保持一致：间距 8pt，边框 4pt，边框颜色为 Noctalia WhiteBlue 的主色 `#629EE8`。
 
 默认使用 niri 布局，窗口宽度预设为 50%、70%、100%，新窗口默认宽度为 70%：
 

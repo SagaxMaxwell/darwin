@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  opacity,
   ...
 }:
 
@@ -13,7 +14,9 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    backupFileExtension = "backup";
+    backupFileExtension = "hm-backup";
+    overwriteBackup = true;
+    extraSpecialArgs = { inherit opacity; };
 
     users.${userName} = {
       imports = [
@@ -37,6 +40,7 @@ in
       "google-chrome"
       "obsidian"
       "shottr"
+      "claude-code"
     ];
 
   fonts.packages = with pkgs; [
@@ -67,6 +71,8 @@ in
       trackpad.TrackpadFourFingerVertSwipeGesture = 2;
       finder.FXPreferredViewStyle = "clmv";
       NSGlobalDomain.AppleShowAllExtensions = true;
+      # Follow light and dark mode like Noctalia's auto theme on NixOS.
+      NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = true;
     };
   };
 

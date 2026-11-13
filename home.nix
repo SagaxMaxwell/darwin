@@ -1,9 +1,16 @@
 {
   lib,
   pkgs,
+  opacity,
   ...
 }:
 
+let
+  # Two-digit hex alpha for #RRGGBBAA colors.
+  alpha = lib.fixedWidthString 2 "0" (
+    lib.toLower (lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
+  );
+in
 {
   imports = [
     ./modules/omniwm
@@ -22,6 +29,8 @@
       # Command-line tools.
       gh
       oxfmt
+      ruff
+      ty
       xh
 
       # Development environments.
@@ -41,7 +50,10 @@
 
     fish.enable = true;
 
-    nushell.enable = true;
+    nushell = {
+      enable = true;
+      loadSessionVariables = true;
+    };
 
     zsh = {
       enable = true;
@@ -80,6 +92,8 @@
     # Development tools.
     bun.enable = true;
 
+    claude-code.enable = true;
+
     codex.enable = true;
 
     difftastic = {
@@ -107,7 +121,7 @@
 
       settings = {
         theme = "light:GitHub Light Default,dark:Atom One Dark";
-        background-opacity = 0.8;
+        background-opacity = opacity;
         background-opacity-cells = true;
         background-blur = true;
       };
@@ -239,8 +253,8 @@
             ] (_: "#00000000")
           )
           {
-            "One Light" = "#fafafacc";
-            "One Dark" = "#282c33cc";
+            "One Light" = "#fafafa${alpha}";
+            "One Dark" = "#282c33${alpha}";
           };
       userSettings.auto_install_extensions = {
         nix = true;
@@ -303,11 +317,19 @@
     };
 
     # GUI apps.
+    mpv = {
+      enable = true;
+      config = {
+        hwdec = "auto";
+        background-color = "#${alpha}000000";
+      };
+    };
+
     obsidian = {
       enable = true;
       cli.enable = true;
 
-      vaults.Documents = {
+      vaults.notes = {
         target = "Documents/notes";
         settings.app.restrictedMode = false;
       };
@@ -324,7 +346,7 @@
         templater-obsidian
         dataview
         notebook-navigator
-        jupyter-notebook
+        jupyter-viewer
         advanced-canvas
         tldraw
       ];

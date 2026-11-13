@@ -20,6 +20,24 @@
         "type": "github"
       }
     },
+    "nix-claude-code": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1794517347,
+        "narHash": "sha256-UFP75biFkXM0jcYetBfHq5wWVkCQ9d+uzr+/pIoHxR8=",
+        "owner": "ryoppippi",
+        "repo": "nix-claude-code",
+        "rev": "a6771418171c48bd692a1902c4e4e7d086732d62",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryoppippi",
+        "repo": "nix-claude-code",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -63,6 +81,22 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1794042290,
+        "narHash": "sha256-ziZn2PvCJE5JEEpqTdxXwJpPB+L3YqoCpTAMCzyaP3U=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f4a03c008967841f2a0b3cb7c436fc6fc31671f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1793977579,
         "narHash": "sha256-WrSODdZFVIs/Hh2NzC0bY+ROByi0bATg8WfePX8dPj8=",
         "owner": "NixOS",
@@ -102,9 +136,10 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "nix-claude-code": "nix-claude-code",
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "obsidian-extensions": "obsidian-extensions"
       }
     },
