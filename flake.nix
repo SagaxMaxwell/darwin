@@ -14,10 +14,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-claude-code = {
-      url = "github:ryoppippi/nix-claude-code";
-    };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,6 +52,12 @@
             nixpkgs.hostPlatform = system;
             nixpkgs.overlays = [
               obsidian-extensions.overlays.default
+              (final: prev: {
+                # The Rust setup hook requires system zstd for zstd-sys.
+                tabularis = prev.tabularis.overrideAttrs (old: {
+                  buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
+                });
+              })
             ];
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }

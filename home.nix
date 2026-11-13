@@ -50,10 +50,7 @@ in
 
     fish.enable = true;
 
-    nushell = {
-      enable = true;
-      loadSessionVariables = true;
-    };
+    nushell.enable = true;
 
     zsh = {
       enable = true;
@@ -74,8 +71,6 @@ in
     bat.enable = true;
 
     eza.enable = true;
-
-    man.generateCaches = false;
 
     fd.enable = true;
 
@@ -113,8 +108,6 @@ in
       };
     };
 
-    home-manager.enable = true;
-
     ghostty = {
       enable = true;
       package = pkgs.ghostty-bin;
@@ -126,8 +119,6 @@ in
         background-blur = true;
       };
     };
-
-    nix-index.enable = true;
 
     nix-index-database = {
       comma.enable = true;

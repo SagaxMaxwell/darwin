@@ -42,15 +42,17 @@ sudo nix run .#darwin-rebuild -- switch --flake .#MacBook
 
 ## 应用
 
-- 系统外观自动切换浅深色；Ghostty、Zed、mpv 和 OmniWM 跟随系统外观。
-- 半透明统一用 `flake.nix` 里的 `opacity`（当前 0.8）：Ghostty、Zed、mpv 背景按此值淡化并开启原生毛玻璃，文字不做整窗淡化。Ghostty 应用后需重启，原生全屏模式下不透明。
+- 禁止在网络盘和 USB 存储上写入 `.DS_Store`；不影响本机磁盘或已有文件。
+- 系统外观自动切换浅深色；Ghostty、Zed、OmniWM 和 mpv 标题栏跟随系统外观。
+- 背景不透明度统一用 `flake.nix` 里的 `opacity`（当前 0.8）：Ghostty、Zed 和 OmniWM 下拉终端启用原生背景模糊；mpv 仅设置背景颜色及透明度。Ghostty 应用后需重启，原生全屏模式下不透明。
 - Ghostty、Zed 使用原生 Metal 渲染；Chrome 保留默认硬件加速，Blender 的 Cycles 渲染设备在应用内选择 Metal。
 - Helix 与 Zed 使用 Nix 提供的语言服务器；Python 使用 ty＋ruff，TOML 使用 Tombi。
+- Zed 保留界面内修改的设置，应用配置时 Nix 声明优先；删除 Nix 字段后，旧值可能仍需在应用内清理。
 - Obsidian 笔记库为 `~/Documents/notes`。
 
 ## OmniWM
 
-修改 `modules/omniwm/settings.toml` 后，运行上面的构建命令应用配置。
+布局与快捷键在 `modules/omniwm/settings.toml` 中维护，下拉终端透明度由 Nix 统一设置。界面内的修改需同步回仓库，否则下次应用配置会恢复仓库设置。
 
 间距、边框宽度、焦点行为和窗口宽度与 NixOS 上的 Umbriel 保持一致：间距 8pt，边框 4pt，边框颜色为 Noctalia WhiteBlue 的主色 `#629EE8`。
 

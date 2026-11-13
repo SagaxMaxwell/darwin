@@ -135,7 +135,7 @@ size = 8.0
 bottom = 8.0
 left = 8.0
 right = 8.0
-top = 45.0
+top = 41.0
 
 [general]
 animationSpeed = 1.0
@@ -493,12 +493,11 @@ red = 0.3
 [quakeTerminal]
 animationDuration = 0.2
 autoHide = false
-backgroundBlurRadius = 0
+backgroundBlurRadius = 20
 backgroundEffect = "standardBlur"
 enabled = true
 heightPercent = 50.0
 monitorMode = "focusedWindow"
-opacity = 1.0
 position = "center"
 widthPercent = 50.0
 

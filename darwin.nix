@@ -56,12 +56,19 @@ in
     inherit computerName hostName;
   };
 
+  # Home Manager initializes Zsh completion.
+  programs.zsh.enableGlobalCompInit = false;
+
   system = {
     stateVersion = 7;
 
     primaryUser = userName;
 
     defaults = {
+      CustomUserPreferences."com.apple.desktopservices" = {
+        DSDontWriteNetworkStores = true;
+        DSDontWriteUSBStores = true;
+      };
       WindowManager.GloballyEnabled = false;
       dock.autohide = true;
       dock.showMissionControlGestureEnabled = true;
