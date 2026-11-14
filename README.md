@@ -56,6 +56,7 @@ sudo darwin-rebuild switch --flake .#MacBook
 
 ## 应用
 
+- 启用 macOS 内置 SSH，支持 SFTP/SCP 和远程开发：`ssh maxwellsagax@<Mac-IP>`。WireGuard 已提供 `wg`、`wg-quick` 及 macOS 后端；连接参数待配置。
 - 禁止在网络盘和 USB 存储上写入 `.DS_Store`；不影响本机磁盘或已有文件。
 - 系统外观自动切换浅深色；Ghostty、Zed、OmniWM 和 mpv 标题栏跟随系统外观。
 - 背景不透明度统一用 `flake.nix` 里的 `opacity`（当前 0.8）：Ghostty、Zed 和 OmniWM 下拉终端启用原生背景模糊；mpv 仅设置背景颜色及透明度。Ghostty 应用后需重启，原生全屏模式下不透明。

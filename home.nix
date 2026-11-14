@@ -34,6 +34,7 @@ in
       ruff
       ty
       xh
+      wireguard-tools
 
       # Development environments.
       rustup

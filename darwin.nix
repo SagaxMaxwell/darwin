@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   opacity,
   ...
@@ -33,15 +32,8 @@ in
     ];
   };
 
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "chatgpt"
-      "google-chrome"
-      "obsidian"
-      "shottr"
-      "claude-code"
-    ];
+  # Allow unfree packages.
+  nixpkgs.config.allowUnfree = true;
 
   fonts.packages = with pkgs; [
     source-han-sans
@@ -56,7 +48,9 @@ in
     inherit computerName hostName;
   };
 
-  # Home Manager initializes Zsh completion.
+  services.openssh.enable = true;
+
+  # Home Manager owns Zsh completion init.
   programs.zsh.enableGlobalCompInit = false;
 
   system = {
@@ -74,13 +68,13 @@ in
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
 
-      # Reserve three-finger vertical swipes for OmniWM workspaces.
+      # Three-finger vertical swipes switch OmniWM workspaces.
       trackpad.TrackpadThreeFingerVertSwipeGesture = 0;
       trackpad.TrackpadFourFingerVertSwipeGesture = 2;
       finder.FXPreferredViewStyle = "clmv";
       NSGlobalDomain.AppleShowAllExtensions = true;
 
-      # Follow light and dark mode like Noctalia's auto theme on NixOS.
+      # Follow system appearance.
       NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = true;
     };
   };

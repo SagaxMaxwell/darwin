@@ -55,7 +55,7 @@
               obsidian-extensions.overlays.default
               (final: prev: {
 
-                # The Rust setup hook requires system zstd for zstd-sys.
+                # Rust setup hook needs system zstd for zstd-sys.
                 tabularis = prev.tabularis.overrideAttrs (old: {
                   buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
                 });
