@@ -172,7 +172,7 @@ enabled = true
 hiddenBundleIDs = []
 rehideIntervalSeconds = 5.0
 
-# Caps Lock drives window/workspace shortcuts; Shift moves instead of focusing.
+# Caps Lock drives window/workspace shortcuts; Shift moves.
 # Control shortcuts keep their bindings.
 [[hotkeys]]
 binding = "Hyper+1"
