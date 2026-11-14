@@ -1,6 +1,5 @@
-# Settings for OmniWM 0.7.6 (schema 4). Gaps, borders, focus and widths mirror
-# the Umbriel configuration in the NixOS repository.
-# Omitted hotkey entries remain unassigned. Required configuration sections are retained.
+# OmniWM 0.7.6 settings (schema 4), mirroring NixOS Umbriel.
+# Unbound hotkeys stay unset; required sections stay.
 
 monitorBarOverrides = []
 monitorDwindleOverrides = []
@@ -95,7 +94,7 @@ tabRailAppIcons = false
 enabled = true
 width = 4.0
 
-# Noctalia WhiteBlue primary #629EE8.
+# Noctalia WhiteBlue primary, #629EE8.
 [borders.color]
 alpha = 1.0
 blue = 0.9098039215686274
@@ -130,7 +129,7 @@ raiseOnMouseFocus = false
 fullscreenUsesOuterGaps = false
 size = 8.0
 
-# top is measured from the physical screen edge; the menu bar height is subtracted.
+# Top gap is from the screen edge, minus the menu bar.
 [gaps.outer]
 bottom = 8.0
 left = 8.0
@@ -173,8 +172,8 @@ enabled = true
 hiddenBundleIDs = []
 rehideIntervalSeconds = 5.0
 
-# Hold Caps Lock for daily window/workspace shortcuts; Shift moves instead of focusing.
-# Control-based advanced shortcuts retain their existing bindings.
+# Caps Lock drives window/workspace shortcuts; Shift moves instead of focusing.
+# Control shortcuts keep their bindings.
 [[hotkeys]]
 binding = "Hyper+1"
 id = "switchWorkspace.0"

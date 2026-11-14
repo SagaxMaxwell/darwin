@@ -36,7 +36,8 @@
     }:
     let
       system = "aarch64-darwin";
-      # Background opacity shared by every translucent surface.
+
+      # Shared background opacity.
       opacity = 0.8;
     in
     {
@@ -53,6 +54,7 @@
             nixpkgs.overlays = [
               obsidian-extensions.overlays.default
               (final: prev: {
+
                 # The Rust setup hook requires system zstd for zstd-sys.
                 tabularis = prev.tabularis.overrideAttrs (old: {
                   buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];

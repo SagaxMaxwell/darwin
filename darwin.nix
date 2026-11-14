@@ -73,11 +73,13 @@ in
       dock.autohide = true;
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
+
       # Reserve three-finger vertical swipes for OmniWM workspaces.
       trackpad.TrackpadThreeFingerVertSwipeGesture = 0;
       trackpad.TrackpadFourFingerVertSwipeGesture = 2;
       finder.FXPreferredViewStyle = "clmv";
       NSGlobalDomain.AppleShowAllExtensions = true;
+
       # Follow light and dark mode like Noctalia's auto theme on NixOS.
       NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = true;
     };
