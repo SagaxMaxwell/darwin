@@ -85,10 +85,10 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1794490034,
-        "narHash": "sha256-/Xiv0nqwKdi/xZ+JFS+/vNSNLj3KEx7nyVyhtnXCsZc=",
+        "lastModified": 1794574244,
+        "narHash": "sha256-wWKPaqwGSYoSbqRHDVhjMGtcJkjxYchK9hitbqcXT/g=",
         "ref": "refs/heads/main",
-        "rev": "eb367f20f534969f9cabefae90758e80a91c88e4",
+        "rev": "a846ff4abe19c8a0db91b1091472d446f6190d2c",
         "shallow": true,
         "type": "git",
         "url": "https://github.com/karaolidis/nix-obsidian-extensions"
