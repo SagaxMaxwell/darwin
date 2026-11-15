@@ -59,17 +59,20 @@ sudo darwin-rebuild switch --flake .#MacBook
 - 启用 macOS 内置 SSH，支持 SFTP/SCP 和远程开发：`ssh maxwellsagax@<Mac-IP>`。WireGuard 已提供 `wg`、`wg-quick` 及 macOS 后端；连接参数待配置。
 - 禁止在网络盘和 USB 存储上写入 `.DS_Store`；不影响本机磁盘或已有文件。
 - 系统外观自动切换浅深色；Ghostty、Zed、OmniWM 和 mpv 标题栏跟随系统外观。
-- 背景不透明度统一用 `flake.nix` 里的 `opacity`（当前 0.8）：Ghostty、Zed 和 OmniWM 下拉终端启用原生背景模糊；mpv 仅设置背景颜色及透明度。Ghostty 应用后需重启，原生全屏模式下不透明。
+- Ghostty、Zed 和 mpv 的背景不透明度使用 `flake.nix` 的 `opacity`（当前 0.8）；Ghostty、Zed 启用原生背景模糊。Ghostty 应用后需重启，原生全屏模式下不透明。
 - Ghostty、Zed 使用原生 Metal 渲染；Chrome 保留默认硬件加速，Blender 的 Cycles 渲染设备在应用内选择 Metal。
 - Helix 与 Zed 使用 Nix 提供的语言服务器；Python 使用 ty＋ruff，TOML 使用 Tombi。
-- Zed 保留界面内修改的设置，应用配置时 Nix 声明优先；删除 Nix 字段后，旧值可能仍需在应用内清理。
+- Herdr 与 NixOS 设置一致：自动深浅主题、恢复 Agent 会话、SSH 保活与复用、Nushell pane、屏幕历史、worktree 目录及完成／等待通知。
+- Zed、Herdr 保留界面内修改的设置，应用配置时 Nix 声明优先；删除 Nix 字段后，旧值可能仍需在应用内清理。
 - Obsidian 笔记库为 `~/Documents/notes`。
 
 ## OmniWM
 
-布局与快捷键在 `modules/omniwm/settings.toml` 中维护，下拉终端透明度由 Nix 统一设置。界面内的修改需同步回仓库，否则下次应用配置会恢复仓库设置。
+采用 **Vitreus＋Catppuccin**，保留样式默认玻璃效果，配色随系统深浅外观切换。nixpkgs 暂为 0.7.6，因此使用官方 0.8.0 安装包及同版本样式，待收录后移除版本覆盖。
 
-间距、边框宽度、焦点行为和窗口宽度与 NixOS 上的 Umbriel 保持一致：间距 8pt，边框 4pt，边框颜色为 Noctalia WhiteBlue 的主色 `#629EE8`。
+布局与快捷键在 `modules/omniwm/settings.toml` 中维护；样式入口在 `default.nix`。界面修改需同步回仓库，下次应用配置以 Nix 为准。
+
+基础间距 8pt、边框 4pt，边框颜色使用 OmniWM 默认值。Vitreus 自动预留顶部空间，其布局会自动隐藏 macOS 菜单栏。
 
 默认使用 niri 布局，窗口宽度预设为 50%、70%、100%，新窗口默认宽度为 70%：
 

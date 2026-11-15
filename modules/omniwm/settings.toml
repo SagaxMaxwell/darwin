@@ -1,4 +1,4 @@
-# OmniWM 0.7.6 settings (schema 4), mirroring NixOS Umbriel.
+# OmniWM 0.8.0 settings (schema 5), mirroring NixOS Umbriel.
 # Unbound hotkeys stay unset; required sections stay.
 
 monitorBarOverrides = []
@@ -6,7 +6,7 @@ monitorDwindleOverrides = []
 monitorGapOverrides = []
 monitorNiriOverrides = []
 monitorOrientationOverrides = []
-schemaVersion = 4
+schemaVersion = 5
 
 [[appRules]]
 bundleId = "com.openai.codex"
@@ -94,12 +94,12 @@ tabRailAppIcons = false
 enabled = true
 width = 4.0
 
-# Noctalia WhiteBlue primary, #629EE8.
+# Required color table; OmniWM's default.
 [borders.color]
+red = 0.084585202284378935
+green = 1.0
+blue = 0.97930003794467602
 alpha = 1.0
-blue = 0.9098039215686274
-green = 0.6196078431372549
-red = 0.3843137254901961
 
 [clipboard]
 historyEnabled = false
@@ -129,12 +129,12 @@ raiseOnMouseFocus = false
 fullscreenUsesOuterGaps = false
 size = 8.0
 
-# Top gap is from the screen edge, minus the menu bar.
+# Vitreus reserves its own space above these gaps.
 [gaps.outer]
 bottom = 8.0
 left = 8.0
 right = 8.0
-top = 41.0
+top = 8.0
 
 [general]
 animationSpeed = 1.0
@@ -400,19 +400,19 @@ id = "resetWindowSecondarySpan"
 
 [[hotkeys]]
 binding = "Hyper+Minus"
-id = "setContainerPrimarySpan.decrease10Percent"
+id = "resizeContainerPrimarySpan.shrink"
 
 [[hotkeys]]
 binding = "Hyper+Equal"
-id = "setContainerPrimarySpan.increase10Percent"
+id = "resizeContainerPrimarySpan.grow"
 
 [[hotkeys]]
 binding = "Hyper+Shift+Minus"
-id = "setWindowSecondarySpan.decrease10Percent"
+id = "resizeWindowSecondarySpan.shrink"
 
 [[hotkeys]]
 binding = "Hyper+Shift+Equal"
-id = "setWindowSecondarySpan.increase10Percent"
+id = "resizeWindowSecondarySpan.grow"
 
 [[hotkeys]]
 binding = "Hyper+Shift+B"
@@ -492,7 +492,6 @@ red = 0.3
 [quakeTerminal]
 animationDuration = 0.2
 autoHide = false
-backgroundBlurRadius = 20
 backgroundEffect = "standardBlur"
 enabled = true
 heightPercent = 50.0
@@ -512,13 +511,16 @@ showIcon = true
 showWorkspaceName = true
 useWorkspaceId = false
 
+[island]
+enabled = true
+
 [workspaceBar]
 autoHide = false
 autoHideHideDelayMilliseconds = 0.0
 autoHideRevealDelayMilliseconds = 0.0
 backgroundOpacity = 0.1
 deduplicateAppIcons = false
-enabled = false
+enabled = true
 excludedBundleIDs = []
 height = 24.0
 hideEmptyWorkspaces = false
