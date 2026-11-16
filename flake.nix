@@ -28,6 +28,7 @@
 
   outputs =
     inputs@{
+      nixpkgs,
       nix-darwin,
       home-manager,
       nix-index-database,
@@ -37,8 +38,11 @@
     let
       system = "aarch64-darwin";
 
-      # Shared background opacity.
+      # Shared background opacity and its #RRGGBBAA alpha.
       opacity = 0.8;
+      alpha = nixpkgs.lib.fixedWidthString 2 "0" (
+        nixpkgs.lib.toLower (nixpkgs.lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
+      );
     in
     {
       apps.${system}.darwin-rebuild = {
@@ -47,7 +51,7 @@
       };
 
       darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit opacity; };
+        specialArgs = { inherit opacity alpha; };
         modules = [
           {
             nixpkgs.hostPlatform = system;

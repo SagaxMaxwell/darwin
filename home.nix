@@ -1,20 +1,16 @@
 {
-  lib,
   pkgs,
   opacity,
+  alpha,
   ...
 }:
 
-let
-
-  # Hex alpha for #RRGGBBAA.
-  alpha = lib.fixedWidthString 2 "0" (
-    lib.toLower (lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
-  );
-in
 {
   imports = [
-    ./modules/omniwm
+    ./helix.nix
+    ./herdr.nix
+    ./omniwm.nix
+    ./zed.nix
   ];
 
   home = {
@@ -90,27 +86,14 @@ in
     # Development tools.
     bun.enable = true;
 
-    claude-code.enable = true;
-
-    codex.enable = true;
-
-    herdr = {
+    claude-code = {
       enable = true;
       mutableSettings = true;
-      settings = {
-        theme.auto_switch = true;
-        session.resume_agents_on_restore = true;
-        remote.manage_ssh_config = true;
-        terminal.default_shell = "nu";
+    };
 
-        # Forward pane images out to the Ghostty outer terminal.
-        terminal.kitty_graphics = true;
-        worktrees.directory = "~/.herdr/worktrees";
-        ui.toast.delivery = "herdr";
-        ui.toast.delay_seconds = 0;
-        ui.sound.enabled = true;
-        experimental.pane_history = true;
-      };
+    codex = {
+      enable = true;
+      mutableSettings = true;
     };
 
     difftastic = {
@@ -147,188 +130,6 @@ in
     };
 
     uv.enable = true;
-
-    # Editors.
-    helix = {
-      enable = true;
-
-      settings = {
-        theme = "onedark";
-
-        editor = {
-          "true-color" = true;
-          "line-number" = "relative";
-          cursorline = true;
-
-          "end-of-line-diagnostics" = "hint";
-          "inline-diagnostics" = {
-            "cursor-line" = "warning";
-          };
-
-          statusline = {
-            right = [
-              "diagnostics"
-              "separator"
-              "selections"
-              "register"
-              "position"
-              "file-encoding"
-              "file-line-ending"
-              "file-type"
-            ];
-            separator = "💤";
-
-            mode = {
-              normal = "🦄";
-              insert = "🐣";
-              select = "🐧";
-            };
-          };
-
-          lsp = {
-            "display-inlay-hints" = true;
-          };
-
-          "cursor-shape" = {
-            insert = "bar";
-            select = "underline";
-          };
-
-          "file-picker" = {
-            hidden = false;
-          };
-
-          gutters = [
-            "diff"
-            "diagnostics"
-            "line-numbers"
-            "spacer"
-          ];
-
-          "soft-wrap" = {
-            enable = true;
-            "wrap-indicator" = "";
-          };
-        };
-      };
-
-      languages.language = [
-        {
-          name = "nix";
-          "auto-format" = true;
-          "language-servers" = [ "nixd" ];
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-        }
-        {
-          name = "python";
-          "language-servers" = [
-            "ty"
-            "ruff"
-          ];
-        }
-        {
-          name = "toml";
-          "language-servers" = [ "tombi" ];
-        }
-      ];
-
-      languages.language-server.ty.command = "${pkgs.ty}/bin/ty";
-
-      languages.language-server.ruff.command = "${pkgs.ruff}/bin/ruff";
-
-      languages.language-server.rust-analyzer.command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
-      languages.language-server.tombi.command = "${pkgs.tombi}/bin/tombi";
-    };
-
-    zed-editor = {
-      enable = true;
-
-      # Apply alpha once; nested surfaces stay clear.
-      userSettings.theme_overrides =
-        lib.mapAttrs
-          (
-            _: background:
-            {
-              "background.appearance" = "blurred";
-              inherit background;
-              "title_bar.background" = background;
-              "title_bar.inactive_background" = background;
-              "status_bar.background" = background;
-            }
-            // lib.genAttrs [
-              "editor.background"
-              "editor.gutter.background"
-              "panel.background"
-              "terminal.background"
-              "toolbar.background"
-              "tab_bar.background"
-              "tab.active_background"
-              "tab.inactive_background"
-            ] (_: "#00000000")
-          )
-          {
-            "One Light" = "#fafafa${alpha}";
-            "One Dark" = "#282c33${alpha}";
-          };
-      userSettings.auto_install_extensions = {
-        nix = true;
-        oxc = true;
-        tombi = true;
-        toml = false;
-        github-theme = false;
-      };
-      userSettings.diagnostics.inline.enabled = true;
-      userSettings.autosave = "on_window_change";
-      userSettings.format_on_save = "on";
-      userSettings.lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
-      userSettings.lsp.oxfmt.binary = {
-        path = "${pkgs.oxfmt}/bin/oxfmt";
-        arguments = [ "--lsp" ];
-      };
-      userSettings.lsp.oxlint.initialization_options.settings.fixKind = "safe_fix";
-      userSettings.lsp.oxlint.binary = {
-        path = "${pkgs.oxlint}/bin/oxlint";
-        arguments = [ "--lsp" ];
-      };
-      userSettings.lsp.ruff.binary = {
-        path = "${pkgs.ruff}/bin/ruff";
-        arguments = [ "server" ];
-      };
-      userSettings.lsp.ty.binary = {
-        path = "${pkgs.ty}/bin/ty";
-        arguments = [ "server" ];
-      };
-      userSettings.lsp.tombi.binary = {
-        path = "${pkgs.tombi}/bin/tombi";
-        arguments = [ "lsp" ];
-      };
-      userSettings.lsp.rust-analyzer.binary.path = "${pkgs.rust-analyzer}/bin/rust-analyzer";
-      userSettings.languages =
-        lib.genAttrs [ "JavaScript" "JSX" "TypeScript" "TSX" ] (_: {
-          formatter.language_server.name = "oxfmt";
-          code_actions_on_format = {
-            "source.organizeImports" = true;
-            "source.fixAll.oxc" = true;
-          };
-        })
-        // {
-          Nix = {
-            language_servers = [ "nixd" ];
-            formatter.external.command = "${pkgs.nixfmt}/bin/nixfmt";
-          };
-          TOML = {
-            language_servers = [ "tombi" ];
-            formatter.language_server.name = "tombi";
-          };
-          Python = {
-            language_servers = [
-              "ty"
-              "ruff"
-            ];
-            code_actions_on_format."source.fixAll.ruff" = true;
-          };
-        };
-    };
 
     # GUI apps.
     mpv = {

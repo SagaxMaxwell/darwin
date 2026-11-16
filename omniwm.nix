@@ -35,7 +35,7 @@ in
       };
     };
     launchd.keepAlive = false;
-    settings = lib.recursiveUpdate (builtins.fromTOML (builtins.readFile ./settings.toml)) {
+    settings = lib.recursiveUpdate (builtins.fromTOML (builtins.readFile ./omniwm.toml)) {
       quakeTerminal = {
         inherit opacity;
         # Match Ghostty's background-blur = true.

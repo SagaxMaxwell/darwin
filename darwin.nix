@@ -1,12 +1,13 @@
 {
   pkgs,
   opacity,
+  alpha,
   ...
 }:
 
 let
-  hostName = "Macbook";
-  computerName = "Macbook";
+  hostName = "MacBook";
+  computerName = "MacBook";
   userName = "maxwellsagax";
 in
 {
@@ -14,8 +15,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "hm-backup";
-    overwriteBackup = true;
-    extraSpecialArgs = { inherit opacity; };
+    extraSpecialArgs = { inherit opacity alpha; };
 
     users.${userName} = {
       imports = [
