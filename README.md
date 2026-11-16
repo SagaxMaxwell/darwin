@@ -40,6 +40,21 @@ nix flake update
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
 - Obsidian 笔记库位于 `~/Documents/notes`；SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
+## 软件与组件取舍
+
+记录评估过的替代方案、暂时采用的兼容处理，以及后来移除的工具。版本与兼容性结论来自当时锁定的依赖和实机记录，更新后可重新评估。后续精简 README 时保留本章及各项理由。
+
+| 方案 | 取舍原因 | 当前选择／状态 |
+| --- | --- | --- |
+| Nix 实现与安装方式 | 2026 年 10 月将首次安装说明从 Determinate 安装器改为 Lix；历史未记录性能比较，不据此推断优劣 | 首次安装用 Lix 官方安装器，之后通过 `nix.package = pkgs.lix` 由 nix-darwin 统一管理版本与服务 |
+| nixpkgs 默认 OmniWM | 当前配置记录的锁定版本为 0.7.6，未满足 0.8.0 的 OmniShell 与样式需求；官方 release 包也未包含所需 Lake 样式 | 固定官方 0.8.0 安装包，Lake 从同版本源码获取；待 nixpkgs 与上游打包满足需求后移除覆盖 |
+| OmniWM 样式 Vitreus | 曾使用 Vitreus＋Catppuccin，后改为 Lake；历史未单独说明更换原因 | Lake＋Catppuccin，顶部中央留空、两侧显示工作区与状态 |
+| OmniWM 配置直接链接到 Nix store | OmniWM 保存时跟随符号链接，会写入只读 store，无法正常保存 | Home Manager 链接后在 activation 中复制成可写文件；下次应用仍以仓库声明覆盖 |
+| Tabularis 原包直接构建 | `zip` 经 `zstd-safe` 引入 `zstd-sys`，Rust 构建需要系统 zstd | 在 overlay 中补充 `zstd` 构建依赖；待上游修复后移除 |
+| Nix 版 Godot Mono 的 Metal 渲染（历史） | 2026-09-27 记录 Godot 4.7.2 在 Forward+／Metal 初始化时触发 `SIGBUS`，崩溃栈位于 MoltenVK 的 SPIRV-Cross；相关说明于 10 月被删除 | 当时建议先用 Compatibility／OpenGL；官方 4.7.2 .NET 包曾通过 Metal、C# 编译与 .NET 10 测试。Godot／C# 工具链后来已移除，当前不安装；不能将旧测试结论推广到新版本 |
+
+Godot、.NET SDK、Roslyn、CSharpier 和 VS Code 属于曾安装后移除的工具，2026-11-12 的 `c01bc03` 明确移除了 C# 工具链；历史没有记录这次移除的具体取舍原因。当前编辑器为 Helix 与 Zed，不能据此认定它们已经替代了完整的 C# 开发环境。
+
 ## 已知限制
 
 OmniWM 0.8.0 在新版 macOS 上清理通知可能失败，窗口边缘偶尔会留下 1pt 黑边；天气组件暂未配置。Herdr pane 中的图片显示仍受上游终端识别限制。
