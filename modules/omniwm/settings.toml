@@ -1,18 +1,14 @@
 # OmniWM 0.8.0 settings (schema 5), mirroring NixOS Umbriel.
 # Unbound hotkeys stay unset; required sections stay.
 
-monitorBarOverrides = []
-monitorDwindleOverrides = []
-monitorGapOverrides = []
-monitorNiriOverrides = []
-monitorOrientationOverrides = []
 schemaVersion = 5
 
-[[appRules]]
-bundleId = "com.openai.codex"
-id = "6A31F08A-4051-4354-B439-42F4C71894A3"
-minHeight = 600.0
-minWidth = 800.0
+# This display's notch/menu area is 32pt; leave another 8pt below it.
+[[monitorGapOverrides]]
+id = "1FD4CFCA-4C7E-4660-B6C6-BC1DE8F4C03C"
+monitorDisplayUUID = "37D8832A-2D66-02CA-B9F7-8F30A301B230"
+monitorName = "内建视网膜显示器"
+outerGapTop = 40.0
 
 [[appRules]]
 bundleId = "com.eltima.cmd1.pro.mas"
@@ -129,7 +125,7 @@ raiseOnMouseFocus = false
 fullscreenUsesOuterGaps = false
 size = 8.0
 
-# Vitreus reserves its own space above these gaps.
+# Top is measured from the screen edge; the built-in notch override is above.
 [gaps.outer]
 bottom = 8.0
 left = 8.0
@@ -512,7 +508,7 @@ showWorkspaceName = true
 useWorkspaceId = false
 
 [island]
-enabled = true
+enabled = false
 
 [workspaceBar]
 autoHide = false
