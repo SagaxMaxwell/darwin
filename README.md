@@ -121,8 +121,6 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 | 位置／来源 | 补丁或兼容处理 | 处理结果 |
 | --- | --- | --- |
-| 原 `flake.nix` Tabularis overlay | `overrideAttrs` 添加 `zstd` 构建依赖 | 已移除，使用官方 Homebrew cask；本仓库现无自行维护的源码／构建补丁 |
-| 锁定 nixpkgs 的 Tabularis derivation | `postPatch` 将 Tauri 的 `createUpdaterArtifacts` 改为 `false` | 该包已退出当前安装清单，不再使用此打包路径 |
 | nix-homebrew 上游默认 `patchBrew` | 修改 Homebrew `update.sh`，跳过本体自更新 | 保留上游默认集成，Homebrew 本体由 Nix 更新 |
 | nix-homebrew 上游默认 `patchBrew` | 适配 Ruby 路径与 `fiddle` gem 加载 | 保留，使用 Nix 提供的 Ruby 运行环境 |
 | nix-homebrew 上游默认 `patchBrew` | 嵌入版本号并调整 Git revision 缓存识别 | 保留，适配 Nix store 中的 Homebrew 源码 |
@@ -142,17 +140,14 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 ## 软件与组件取舍
 
-保留选型理由和历史排查结论；版本与兼容性结论以当时依赖和实机记录为准。README 可合并、精简重复说明，但不随意删除仍有用的取舍、验证与排查记录。
+保留当前软件的选型理由和仍有用的排查结论。README 可合并、精简重复说明；已弃用软件及停用方案的历史记录可删除。
 
 | 方案 | 取舍原因 | 当前选择／状态 |
 | --- | --- | --- |
-| Nix 实现与安装方式 | 2026 年 10 月将首次安装说明从 Determinate 安装器改为 Lix；历史未记录性能比较，不据此推断优劣 | 首次安装用 Lix 官方安装器，之后通过 `nix.package = pkgs.lix` 由 nix-darwin 统一管理版本与服务 |
+| Nix 实现与安装方式 | 使用 Lix，由 nix-darwin 统一管理版本与服务 | 首次安装用 Lix 官方安装器，之后通过 `nix.package = pkgs.lix` 管理 |
 | Homebrew 安装方式 | 手工运行官方安装脚本会在 `sudo darwin-rebuild switch` 之外留下一步不可复现的操作 | 用 `nix-homebrew` 声明式安装，brew 代码锁在 Nix store，激活时自动创建前缀 |
 | Rift 打包方式 | 不在 nixpkgs、也没有 Home Manager 模块；自行写 derivation 需跟随它的 release 产物与签名 | 用 Homebrew formula，二进制与 `Rift.app` 由上游维护 |
-| Tabularis 打包方式 | 避免维护 Nix 构建覆盖，原处理见补丁清单 | 使用官方 Homebrew cask 分发的上游 Apple Silicon DMG |
-| Nix 版 Godot Mono 的渲染崩溃（历史） | 2026-09-27 的 `c1c562c` 记录 Godot 4.7.2 初始化时触发 `SIGBUS`，栈涉及 MoltenVK／SPIRV-Cross；原文称“Forward+／Metal”，但 MoltenVK 是 Vulkan 到 Metal 的转换层，现有记录不足以确定当时选择的渲染驱动。说明于 10 月被删除 | 历史建议先用 Compatibility／OpenGL，并记录官方 4.7.2 .NET 包通过测试；本次未复现，不能推广到新版本。Godot／C# 工具链后来已移除，当前不安装 |
-
-Godot、.NET SDK、Roslyn、CSharpier 和 VS Code 属于曾安装后移除的工具，2026-11-12 的 `c01bc03` 明确移除了 C# 工具链；历史没有记录这次移除的具体取舍原因。当前编辑器为 Helix 与 Zed，不能据此认定它们已经替代了完整的 C# 开发环境。
+| Tabularis 打包方式 | 直接使用上游 macOS 发行包，避免维护 Nix 构建覆盖 | 使用官方 Homebrew cask 分发的上游 Apple Silicon DMG |
 
 ## 激活故障排查
 
@@ -166,9 +161,9 @@ Godot、.NET SDK、Roslyn、CSharpier 和 VS Code 属于曾安装后移除的工
 
 ## 迁移残留清理
 
-2026-11-17 已清理 Homebrew 安装包、已移除工具缓存、uv 无用缓存和 Nix 无引用对象，约 2 GB；两个空的 Keystone 启动项已备份，19 条失效应用登记已注销。详细记录位于 `~/Library/Application Support/Darwin Cleanup/`。
+2026-11-17 已清理 Homebrew 安装包、已移除工具缓存、uv 无用缓存和 Nix 无引用对象，约 2 GB；失效启动项已备份，19 条失效应用登记已注销。详细记录位于 `~/Library/Application Support/Darwin Cleanup/`。
 
-失效 Obsidian CLI 链接和旧 Lix 安装器启动项已移除，系统 generation 已保留最近三个。一次性清理脚本已删除；系统文件备份保留在 `/var/root/Library/Application Support/Darwin Cleanup/`。
+该次清理保留了最近三个系统 generation；系统文件备份位于 `/var/root/Library/Application Support/Darwin Cleanup/`。
 
 若 Nix GC 在旧 `.app` 上报告 `chmod ... Operation not permitted`，应检查 macOS「隐私与安全性 → 应用管理」权限。2026-11-17 的日志记录了 `SystemPolicyAppBundles` 拒绝 Nix 后台进程访问。可在获授权并重新启动的终端中执行 `sudo nix-store --store local --gc`。此权限与「完全磁盘访问权限」不同。不要直接修改或删除 Nix store 中的 `.app`，也不要移除其保护属性。
 
