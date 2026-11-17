@@ -67,6 +67,7 @@ in
       WindowManager.GloballyEnabled = false;
       dock.autohide = true;
       dock.autohide-delay = 0.5;
+      dock.tilesize = 48;
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
 

@@ -182,5 +182,20 @@
     };
   };
 
+  launchd.agents.shottr = {
+    enable = true;
+    domain = "gui";
+    config = {
+      ProgramArguments = [
+        "/usr/bin/open"
+        "-g"
+        "-a"
+        "/Applications/Shottr.app"
+      ];
+      RunAtLoad = true;
+      LimitLoadToSessionType = "Aqua";
+    };
+  };
+
   xdg.enable = true;
 }
