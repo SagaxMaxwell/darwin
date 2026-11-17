@@ -9,12 +9,15 @@
   imports = [
     ./helix.nix
     ./herdr.nix
-    ./omniwm.nix
+    ./rift.nix
     ./zed.nix
   ];
 
   home = {
     stateVersion = "26.11";
+
+    # Expose the bundled Ghostty CLI.
+    sessionPath = [ "/Applications/Ghostty.app/Contents/MacOS" ];
 
     packages = with pkgs; [
 
@@ -34,11 +37,6 @@
 
       # Development environments.
       rustup
-
-      # GUI apps.
-      blender
-      shottr
-      tabularis
     ];
   };
 
@@ -115,7 +113,9 @@
 
     ghostty = {
       enable = true;
-      package = pkgs.ghostty-bin;
+
+      # Install the app through Homebrew.
+      package = null;
 
       settings = {
         theme = "light:GitHub Light Default,dark:Atom One Dark";
@@ -142,6 +142,7 @@
 
     obsidian = {
       enable = true;
+      package = null;
       cli.enable = true;
 
       vaults.notes = {
@@ -171,9 +172,12 @@
 
     google-chrome = {
       enable = true;
+      package = null;
 
       extensions = [
-        "bgnkhhnnamicmpeenaelnjfhikgbkllg" # AdGuard AdBlocker
+
+        # AdGuard AdBlocker.
+        "bgnkhhnnamicmpeenaelnjfhikgbkllg"
       ];
     };
   };

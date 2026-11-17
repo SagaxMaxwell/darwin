@@ -9,7 +9,10 @@
   programs.zed-editor = {
     enable = true;
 
-    # Apply alpha once; nested surfaces stay clear.
+    # Install the app through Homebrew.
+    package = null;
+
+    # Apply opacity only to outer surfaces.
     userSettings.theme_overrides =
       lib.mapAttrs
         (

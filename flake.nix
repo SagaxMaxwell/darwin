@@ -24,6 +24,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Install Homebrew through Nix.
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
   outputs =
@@ -33,12 +35,13 @@
       home-manager,
       nix-index-database,
       obsidian-extensions,
+      nix-homebrew,
       ...
     }:
     let
       system = "aarch64-darwin";
 
-      # Shared background opacity and its #RRGGBBAA alpha.
+      # Share background opacity and hex alpha.
       opacity = 0.8;
       alpha = nixpkgs.lib.fixedWidthString 2 "0" (
         nixpkgs.lib.toLower (nixpkgs.lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
@@ -57,17 +60,12 @@
             nixpkgs.hostPlatform = system;
             nixpkgs.overlays = [
               obsidian-extensions.overlays.default
-              (final: prev: {
-
-                # Rust setup hook needs system zstd for zstd-sys.
-                tabularis = prev.tabularis.overrideAttrs (old: {
-                  buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
-                });
-              })
             ];
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }
           ./darwin.nix
+          nix-homebrew.darwinModules.nix-homebrew
+          ./homebrew.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.sharedModules = [

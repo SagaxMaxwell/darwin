@@ -50,7 +50,7 @@ in
 
   services.openssh.enable = true;
 
-  # Home Manager owns Zsh completion init.
+  # Let Home Manager initialize Zsh completions.
   programs.zsh.enableGlobalCompInit = false;
 
   system = {
@@ -63,17 +63,21 @@ in
         DSDontWriteNetworkStores = true;
         DSDontWriteUSBStores = true;
       };
+
       WindowManager.GloballyEnabled = false;
       dock.autohide = true;
       dock.autohide-delay = 0.5;
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
 
-      # Three-finger vertical swipes switch OmniWM workspaces.
+      # Use four fingers for Mission Control.
       trackpad.TrackpadThreeFingerVertSwipeGesture = 0;
       trackpad.TrackpadFourFingerVertSwipeGesture = 2;
       finder.FXPreferredViewStyle = "clmv";
       NSGlobalDomain.AppleShowAllExtensions = true;
+
+      # Keep the desktop menu bar visible.
+      NSGlobalDomain._HIHideMenuBar = false;
 
       # Follow system appearance.
       NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = true;
