@@ -5,7 +5,7 @@
     enable = true;
 
     settings = {
-      theme = "onedark";
+      theme = "base16_terminal";
 
       editor = {
         "true-color" = true;
