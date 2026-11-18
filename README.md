@@ -7,7 +7,7 @@
 | 文件 | 用途 |
 | --- | --- |
 | `flake.nix` / `flake.lock` | `MacBook` 入口、依赖锁定与共享主题参数 |
-| `darwin.nix` | 系统服务、macOS 默认项、字体与 Home Manager 接入 |
+| `darwin.nix` | 系统服务、macOS 默认项与 Home Manager 接入 |
 | `home.nix` | 用户软件、Shell、终端和应用开关 |
 | `helix.nix` / `zed.nix` | 编辑器与语言工具 |
 | `herdr.nix` | Herdr 及 Claude Code／Codex 会话钩子 |
@@ -45,15 +45,14 @@ brew bundle
 brew bundle check --no-upgrade
 ```
 
-首次安装 Lix 时使用官方安装器；已有 Nix/Lix 无需重复安装。Homebrew 不必手工安装，`nix-homebrew` 会在第一次激活时创建 `/opt/homebrew` 并写入 brew 启动器。新增文件需要先 `git add`，这样 Flake 才会将其纳入输入。`nix flake check --no-build` 不能替代实际构建和激活验证；`darwinConfigurations` 通过上面的显式求值命令检查。
+首次安装 Lix 时使用官方安装器；已有 Nix/Lix 无需重复安装，之后由 `nix.package = pkgs.lix` 管理。Homebrew 由 nix-homebrew 在首次激活时安装。新增文件需先 `git add` 才会纳入 Git Flake。`nix flake check --no-build` 不能替代系统入口求值、构建和激活验证。
 
 ## 当前约定
 
-- nixpkgs 提供命令行工具、语言工具、字体和 mpv；Homebrew 提供下表中的 macOS GUI 应用与 Rift；Home Manager 管理用户配置，nix-darwin 管理系统设置。
+- Home Manager 管理用户配置，nix-darwin 管理系统设置；软件来源与更新边界见下表。
 - Nix 使用锁定的 Flake 输入，关闭旧 channel 机制；激活后在新终端中不再引用不存在的 root channel 路径。
 - Zed、Herdr、Claude Code、Codex 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 菜单栏在普通桌面下不自动隐藏，由 `darwin.nix` 声明；全屏模式沿用系统默认行为。
-- Ghostty 沿用默认字体；自带 Terminal 的 Basic 配置使用 JetBrainsMono Nerd Font Mono，字体由 Nix 安装，Terminal 字体偏好通过应用原生设置保存。
 - Herdr 通过 `herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，用于记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
 - Obsidian 笔记库位于 `~/Documents/notes`；SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
@@ -101,10 +100,10 @@ Homebrew 本体由 nix-homebrew 固定在 Nix store，软件由 nix-darwin 按 B
 
 | 来源 | 软件／组件 | 理由 |
 | --- | --- | --- |
-| nixpkgs | Lix、Nix 工具、Git／gh、四种 Shell、终端 CLI、Herdr、Claude Code、Codex、Bun、uv、rustup、Helix、语言服务器／格式化器、WireGuard 工具、字体 | 统一锁定依赖，适合声明式环境；编辑器引用 Nix 语言工具的绝对路径 |
+| nixpkgs | Lix、Nix 工具、Git／gh、四种 Shell、终端 CLI、Herdr、Claude Code、Codex、Bun、uv、rustup、Helix、语言服务器／格式化器、WireGuard 工具 | 统一锁定依赖，适合声明式环境；编辑器引用 Nix 语言工具的绝对路径 |
 | nixpkgs | mpv | 同时作为 CLI 和播放器，保留 Home Manager 的配置与脚本集成 |
-| Homebrew 官方 cask | Blender、Ghostty、Google Chrome、Obsidian、SFM、Shottr、Tabularis、Zed | 使用上游 macOS 应用包，安装到 `/Applications`，适配应用更新与系统集成 |
-| Homebrew 上游 tap | `acsandmann/tap/rift` | 上游维护的 formula 提供 `Rift.app`、`rift` 和 `rift-cli` |
+| Homebrew 官方 cask | Blender、Ghostty、Google Chrome、Obsidian、SFM、Shottr、Tabularis、Zed | 使用上游 macOS 应用包，安装到 `/Applications`；Tabularis 使用上游 Apple Silicon DMG，避免维护 Nix 构建覆盖 |
+| Homebrew 上游 tap | `acsandmann/tap/rift` | 上游 formula 提供应用和 CLI；避免自行维护打包，服务由 Home Manager 管理 |
 | nix-homebrew | Homebrew 本体及运行环境 | 由 Nix 配置安装、由 `flake.lock` 固定源码；不使用独立安装脚本，也不把 `pkgs.brew` 当作完整的前缀安装管理器 |
 
 Ghostty、Chrome、Obsidian、Zed 的 Home Manager 模块使用 `package = null`，只管理设置，避免双重安装。Obsidian 插件、主题、CLI 开关及 Chrome 扩展声明保留；Zed 语言工具仍来自 Nix。Ghostty cask 不链接 CLI，因此 `home.sessionPath` 包含应用自带的 `Contents/MacOS` 目录；Obsidian、Zed、Blender 的 CLI 由 cask 提供。
@@ -133,27 +132,13 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 ## 配置验证（2026-11-18）
 
-- 已通过 `nixfmt --check *.nix`、`git diff --check`、`nix flake check --no-build`、完整系统入口求值及 `darwin-rebuild build --flake .#MacBook`。
-- 系统和 Home Manager 模块求值均为零 warning、零失败 assertion；生成的 Brewfile 包含 8 个 cask、2 个 formula、9 个 App Store 条目。Nix 包清单各自没有重复项；系统与用户清单共享 Bash、Zsh 和补全包的相同 store 路径，不重复存储。
-- 应用登录启动项统一由 Home Manager launchd agent 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 和 Shottr 使用 `open -g` 在后台打开，不抢占前台。没有 `KeepAlive` 或轮询任务；另有 Rift 服务和每周更新一次的 tealdeer 缓存任务。
-- Ghostty 配置通过应用自身校验；Helix 的 Nix／Python／TOML 语言工具可找到，Zed 的全部 7 个语言服务二进制均存在且可执行。Helix 25.07.1 缺少 TOML 缩进查询，属于上游限制。
-- Nix 系统闭包约 6.42 GB（十进制），包含开发工具、多 Shell、多编辑器、字体及依赖；属于完整个人工作环境，不是最小安装。此前从约 9.94 GB 降至 6.42 GB 的比较仅指 Nix 闭包，Homebrew／App Store 应用体积另计，不代表整机磁盘节省量。
-- 保留实际使用的多 Shell、多编辑器配置，不把不同使用场景误判为重复；移除 Herdr 仅供本项目使用的自定义集成选项层，直接声明两套上游钩子。
-- 未引入已废弃的 Homebrew Bundle lockfile 或无用途的实验开关；API、更新与信任策略见上文。
-- `stateVersion` 是兼容行为基线，不是软件版本，不能为了追新随意递增。软件版本由依赖更新决定。
+- 格式、Flake、完整系统求值及构建检查通过；系统与 Home Manager 无模块警告、无失败断言。
+- 系统和用户包清单内部无重复；共同引用的 Bash、Zsh 和补全包使用相同 store 路径，不重复存储。Brewfile 包含 8 个 cask、2 个 formula、9 个 App Store 条目。
+- Homebrew Shell 初始化仅由 nix-homebrew 提供；GUI 应用的 Home Manager 模块使用 `package = null`，避免与 Homebrew 双重安装。
+- 登录项统一由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；前者与 Shottr 使用 `open -g`，不抢占前台。五项均不常驻重启；另有 Rift 服务和每周 tealdeer 更新任务。
+- Ghostty 使用原生配置校验；编辑器语言服务路径和 Herdr 上游钩子单独检查。未新增自定义激活脚本、轮询任务或源码补丁。
 
-构建通过不等于应用交互已全部验证：Homebrew cask 在 `switch` 时安装，辅助功能需手动授权。Rift 已激活，权限、工作区 IPC 及表中列宽／手势设置已验证；四个工作区均为 `scrolling`，再次重启后的行为仍待确认。旧 Nix generation 保留旧包供回滚，按需垃圾回收。
-
-## 软件与组件取舍
-
-保留当前软件的选型理由和仍有用的排查结论。README 可合并、精简重复说明；已弃用软件及停用方案的历史记录可删除。
-
-| 方案 | 取舍原因 | 当前选择／状态 |
-| --- | --- | --- |
-| Nix 实现与安装方式 | 使用 Lix，由 nix-darwin 统一管理版本与服务 | 首次安装用 Lix 官方安装器，之后通过 `nix.package = pkgs.lix` 管理 |
-| Homebrew 安装方式 | 手工运行官方安装脚本会在 `sudo darwin-rebuild switch` 之外留下一步不可复现的操作 | 用 `nix-homebrew` 声明式安装，brew 代码锁在 Nix store，激活时自动创建前缀 |
-| Rift 打包方式 | 不在 nixpkgs、也没有 Home Manager 模块；自行写 derivation 需跟随它的 release 产物与签名 | 用 Homebrew formula，二进制与 `Rift.app` 由上游维护 |
-| Tabularis 打包方式 | 直接使用上游 macOS 发行包，避免维护 Nix 构建覆盖 | 使用官方 Homebrew cask 分发的上游 Apple Silicon DMG |
+这是包含多 Shell、多编辑器和开发工具的个人工作环境，不是最小安装。`stateVersion` 是兼容基线，不随版本追新。构建验证不等于实际激活或所有应用交互测试；Homebrew 安装和权限检查发生在 `switch` 阶段。本次检查不执行 `switch`，也不更新锁定依赖。
 
 ## 激活故障排查
 
@@ -163,13 +148,11 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 成功后，`~/.config/rift/config.toml` 应链接到 Nix 生成的配置，`launchctl print gui/501/git.acsandmann.rift` 应包含 `--config`，`/opt/homebrew/bin/rift-cli query workspace-layout` 应显示 `scrolling`。只完成构建或 Homebrew 安装不代表系统激活已完成。
 
-若重启后恢复为 `traditional`，且日志出现 `Another Rift instance is already running`，检查重复登录项。此前 Rift.app 抢先启动并读取旧 `config.toml`（传统布局、默认关闭管理），阻止加载独立 `nix.toml` 的服务启动。本机已移除重复登录项，所有入口改读标准配置；旧文件备份为 `~/.config/rift/config.toml.hm-backup`。自动启动只交给 Home Manager。单独激活用户配置后，仍应执行 `sudo darwin-rebuild switch --flake .#MacBook` 同步系统 generation。
+若重启后恢复为 `traditional`，且日志出现 `Another Rift instance is already running`，检查重复登录项和读取的配置路径。此前问题由 Rift.app 抢先读取旧配置造成；现在所有入口使用标准 `config.toml`，旧备份位于 `~/.config/rift/config.toml.hm-backup`。自动启动只交给 Home Manager；单独激活用户配置后，仍需执行系统 `switch` 同步 generation。
 
 ## 迁移残留清理
 
-2026-11-17 已清理 Homebrew 安装包、已移除工具缓存、uv 无用缓存和 Nix 无引用对象，约 2 GB；失效启动项已备份，19 条失效应用登记已注销。详细记录位于 `~/Library/Application Support/Darwin Cleanup/`。
-
-该次清理保留了最近三个系统 generation；系统文件备份位于 `/var/root/Library/Application Support/Darwin Cleanup/`。
+2026-11-17 清理迁移残留约 2 GB、注销 19 条失效应用登记，并保留最近三个系统 generation。记录和失效启动项备份位于 `~/Library/Application Support/Darwin Cleanup/`，系统文件备份位于 `/var/root/Library/Application Support/Darwin Cleanup/`。旧 generation 保留旧包供回滚，按需通过 Nix GC 回收。
 
 若 Nix GC 在旧 `.app` 上报告 `chmod ... Operation not permitted`，应检查 macOS「隐私与安全性 → 应用管理」权限。2026-11-17 的日志记录了 `SystemPolicyAppBundles` 拒绝 Nix 后台进程访问。可在获授权并重新启动的终端中执行 `sudo nix-store --store local --gc`。此权限与「完全磁盘访问权限」不同。不要直接修改或删除 Nix store 中的 `.app`，也不要移除其保护属性。
 

@@ -11,6 +11,8 @@ let
   userName = "maxwellsagax";
 in
 {
+  imports = [ ./fonts.nix ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -38,15 +40,6 @@ in
 
   # Allow unfree packages.
   nixpkgs.config.allowUnfree = true;
-
-  fonts.packages = with pkgs; [
-    source-han-sans
-    source-han-serif
-    source-han-mono
-    lxgw-wenkai
-    ibm-plex
-    nerd-fonts.jetbrains-mono
-  ];
 
   networking = {
     inherit computerName hostName;

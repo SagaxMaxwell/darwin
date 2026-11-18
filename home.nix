@@ -119,7 +119,7 @@
       package = null;
 
       settings = {
-        theme = "light:GitHub Light Default,dark:Atom One Dark";
+        theme = "light:TokyoNight Storm,dark:IR Black";
         background-opacity = opacity;
         background-opacity-cells = true;
         background-blur = true;

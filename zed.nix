@@ -12,6 +12,20 @@
     # Install the app through Homebrew.
     package = null;
 
+    userSettings.theme = {
+      mode = "system";
+      light = "Tokyo Night Storm";
+      dark = "IR Black";
+    };
+
+    userSettings.terminal = {
+      font_family = "Cascadia Code NF";
+      font_fallbacks = [
+        "Maple Mono NF"
+        "Maple Mono NF CN"
+      ];
+    };
+
     # Apply opacity only to outer surfaces.
     userSettings.theme_overrides =
       lib.mapAttrs
@@ -36,10 +50,12 @@
           ] (_: "#00000000")
         )
         {
-          "One Light" = "#fafafa${alpha}";
-          "One Dark" = "#282c33${alpha}";
+          "Tokyo Night Storm" = "#24283b${alpha}";
+          "IR Black" = "#000000${alpha}";
         };
     userSettings.auto_install_extensions = {
+      tokyo-night = true;
+      ir-black = true;
       nix = true;
       oxc = true;
       tombi = true;

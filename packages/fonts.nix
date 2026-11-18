@@ -1,0 +1,186 @@
+{ lib, pkgs }:
+
+let
+
+  # Use the standard font installer.
+  mkFont =
+    {
+      pname,
+      version,
+      sources,
+      license ? lib.licenses.ofl,
+    }:
+    pkgs.stdenvNoCC.mkDerivation {
+      inherit pname version;
+      src = pkgs.linkFarm "${pname}-sources" (
+        map (source: {
+          inherit (source) name;
+          path = pkgs.fetchurl source;
+        }) sources
+      );
+      nativeBuildInputs = [ pkgs.installFonts ];
+      dontBuild = true;
+      meta = {
+        inherit license;
+        platforms = lib.platforms.all;
+      };
+    };
+in
+{
+  maple-mono-nf = pkgs.stdenvNoCC.mkDerivation {
+    pname = "maple-mono-nf";
+    version = "8.0-beta.3";
+    src = pkgs.fetchurl {
+      url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-VF.zip";
+      hash = "sha256-uzydYW868FVeuC6/wC28FqssWdLNVHHS+BXFU6+YPUE=";
+    };
+    nativeBuildInputs = [
+      pkgs.unzip
+      pkgs.installFonts
+    ];
+    sourceRoot = ".";
+    dontBuild = true;
+    meta = {
+      license = lib.licenses.ofl;
+      platforms = lib.platforms.all;
+    };
+  };
+
+  maple-mono-nf-cn = pkgs.stdenvNoCC.mkDerivation {
+    pname = "maple-mono-nf-cn";
+    version = "8.0-beta.3";
+    src = pkgs.fetchurl {
+      url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-CN-VF.zip";
+      hash = "sha256-BVd6/BuJZpw2Qr8OK+dkpZGWeE4ODqfkRPcDwpUPpps=";
+    };
+    nativeBuildInputs = [
+      pkgs.unzip
+      pkgs.installFonts
+    ];
+    sourceRoot = ".";
+    dontBuild = true;
+    meta = {
+      license = lib.licenses.ofl;
+      platforms = lib.platforms.all;
+    };
+  };
+
+  zhuque-fangsong = pkgs.stdenvNoCC.mkDerivation {
+    pname = "zhuque-fangsong";
+    version = "0.212";
+    src = pkgs.fetchurl {
+      url = "https://github.com/TrionesType/zhuque/releases/download/v0.212/ZhuqueFangsong-v0.212.zip";
+      hash = "sha256-u4tmGnZD0ilqctnRBTCgCUlBnE5Sf7YXg/c8K6GowGI=";
+    };
+    nativeBuildInputs = [
+      pkgs.unzip
+      pkgs.installFonts
+    ];
+    sourceRoot = ".";
+    dontBuild = true;
+    meta = {
+      license = lib.licenses.ofl;
+      platforms = lib.platforms.all;
+    };
+  };
+
+  alimama-fangyuan = mkFont {
+    pname = "alimama-fangyuan";
+    version = "1.004-beta";
+    license = lib.licenses.unfree;
+    sources = [
+      {
+        name = "AlimamaFangYuanTiVF.ttf";
+        url = "https://fonts.alibabadesign.com/AlimamaFangYuanTiVF/AlimamaFangYuanTiVF-Thin/AlimamaFangYuanTiVF-Thin.ttf";
+        hash = "sha256-xz1Ubip19BhJRPNyzdQWd5mf591T/GbGkNxfAfmQAs8=";
+        curlOptsList = [
+          "--referer"
+          "https://www.alibabafonts.com/"
+        ];
+      }
+    ];
+  };
+
+  amstelvar = mkFont {
+    pname = "amstelvar";
+    version = "unstable-f44f670";
+    sources = [
+      {
+        name = "amstelvar-1.ttf";
+        url = "https://raw.githubusercontent.com/googlefonts/amstelvar-beta/f44f670affec72a37c69a1bf103bddc044020f49/fonts/Amstelvar-Italic%5BGRAD%2CYOPQ%2CYTAS%2CYTDE%2CYTFI%2CYTLC%2CYTUC%2Cwdth%2Cwght%2Copsz%5D.ttf";
+        hash = "sha256-5BDITis9IQt1JKCP4WpFgkcyFpEIao1O8/sCT9RKsZI=";
+      }
+      {
+        name = "amstelvar-2.ttf";
+        url = "https://raw.githubusercontent.com/googlefonts/amstelvar-beta/f44f670affec72a37c69a1bf103bddc044020f49/fonts/Amstelvar-Roman%5BGRAD%2CXOPQ%2CXTRA%2CYOPQ%2CYTAS%2CYTDE%2CYTFI%2CYTLC%2CYTUC%2Cwdth%2Cwght%2Copsz%5D.ttf";
+        hash = "sha256-WwcI+7sGnhJ65i0Be9A7653Z3WG8B7dI9lCKf82QFmI=";
+      }
+    ];
+  };
+
+  google-sans-flex = mkFont {
+    pname = "google-sans-flex";
+    version = "unstable-7af0d90";
+    sources = [
+      {
+        name = "google-sans-flex-1.ttf";
+        url = "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/googlesansflex/GoogleSansFlex%5BROND%2Copsz%2Cslnt%2Cwdth%2Cwght%5D.ttf";
+        hash = "sha256-qax3B5iFfV6KxZPO1Csi5Ap8CM7Jgxn5Kw7Mwng6d7o=";
+      }
+    ];
+  };
+
+  noto-colrv1 = mkFont {
+    pname = "noto-colrv1";
+    version = "2.051";
+    sources = [
+      {
+        name = "noto-colrv1-1.ttf";
+        url = "https://raw.githubusercontent.com/googlefonts/noto-emoji/v2.051/fonts/Noto-COLRv1.ttf";
+        hash = "sha256-CuV/5YZFY4UjujXziNk3OdKSU5qay4TfVwDIGx4aKNI=";
+      }
+    ];
+  };
+
+  openmoji-colrv1 = mkFont {
+    pname = "openmoji-colrv1";
+    version = "17.0.0";
+    license = lib.licenses.cc-by-sa-40;
+    sources = [
+      {
+        name = "openmoji-colrv1-1.ttf";
+        url = "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/font/OpenMoji-color-glyf_colr_1/OpenMoji-color-glyf_colr_1.ttf";
+        hash = "sha256-tshuPZX1V9rpp9WamTtabyJ0xAHW2XV0fUNhLG+rI20=";
+      }
+    ];
+  };
+
+  chiron-sung = mkFont {
+    pname = "chiron-sung";
+    version = "1.024";
+    sources = [
+      {
+        name = "ChironSungHKVF.otf";
+        url = "https://raw.githubusercontent.com/chiron-fonts/chiron-sung-hk/v1.024/VAR_OTF/ChironSungHKVF.otf";
+        hash = "sha256-DREqGueO02ZyVhcTFzrXAYCqx23pnnXRUXhI5e9+pjs=";
+      }
+      {
+        name = "ChironSungHKItVF.otf";
+        url = "https://raw.githubusercontent.com/chiron-fonts/chiron-sung-hk/v1.024/VAR_OTF/ChironSungHKItVF.otf";
+        hash = "sha256-9Q8PTBrPSA2arAzlwi/uXhpOv+QBZ8IDgoYlytoID4Y=";
+      }
+    ];
+  };
+
+  wenyuan-rounded = mkFont {
+    pname = "wenyuan-rounded";
+    version = "1.110";
+    sources = [
+      {
+        name = "WenYuanRoundedSCVF.otf";
+        url = "https://github.com/takushun-wu/WenYuanFonts/releases/download/v1.110/WenYuanRoundedSCVF.otf";
+        hash = "sha256-bpcJielK1qyvpl6PJbHoB2c28qtpt09L80mE7CT85H8=";
+      }
+    ];
+  };
+}
