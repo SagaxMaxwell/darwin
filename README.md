@@ -2,19 +2,24 @@
 
 面向 Apple Silicon 的 macOS 配置，使用 nix-darwin、Home Manager、Lix 和 Rift。
 
-## 文件
+## 结构
 
 | 文件 | 用途 |
 | --- | --- |
 | `flake.nix` / `flake.lock` | `MacBook` 入口、依赖锁定与共享主题参数 |
 | `darwin.nix` | 系统服务、macOS 默认项与 Home Manager 接入 |
-| `home.nix` | 用户软件、Shell、终端和应用开关 |
-| `helix.nix` / `zed.nix` | 编辑器与语言工具 |
-| `herdr.nix` | Herdr 及 Claude Code／Codex 会话钩子 |
-| `rift.nix` | Rift 原生 TOML 配置与 launchd 常驻服务 |
-| `homebrew.nix` | nix-homebrew 安装 Homebrew 本体，nix-darwin 声明软件清单 |
+| `home.nix` | Home Manager 入口、应用模块导入与基础 XDG 设置 |
+| `apps/terminal.nix` | Ghostty、Shell 和终端工具 |
+| `apps/development.nix` | Git、开发工具、AI 工具与 Herdr 模块接入 |
+| `apps/desktop.nix` | 浏览器、播放器、Obsidian、登录应用与 Rift 模块接入 |
+| `editor/helix.nix` / `editor/zed.nix` | 编辑器与语言工具 |
+| `apps/herdr.nix` | Herdr 及 Claude Code／Codex 会话钩子 |
+| `apps/rift.nix` | Rift 原生 TOML 配置与 launchd 常驻服务 |
+| `system/homebrew.nix` | nix-homebrew 安装 Homebrew 本体，nix-darwin 声明软件清单 |
 
-配置保持单一来源：系统设置在 `darwin.nix`，用户设置在 `home.nix` 或对应应用模块；`flake.nix` 的 `opacity = 0.8`（80% 不透明）用于 Ghostty 背景、Zed 指定主题背景和 mpv 视频外空白区域，不代表整个桌面或所有窗口的透明度。
+目录沿用 `~/nixos` 的分类：`system/` 由 `darwin.nix` 和 `flake.nix` 接入；`home.nix` 导入 `apps/` 和 `editor/`；`packages/` 定义自定义包。应用设置与服务集中在对应模块，Homebrew 保留原导入顺序和 PATH 优先级。
+
+`flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域。Ghostty、Zed 启用背景模糊；Obsidian 使用原生半透明和 Border 默认透明程度，无自定义 CSS。效果因应用而异，不是全局窗口透明度。
 
 ## 使用
 
@@ -34,32 +39,33 @@ darwin-rebuild build --flake .#MacBook
 # Build and activate the system.
 sudo darwin-rebuild switch --flake .#MacBook
 
-# Update locked inputs, then rebuild and activate.
+# Update inputs, then rebuild and activate.
 nix flake update
 
-# Update apps as your user in a new terminal.
+# Update apps without sudo in a new terminal.
 brew update
 brew bundle
 
-# Check installed apps without requiring upgrades.
+# Check apps without upgrades.
 brew bundle check --no-upgrade
 ```
 
-首次安装 Lix 时使用官方安装器；已有 Nix/Lix 无需重复安装，之后由 `nix.package = pkgs.lix` 管理。Homebrew 由 nix-homebrew 在首次激活时安装。新增文件需先 `git add` 才会纳入 Git Flake。`nix flake check --no-build` 不能替代系统入口求值、构建和激活验证。
+首次安装 Lix 使用官方安装器，已有 Nix/Lix 无需重装；之后由 `nix.package = pkgs.lix` 管理。nix-homebrew 在首次激活时安装 Homebrew。新增文件需先 `git add` 才会纳入 Git Flake。`--no-build` 检查不能替代系统入口求值、构建和激活验证。
 
 ## 当前约定
 
-- Home Manager 管理用户配置，nix-darwin 管理系统设置；软件来源与更新边界见下表。
+- Home Manager 管理用户配置，nix-darwin 管理系统设置；软件来源与更新边界见后文。
 - Nix 使用锁定的 Flake 输入，关闭旧 channel 机制；激活后在新终端中不再引用不存在的 root channel 路径。
 - Zed、Herdr、Claude Code、Codex 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 菜单栏在普通桌面下不自动隐藏，由 `darwin.nix` 声明；全屏模式沿用系统默认行为。
-- Herdr 通过 `herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，用于记录和恢复 Agent 会话。
+- 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设数值强度。
+- Herdr 通过 `apps/herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，用于记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
 - Obsidian 笔记库位于 `~/Documents/notes`；SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
 ## Rift 设置
 
-布局、快捷键与服务统一在 `rift.nix` 声明。Home Manager 生成 `~/.config/rift/config.toml`，服务通过原生 `--config` 加载，直接打开应用也使用同一配置；无需源码补丁。表中的“默认”以 Rift 0.8.3 为基准。
+`apps/rift.nix` 统一声明布局、快捷键与服务。Home Manager 生成 `~/.config/rift/config.toml`，服务通过原生 `--config` 加载，直接打开应用也读取同一配置，无需源码补丁。下表默认值以 Rift 0.8.3 为准。
 
 | 设置 | 当前值／行为 | 与默认的关系 |
 | --- | --- | --- |
@@ -84,9 +90,9 @@ brew bundle check --no-upgrade
 
 | 操作 | 命令／方式 |
 | --- | --- |
-| 持久修改并应用 | 修改 `rift.nix`，执行 `sudo darwin-rebuild switch --flake .#MacBook`；配置变化会触发 Home Manager 重启 Rift |
+| 持久修改并应用 | 修改 `apps/rift.nix`，执行 `sudo darwin-rebuild switch --flake .#MacBook`；配置变化会触发 Home Manager 重启 Rift |
 | 循环切换当前列宽 | `rift-cli execute layout switch-preset-column-width` |
-| 打开设置窗口 | `/opt/homebrew/bin/rift-cli settings`；配置位于只读 Nix store，持久修改应在 `rift.nix` 完成 |
+| 打开设置窗口 | `/opt/homebrew/bin/rift-cli settings`；配置位于只读 Nix store，持久修改应在 `apps/rift.nix` 完成 |
 | 查看工作区布局 | `/opt/homebrew/bin/rift-cli query workspace-layout` |
 | 手动重启服务 | 普通用户执行 `launchctl kickstart -k gui/501/git.acsandmann.rift`；本机 UID 为 501，兼容 Nushell，不加 `sudo` |
 
@@ -114,11 +120,11 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 普通 `darwin-rebuild switch` 采用模块默认值：`autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，只安装缺少的软件。更新时执行上面的 `brew update` 和 `brew bundle`；标记为 `auto_updates` 的 cask 通常由应用自行更新，不启用全局 greedy 升级。Homebrew 的常规缓存清理保持默认；移除声明不会自动卸载软件，可先用 `brew bundle cleanup` 查看待移除列表，再决定是否执行带 `--force` 的清理。不启用会删除应用数据的 `zap`。
 
-`flake.lock` 固定 Nix 输入与 Homebrew 本体，不固定通过 API／可变 tap 获取的 cask 和 formula 版本；Nix 回滚也不会回滚 Homebrew 应用版本。两个来源的更新边界应分别理解。
+`flake.lock` 固定 Nix 输入与 Homebrew 本体，不固定 API／可变 tap 获取的 cask 和 formula 版本；Nix 回滚不会回滚 Homebrew 应用。
 
 ## 补丁清单
 
-检查范围为本仓库及本次直接涉及的上游打包实现；不是整个 nixpkgs 依赖图的补丁审计。
+范围限于本仓库与直接检查的上游打包实现，不涵盖整个 nixpkgs 依赖图。
 
 | 位置／来源 | 补丁或兼容处理 | 处理结果 |
 | --- | --- | --- |
@@ -133,12 +139,13 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 ## 配置验证（2026-11-18）
 
 - 格式、Flake、完整系统求值及构建检查通过；系统与 Home Manager 无模块警告、无失败断言。
+- 目录整理前后，系统和用户软件集合、Brewfile、launchd 服务及应用配置内容一致；保留 Homebrew 的 PATH 优先级。模块拆分改变包列表顺序，因此部分生成路径发生变化。随后另行启用 Obsidian 原生半透明，透明程度沿用主题默认值。
 - 系统和用户包清单内部无重复；共同引用的 Bash、Zsh 和补全包使用相同 store 路径，不重复存储。Brewfile 包含 8 个 cask、2 个 formula、9 个 App Store 条目。
 - Homebrew Shell 初始化仅由 nix-homebrew 提供；GUI 应用的 Home Manager 模块使用 `package = null`，避免与 Homebrew 双重安装。
 - 登录项统一由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；前者与 Shottr 使用 `open -g`，不抢占前台。五项均不常驻重启；另有 Rift 服务和每周 tealdeer 更新任务。
 - Ghostty 使用原生配置校验；编辑器语言服务路径和 Herdr 上游钩子单独检查。未新增自定义激活脚本、轮询任务或源码补丁。
 
-这是包含多 Shell、多编辑器和开发工具的个人工作环境，不是最小安装。`stateVersion` 是兼容基线，不随版本追新。构建验证不等于实际激活或所有应用交互测试；Homebrew 安装和权限检查发生在 `switch` 阶段。本次检查不执行 `switch`，也不更新锁定依赖。
+这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。上述验证未执行 `switch` 或更新锁定依赖。
 
 ## 激活故障排查
 

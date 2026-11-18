@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 
 let
-  extraFonts = import ./packages/fonts.nix { inherit lib pkgs; };
+  extraFonts = import ../packages/fonts.nix { inherit lib pkgs; };
 in
 {
   fonts.packages =

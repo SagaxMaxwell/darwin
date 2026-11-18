@@ -21,13 +21,13 @@ let
           ];
           max_column_width_ratio = 0.9;
 
-          # Apply the default width to new columns.
+          # Use the default column width.
           preserve_window_sizes = false;
         };
       };
     };
 
-    # Configure desktop shortcuts.
+    # Desktop shortcuts.
     modifier_combinations = {
       "comb1" = "Alt + Shift";
     };
@@ -120,15 +120,15 @@ let
 in
 {
 
-  # Use the same config for every launch method.
+  # Share the config across launch methods.
   xdg.configFile."rift/config.toml".source = configFile;
 
-  # Manage Rift with Home Manager.
+  # Manage the Rift service.
   launchd.agents.rift = {
     enable = true;
     restartTriggers = [ configFile ];
 
-    # Run in the graphical login session.
+    # Run at graphical login.
     domain = "gui";
 
     config = {

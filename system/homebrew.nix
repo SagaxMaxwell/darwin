@@ -7,7 +7,7 @@
     enable = true;
     user = config.system.primaryUser;
 
-    # Disable analytics for all brew commands.
+    # Disable Homebrew analytics.
     extraEnv.HOMEBREW_NO_ANALYTICS = "1";
   };
 
@@ -31,7 +31,7 @@
 
     brews = [
 
-      # Manage the Rift service only in rift.nix.
+      # Manage the service in apps/rift.nix.
       "acsandmann/tap/rift"
       "mas"
     ];
@@ -48,7 +48,7 @@
     ];
   };
 
-  # Expose Homebrew commands to Nushell too.
+  # Include Homebrew in the system PATH.
   environment.systemPath = [
     "${config.homebrew.prefix}/bin"
     "${config.homebrew.prefix}/sbin"

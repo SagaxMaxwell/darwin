@@ -6,7 +6,7 @@ let
   # Link upstream hook scripts.
   script = agent: "${cfg.package.src}/src/integration/assets/${agent}/herdr-agent-state.sh";
 
-  # Report agent sessions to Herdr.
+  # Report sessions to Herdr.
   hook = path: {
     type = "command";
     command = "bash '${config.home.homeDirectory}/${path}' session";

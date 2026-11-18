@@ -26,7 +26,7 @@
       ];
     };
 
-    # Apply opacity only to outer surfaces.
+    # Set outer surface opacity.
     userSettings.theme_overrides =
       lib.mapAttrs
         (

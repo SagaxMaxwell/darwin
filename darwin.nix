@@ -11,7 +11,7 @@ let
   userName = "maxwellsagax";
 in
 {
-  imports = [ ./fonts.nix ];
+  imports = [ ./system/fonts.nix ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -47,7 +47,7 @@ in
 
   services.openssh.enable = true;
 
-  # Let Home Manager initialize Zsh completions.
+  # Initialize completions through Home Manager.
   programs.zsh.enableGlobalCompInit = false;
 
   system = {
@@ -62,6 +62,7 @@ in
       };
 
       WindowManager.GloballyEnabled = false;
+      dock.orientation = "right";
       dock.autohide = true;
       dock.autohide-delay = 0.5;
       dock.tilesize = 48;
@@ -77,7 +78,10 @@ in
       # Keep the desktop menu bar visible.
       NSGlobalDomain._HIHideMenuBar = false;
 
-      # Follow system appearance.
+      # Preserve system transparency.
+      universalaccess.reduceTransparency = false;
+
+      # Switch appearance automatically.
       NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = true;
     };
   };

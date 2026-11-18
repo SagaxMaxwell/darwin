@@ -65,7 +65,7 @@
           }
           ./darwin.nix
           nix-homebrew.darwinModules.nix-homebrew
-          ./homebrew.nix
+          ./system/homebrew.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.sharedModules = [
