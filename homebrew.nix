@@ -15,10 +15,26 @@
     enable = true;
     global.brewfile = true;
 
+    masApps = {
+      "AdGuard Mini" = 1440147259;
+      Developer = 640199958;
+      GarageBand = 682658836;
+      iMovie = 408981434;
+      Keynote = 361285480;
+      Numbers = 361304891;
+      Pages = 361309726;
+      "Quantumult X" = 1443988620;
+      "Screens 5" = 1663047912;
+    };
+
     taps = [ "acsandmann/tap" ];
 
-    # Manage the Rift service only in rift.nix.
-    brews = [ "acsandmann/tap/rift" ];
+    brews = [
+
+      # Manage the Rift service only in rift.nix.
+      "acsandmann/tap/rift"
+      "mas"
+    ];
 
     casks = [
       "blender"
@@ -26,6 +42,7 @@
       "google-chrome"
       "obsidian"
       "shottr"
+      "sfm"
       "tabularis"
       "zed"
     ];

@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   opacity,
   alpha,
@@ -182,20 +183,36 @@
     };
   };
 
-  launchd.agents.shottr = {
-    enable = true;
-    domain = "gui";
-    config = {
-      ProgramArguments = [
-        "/usr/bin/open"
-        "-g"
-        "-a"
-        "/Applications/Shottr.app"
-      ];
-      RunAtLoad = true;
-      LimitLoadToSessionType = "Aqua";
-    };
-  };
+  launchd.agents =
+    lib.mapAttrs
+      (_: args: {
+        enable = true;
+        domain = "gui";
+        config = {
+          ProgramArguments = [ "/usr/bin/open" ] ++ args;
+          RunAtLoad = true;
+          LimitLoadToSessionType = "Aqua";
+        };
+      })
+      {
+        adguard-mini = [
+          "-a"
+          "/Applications/AdGuard Mini.app"
+        ];
+        ghostty = [
+          "-a"
+          "/Applications/Ghostty.app"
+        ];
+        quantumult-x = [
+          "-a"
+          "/Applications/Quantumult X.app"
+        ];
+        shottr = [
+          "-g"
+          "-a"
+          "/Applications/Shottr.app"
+        ];
+      };
 
   xdg.enable = true;
 }

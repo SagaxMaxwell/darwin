@@ -4,13 +4,7 @@ let
   settings = {
     settings = {
       default_disable = false;
-      hot_reload = true;
       animate = true;
-      animation_duration = 0.3;
-      animation_fps = 100.0;
-      focus_follows_mouse = true;
-      mouse_follows_focus = true;
-      mouse_hides_on_focus = true;
 
       layout = {
         mode = "scrolling";
@@ -29,18 +23,8 @@ let
 
           # Apply the default width to new columns.
           preserve_window_sizes = false;
-
         };
       };
-    };
-
-    virtual_workspaces = {
-      mode = "per_display";
-      default_workspace_count = 4;
-      workspace_names = [
-        "first"
-        "second"
-      ];
     };
 
     # Configure desktop shortcuts.
@@ -67,6 +51,7 @@ let
       "Alt + Enter" = {
         "exec" = [
           "/usr/bin/open"
+          "-n"
           "-a"
           "/Applications/Ghostty.app"
         ];

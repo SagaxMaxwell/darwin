@@ -26,6 +26,10 @@ in
 
   nix = {
     package = pkgs.lix;
+
+    # Use locked Flake inputs instead of channels.
+    channel.enable = false;
+
     settings.experimental-features = [
       "nix-command"
       "flakes"
