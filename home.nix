@@ -196,6 +196,7 @@
       })
       {
         adguard-mini = [
+          "-g"
           "-a"
           "/Applications/AdGuard Mini.app"
         ];
