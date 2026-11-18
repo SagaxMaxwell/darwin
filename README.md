@@ -135,7 +135,7 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 - 已通过 `nixfmt --check *.nix`、`git diff --check`、`nix flake check --no-build`、完整系统入口求值及 `darwin-rebuild build --flake .#MacBook`。
 - 系统和 Home Manager 模块求值均为零 warning、零失败 assertion；生成的 Brewfile 包含 8 个 cask、2 个 formula、9 个 App Store 条目。Nix 包清单各自没有重复项；系统与用户清单共享 Bash、Zsh 和补全包的相同 store 路径，不重复存储。
-- 已解析全部 6 个用户 launchd plist，无重复 Label：4 个应用登录启动项、Rift 服务和每周更新一次的 tealdeer 缓存任务。登录启动项没有 `KeepAlive` 或轮询任务。
+- 应用登录启动项统一由 Home Manager launchd agent 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；没有 `KeepAlive` 或轮询任务。另有 Rift 服务和每周更新一次的 tealdeer 缓存任务。
 - Ghostty 配置通过应用自身校验；Helix 的 Nix／Python／TOML 语言工具可找到，Zed 的全部 7 个语言服务二进制均存在且可执行。Helix 25.07.1 缺少 TOML 缩进查询，属于上游限制。
 - Nix 系统闭包约 6.42 GB（十进制），包含开发工具、多 Shell、多编辑器、字体及依赖；属于完整个人工作环境，不是最小安装。此前从约 9.94 GB 降至 6.42 GB 的比较仅指 Nix 闭包，Homebrew／App Store 应用体积另计，不代表整机磁盘节省量。
 - 保留实际使用的多 Shell、多编辑器配置，不把不同使用场景误判为重复；移除 Herdr 仅供本项目使用的自定义集成选项层，直接声明两套上游钩子。

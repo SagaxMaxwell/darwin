@@ -199,6 +199,10 @@
           "-a"
           "/Applications/AdGuard Mini.app"
         ];
+        chrome = [
+          "-a"
+          "/Applications/Google Chrome.app"
+        ];
         ghostty = [
           "-a"
           "/Applications/Ghostty.app"
