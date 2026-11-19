@@ -4,7 +4,7 @@ let
   cfg = config.programs.herdr;
 
   # Link upstream hook scripts.
-  script = agent: "${cfg.package.src}/src/integration/assets/${agent}/herdr-agent-state.sh";
+  script = agent: "${cfg.package}/share/herdr/integrations/${agent}/herdr-agent-state.sh";
 
   # Report sessions to Herdr.
   hook = path: {

@@ -19,7 +19,11 @@
 
 目录沿用 `~/nixos` 的分类：`system/` 由 `darwin.nix` 和 `flake.nix` 接入；`home.nix` 导入 `apps/` 和 `editor/`；`packages/` 定义自定义包。应用设置与服务集中在对应模块，Homebrew 保留原导入顺序和 PATH 优先级。
 
-`flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域。Ghostty、Zed 启用背景模糊；Obsidian 使用原生半透明和 Border 默认透明程度，无自定义 CSS。效果因应用而异，不是全局窗口透明度。
+Ghostty、Zed 随系统外观切换：浅色外观使用 GitHub Dark Dimmed（仍是深色主题），深色外观使用 IR Black；Zed 自动安装对应扩展。Helix 使用 `base16_terminal` 跟随终端配色。
+
+`flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域；Ghostty、Zed 开启模糊。这不是全局窗口透明度，各应用效果不同。
+
+Obsidian 开启原生半透明；Nix 通过 Style Settings 配置 Border，浅色、深色均启用卡片布局，左右侧栏和正文面板透明，底层沿用默认值（浅色 `0.8`、深色 `0.6`）。无自定义 CSS；堆叠标签页、弹窗等遵循主题规则。本机仍无法透出桌面，见“已知限制”。
 
 ## 使用
 
@@ -59,7 +63,7 @@ brew bundle check --no-upgrade
 - Zed、Herdr、Claude Code、Codex 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 菜单栏在普通桌面下不自动隐藏，由 `darwin.nix` 声明；全屏模式沿用系统默认行为。
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设数值强度。
-- Herdr 通过 `apps/herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，用于记录和恢复 Agent 会话。
+- Herdr 通过 `apps/herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，使用包内上游脚本记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
 - Obsidian 笔记库位于 `~/Documents/notes`；SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
@@ -102,7 +106,7 @@ Rift 通过 Homebrew formula `acsandmann/tap/rift` 安装，常驻服务由 Home
 
 ## 软件来源与更新策略
 
-Homebrew 本体由 nix-homebrew 固定在 Nix store，软件由 nix-darwin 按 Brewfile 管理；`/opt/homebrew` 保存 Cellar、Caskroom、Taps 等状态。当前机器已由 Nix 管理，新机器也无需独立安装；接管既有的手工安装时才临时启用 `autoMigrate`。
+nix-homebrew 将 Homebrew 本体固定在 Nix store，nix-darwin 按 Brewfile 管理软件；`/opt/homebrew` 保存 Cellar、Caskroom、Taps 等状态。本机已由 Nix 管理，新机器无需独立安装；仅接管手工安装时临时启用 `autoMigrate`。
 
 | 来源 | 软件／组件 | 理由 |
 | --- | --- | --- |
@@ -112,13 +116,13 @@ Homebrew 本体由 nix-homebrew 固定在 Nix store，软件由 nix-darwin 按 B
 | Homebrew 上游 tap | `acsandmann/tap/rift` | 上游 formula 提供应用和 CLI；避免自行维护打包，服务由 Home Manager 管理 |
 | nix-homebrew | Homebrew 本体及运行环境 | 由 Nix 配置安装、由 `flake.lock` 固定源码；不使用独立安装脚本，也不把 `pkgs.brew` 当作完整的前缀安装管理器 |
 
-Ghostty、Chrome、Obsidian、Zed 的 Home Manager 模块使用 `package = null`，只管理设置，避免双重安装。Obsidian 插件、主题、CLI 开关及 Chrome 扩展声明保留；Zed 语言工具仍来自 Nix。Ghostty cask 不链接 CLI，因此 `home.sessionPath` 包含应用自带的 `Contents/MacOS` 目录；Obsidian、Zed、Blender 的 CLI 由 cask 提供。
+Ghostty、Chrome、Obsidian、Zed 使用 `package = null`，Home Manager 只管理配置，避免双重安装；保留 Obsidian 插件、主题、CLI 开关及 Chrome 扩展。Zed 语言工具来自 Nix。Ghostty cask 不链接 CLI，故 `home.sessionPath` 添加应用的 `Contents/MacOS`；Obsidian、Zed、Blender 的 CLI 由 cask 提供。
 
 Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`／`homebrew-cask` 仓库加入 Flake；只保留 Rift 的第三方 tap。Apple Silicon 使用 `/opt/homebrew`，未启用额外的 Intel／Rosetta 前缀。nix-homebrew 提供 Bash／Zsh／Fish 集成；系统 PATH 补充 Homebrew 路径供 Nushell 等入口继承，不再启用第二套 shell 集成。
 
 `homebrew.global.brewfile = true` 让手工 `brew bundle` 使用 Nix 生成的同一份清单。nix-darwin 自动为声明的软件生成 `trusted: true`，Rift 使用完整 formula 名称，因此无需重复配置信任或信任整个 tap。通过 nix-homebrew 的启动器统一关闭 analytics。
 
-普通 `darwin-rebuild switch` 采用模块默认值：`autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，只安装缺少的软件。更新时执行上面的 `brew update` 和 `brew bundle`；标记为 `auto_updates` 的 cask 通常由应用自行更新，不启用全局 greedy 升级。Homebrew 的常规缓存清理保持默认；移除声明不会自动卸载软件，可先用 `brew bundle cleanup` 查看待移除列表，再决定是否执行带 `--force` 的清理。不启用会删除应用数据的 `zap`。
+`darwin-rebuild switch` 沿用 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，只安装缺少的软件。更新执行 `brew update`、`brew bundle`；`auto_updates` cask 通常由应用自行更新，不启用全局 greedy。缓存清理沿用默认；移除声明不会自动卸载，先用 `brew bundle cleanup` 查看清单，按需加 `--force` 执行。不启用会删除应用数据的 `zap`。
 
 `flake.lock` 固定 Nix 输入与 Homebrew 本体，不固定 API／可变 tap 获取的 cask 和 formula 版本；Nix 回滚不会回滚 Homebrew 应用。
 
@@ -131,25 +135,32 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 | nix-homebrew 上游默认 `patchBrew` | 修改 Homebrew `update.sh`，跳过本体自更新 | 保留上游默认集成，Homebrew 本体由 Nix 更新 |
 | nix-homebrew 上游默认 `patchBrew` | 适配 Ruby 路径与 `fiddle` gem 加载 | 保留，使用 Nix 提供的 Ruby 运行环境 |
 | nix-homebrew 上游默认 `patchBrew` | 嵌入版本号并调整 Git revision 缓存识别 | 保留，适配 Nix store 中的 Homebrew 源码 |
+| nixpkgs 的 Herdr 打包 | macOS 下将内嵌 libghostty 的 `xcrun`、`ln`、`cp`、`ranlib` 绝对路径改为 PATH 查找 | 上游构建适配，本仓库无额外补丁 |
 | nixpkgs 的 Helix 打包 | `mdbook-0.5-support.patch`，并移除旧文档主题模板 | 上游文档构建兼容处理，未在本仓库覆盖 |
 | nixpkgs 的 Helix 语法包集合 | Haskell 解析器添加 `-fno-strict-aliasing`；Perl 解析器移除冲突的 `bsearch` 实现 | 上游构建／源码兼容处理，未在本仓库覆盖 |
 
-本仓库无自行维护的源码／构建补丁。上述三项 Homebrew 处理由上游同一个 `patchBrew` 开关控制，默认开启；Ruby 适配按文件结构判断，版本处理要求包提供 `version`。Obsidian 扩展 overlay 是插件／主题包集合，Herdr 钩子直接链接上游脚本，Rift plist 是服务配置，Zed `theme_overrides` 是主题设置，均不属于源码补丁。
+本仓库无自行维护的源码／构建补丁。上述三项 Homebrew 处理由上游同一个 `patchBrew` 开关控制，默认开启；Ruby 适配按文件结构判断，版本处理要求包提供 `version`。Obsidian 扩展 overlay 是插件／主题包集合，Herdr 钩子链接安装包内的上游脚本，Rift plist 是服务配置，Zed `theme_overrides` 是主题设置，均不属于源码补丁。
 
 ## 配置验证（2026-11-18）
 
-- 格式、Flake、完整系统求值及构建检查通过；系统与 Home Manager 无模块警告、无失败断言。
-- 目录整理前后，系统和用户软件集合、Brewfile、launchd 服务及应用配置内容一致；保留 Homebrew 的 PATH 优先级。模块拆分改变包列表顺序，因此部分生成路径发生变化。随后另行启用 Obsidian 原生半透明，透明程度沿用主题默认值。
-- 系统和用户包清单内部无重复；共同引用的 Bash、Zsh 和补全包使用相同 store 路径，不重复存储。Brewfile 包含 8 个 cask、2 个 formula、9 个 App Store 条目。
-- Homebrew Shell 初始化仅由 nix-homebrew 提供；GUI 应用的 Home Manager 模块使用 `package = null`，避免与 Homebrew 双重安装。
-- 登录项统一由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；前者与 Shottr 使用 `open -g`，不抢占前台。五项均不常驻重启；另有 Rift 服务和每周 tealdeer 更新任务。
-- Ghostty 使用原生配置校验；编辑器语言服务路径和 Herdr 上游钩子单独检查。未新增自定义激活脚本、轮询任务或源码补丁。
+| 检查 | 结果 |
+| --- | --- |
+| 格式与求值 | nixfmt、Flake、系统入口求值及完整构建通过；系统与 Home Manager 无模块警告、无失败断言 |
+| 安装来源 | 14 项系统包、40 项用户包，各清单内部无重复；Bash、Zsh 和补全包共享 store 路径；Brewfile 为 8 个 cask、2 个 formula、9 个 App Store 条目 |
+| 初始化与服务 | Homebrew Shell 初始化仅由 nix-homebrew 提供，Zsh 补全由 Home Manager 初始化；GUI 配置用 `package = null`；Homebrew 无启用的服务，与 Rift 的 Home Manager 服务不重复 |
+| 运行闭包 | Herdr 钩子改用包内相同脚本，移除约 49 MiB 源码引用；闭包路径数从 656 降至 655，旧代仍保留原引用 |
+| 应用配置 | 生成的 Ghostty 配置通过原生校验；编辑器语言服务路径与 Herdr 钩子已检查，Helix 的 nixd 改用 Nix 绝对路径 |
+| 注释与补丁 | 简短英文注释，上方空行、无同行注释；未新增自定义激活脚本、轮询任务或源码补丁 |
 
-这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。上述验证未执行 `switch` 或更新锁定依赖。
+登录项由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 与 Shottr 用 `open -g`，不抢前台。五项均不常驻重启；另有 Rift 常驻服务和每周 tealdeer 更新任务。
+
+目录整理保留系统和用户软件集合、Brewfile、launchd 服务、应用设置及 Homebrew PATH 优先级；包列表顺序变化使部分生成路径改变。随后新增的 Obsidian 原生半透明与主题面板设置见前文。
+
+这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。本次未执行 `switch`、更新锁定依赖或穷举运行时冲突；未发现配置层重复安装、服务冲突或弃用选项警告。
 
 ## 激活故障排查
 
-如果普通桌面的菜单栏仍自动隐藏，先用 `defaults read NSGlobalDomain _HIHideMenuBar` 确认值为 `0`。本机 macOS 27.3 曾在偏好已正确写入后保留旧的运行状态；以普通用户执行 `killall MenuBarAgent` 和 `killall ControlCenter`，系统自动重启这两个进程后，已实机确认恢复显示。无需修改全屏偏好，也不必把进程重启加入每次激活。
+普通桌面菜单栏仍隐藏时，用 `defaults read NSGlobalDomain _HIHideMenuBar` 确认值为 `0`。本机 macOS 27.3 曾保留旧运行状态；普通用户执行 `killall MenuBarAgent`、`killall ControlCenter` 后，系统自动重启进程，已实机恢复。无需修改全屏偏好或在每次激活时重启进程。
 
 如果 `switch` 在 `linkGeneration` 阶段更新 Chrome 的 `External Extensions` 时报告 `Operation not permitted`，本次 Home Manager 激活没有完成，后面的 Rift 配置和服务也不会更新。2026-11-17 的系统 TCC 日志已确认：自带终端 `com.apple.Terminal` 对 Chrome 应用数据的访问被拒绝，`sudo` 不能绕过该授权。为实际运行命令的终端开启「隐私与安全性 → 完全磁盘访问权限」，完全退出并重新打开该终端，再执行 `switch`。自带终端路径是 `/System/Applications/Utilities/Terminal.app`；Homebrew 版 Ghostty 路径是 `/Applications/Ghostty.app`。不要用 `chmod 777` 或删除浏览器数据处理这类访问拒绝。
 
@@ -167,6 +178,7 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 ## 已知限制
 
+- Obsidian 1.15.1／Electron 43.8.9 在本机 macOS 27.3 上，原生半透明已开启、Border 面板背景已透明，但仍未透出桌面；重新启用原生半透明也无效。疑似原生窗口合成问题，未确认根因；[上游类似报告](https://forum.obsidian.md/t/115493) 涉及不同版本，帖子自动关闭不代表已修复。降低背景不透明度未改善，浅色已恢复默认 `0.8`，不添加补丁。
 - Rift 0.8.3 为 0.x 阶段，配置字段与 CLI 可能变化；升级后如配置不再生效，用 `rift-cli execute config reload` 查看具体报错。
 - Rift 依赖 macOS 私有窗口 API，系统大版本更新后建议先确认它是否仍正常工作。
 - Herdr 已启用 Kitty 图片协议，但 Agent pane 中的图片显示仍需上游终端识别支持。

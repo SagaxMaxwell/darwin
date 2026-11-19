@@ -60,7 +60,7 @@
       package = null;
 
       settings = {
-        theme = "light:TokyoNight Storm,dark:IR Black";
+        theme = "light:GitHub Dark Dimmed,dark:IR Black";
         background-opacity = opacity;
         background-opacity-cells = true;
         background-blur = true;

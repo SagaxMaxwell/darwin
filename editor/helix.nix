@@ -84,6 +84,8 @@
       }
     ];
 
+    languages.language-server.nixd.command = "${pkgs.nixd}/bin/nixd";
+
     languages.language-server.ty.command = "${pkgs.ty}/bin/ty";
 
     languages.language-server.ruff.command = "${pkgs.ruff}/bin/ruff";
