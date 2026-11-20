@@ -19,7 +19,12 @@ in
     enable = true;
     mutableSettings = true;
     settings = {
-      theme.auto_switch = true;
+      theme = {
+        name = "terminal";
+        auto_switch = true;
+        light_name = "terminal";
+        dark_name = "terminal";
+      };
       session.resume_agents_on_restore = true;
       remote.manage_ssh_config = true;
       terminal.default_shell = "nu";
@@ -45,6 +50,9 @@ in
   };
 
   home.file.".codex/herdr-agent-state.sh".source = script "codex";
+
+  home.file."${config.programs.pi-coding-agent.configDir}/extensions/herdr-agent-state.ts".source =
+    "${cfg.package}/share/herdr/integrations/pi/herdr-agent-state.ts";
 
   programs.codex = {
     settings.features.hooks = true;

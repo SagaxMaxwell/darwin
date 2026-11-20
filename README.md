@@ -11,9 +11,9 @@
 | `home.nix` | Home Manager 入口、应用模块导入与基础 XDG 设置 |
 | `apps/terminal.nix` | Ghostty、Shell 和终端工具 |
 | `apps/development.nix` | Git、开发工具、AI 工具与 Herdr 模块接入 |
-| `apps/desktop.nix` | 浏览器、播放器、Obsidian、登录应用与 Rift 模块接入 |
+| `apps/desktop.nix` | 浏览器、播放器、登录应用与 Rift 模块接入 |
 | `editor/helix.nix` / `editor/zed.nix` | 编辑器与语言工具 |
-| `apps/herdr.nix` | Herdr 及 Claude Code／Codex 会话钩子 |
+| `apps/herdr.nix` | Herdr 及 Claude Code／Codex／Pi 会话集成 |
 | `apps/rift.nix` | Rift 原生 TOML 配置与 launchd 常驻服务 |
 | `system/homebrew.nix` | nix-homebrew 安装 Homebrew 本体，nix-darwin 声明软件清单 |
 
@@ -22,8 +22,6 @@
 Ghostty、Zed 随系统外观切换：浅色外观使用 GitHub Dark Dimmed（仍是深色主题），深色外观使用 IR Black；Zed 自动安装对应扩展。Helix 使用 `base16_terminal` 跟随终端配色。
 
 `flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域；Ghostty、Zed 开启模糊。这不是全局窗口透明度，各应用效果不同。
-
-Obsidian 开启原生半透明；Nix 通过 Style Settings 配置 Border，浅色、深色均启用卡片布局，左右侧栏和正文面板透明，底层沿用默认值（浅色 `0.8`、深色 `0.6`）。无自定义 CSS；堆叠标签页、弹窗等遵循主题规则。本机仍无法透出桌面，见“已知限制”。
 
 ## 使用
 
@@ -60,12 +58,12 @@ brew bundle check --no-upgrade
 
 - Home Manager 管理用户配置，nix-darwin 管理系统设置；软件来源与更新边界见后文。
 - Nix 使用锁定的 Flake 输入，关闭旧 channel 机制；激活后在新终端中不再引用不存在的 root channel 路径。
-- Zed、Herdr、Claude Code、Codex 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
+- Zed、Herdr、Claude Code、Codex、Pi 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 菜单栏在普通桌面下不自动隐藏，由 `darwin.nix` 声明；全屏模式沿用系统默认行为。
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设数值强度。
-- Herdr 通过 `apps/herdr.nix` 接入 Claude Code 与 Codex 的 SessionStart 钩子，使用包内上游脚本记录和恢复 Agent 会话。
+- Herdr 通过 `apps/herdr.nix` 接入 Claude Code／Codex 的 SessionStart 钩子及 Pi 扩展，直接链接包内上游文件，记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
-- Obsidian 笔记库位于 `~/Documents/notes`；SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
+- 笔记使用 Anytype；现行规范位于 Anytype「知识星图」中的“Anytype 笔记规范”，`~/Documents/notes` 保留迁移源文件供回查。SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
 ## Rift 设置
 
@@ -110,13 +108,14 @@ nix-homebrew 将 Homebrew 本体固定在 Nix store，nix-darwin 按 Brewfile �
 
 | 来源 | 软件／组件 | 理由 |
 | --- | --- | --- |
-| nixpkgs | Lix、Nix 工具、Git／gh、四种 Shell、终端 CLI、Herdr、Claude Code、Codex、Bun、uv、rustup、Helix、语言服务器／格式化器、WireGuard 工具 | 统一锁定依赖，适合声明式环境；编辑器引用 Nix 语言工具的绝对路径 |
+| nixpkgs | Lix、Nix 工具、Git／gh、四种 Shell、终端 CLI、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、语言服务器／格式化器、WireGuard 工具 | 统一锁定依赖，适合声明式环境；编辑器引用 Nix 语言工具的绝对路径 |
 | nixpkgs | mpv | 同时作为 CLI 和播放器，保留 Home Manager 的配置与脚本集成 |
-| Homebrew 官方 cask | Blender、Ghostty、Google Chrome、Obsidian、SFM、Shottr、Tabularis、Zed | 使用上游 macOS 应用包，安装到 `/Applications`；Tabularis 使用上游 Apple Silicon DMG，避免维护 Nix 构建覆盖 |
+| Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、SFM、Shottr、Tabularis、Zed、Delta | 使用上游 macOS 应用包，安装到 `/Applications`；Tabularis 使用上游 Apple Silicon DMG，避免维护 Nix 构建覆盖 |
+| Homebrew 官方 formula | Gas City（`gascity`） | 上游推荐的安装渠道，自动提供 Beads、Dolt、tmux、jq、flock 等依赖 |
 | Homebrew 上游 tap | `acsandmann/tap/rift` | 上游 formula 提供应用和 CLI；避免自行维护打包，服务由 Home Manager 管理 |
 | nix-homebrew | Homebrew 本体及运行环境 | 由 Nix 配置安装、由 `flake.lock` 固定源码；不使用独立安装脚本，也不把 `pkgs.brew` 当作完整的前缀安装管理器 |
 
-Ghostty、Chrome、Obsidian、Zed 使用 `package = null`，Home Manager 只管理配置，避免双重安装；保留 Obsidian 插件、主题、CLI 开关及 Chrome 扩展。Zed 语言工具来自 Nix。Ghostty cask 不链接 CLI，故 `home.sessionPath` 添加应用的 `Contents/MacOS`；Obsidian、Zed、Blender 的 CLI 由 cask 提供。
+Ghostty、Chrome、Zed 使用 `package = null`，Home Manager 只管理配置，避免双重安装；保留 Chrome 扩展。Zed 语言工具来自 Nix。Ghostty cask 不链接 CLI，故 `home.sessionPath` 添加应用的 `Contents/MacOS`；Zed、Blender 的 CLI 由 cask 提供。
 
 Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`／`homebrew-cask` 仓库加入 Flake；只保留 Rift 的第三方 tap。Apple Silicon 使用 `/opt/homebrew`，未启用额外的 Intel／Rosetta 前缀。nix-homebrew 提供 Bash／Zsh／Fish 集成；系统 PATH 补充 Homebrew 路径供 Nushell 等入口继承，不再启用第二套 shell 集成。
 
@@ -125,6 +124,42 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 `darwin-rebuild switch` 沿用 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，只安装缺少的软件。更新执行 `brew update`、`brew bundle`；`auto_updates` cask 通常由应用自行更新，不启用全局 greedy。缓存清理沿用默认；移除声明不会自动卸载，先用 `brew bundle cleanup` 查看清单，按需加 `--force` 执行。不启用会删除应用数据的 `zap`。
 
 `flake.lock` 固定 Nix 输入与 Homebrew 本体，不固定 API／可变 tap 获取的 cask 和 formula 版本；Nix 回滚不会回滚 Homebrew 应用。
+
+## Agent 工具
+
+| 工具 | 声明与使用 |
+| --- | --- |
+| Pi | `apps/development.nix` 启用 `programs.pi-coding-agent`；运行 `pi`，首次通过 `/login` 登录，再选择模型 |
+| Herdr | 保留现有配置；在 Herdr 窗格中运行 `pi`，官方扩展自动上报状态与会话路径，在普通终端中不启用上报 |
+| Gas City | `system/homebrew.nix` 安装 `gascity`，命令为 `gc`；安装并声明 Herdr 后端，项目、city 和后台服务按实际工作初始化 |
+| Delta（Zed 团队） | Homebrew cask `zed-delta`，安装 `Delta.app` 和 `delta` CLI；与 Git diff 工具 `pkgs.delta` 不同，登录与协作空间在应用内设置 |
+| Vibex | 暂不纳入：当前锁定的 nixpkgs 和 Homebrew 官方仓库未找到包，上游提供 macOS DMG；不自行打包，后续可重新检查 |
+
+Pi 使用用户自己的登录凭据与模型选择，不在 Nix 中写入密钥。Herdr 扩展由 Nix 管理，无需再执行 `herdr integration install pi`。
+
+### 外观与会话
+
+| 工具 | 外观 | 会话保存与恢复 |
+| --- | --- | --- |
+| Pi | 原生 `system` 主题跟随终端；在 Ghostty 中使用现有 80% 不透明度和模糊 | 默认保存会话；官方 Herdr 扩展上报状态与路径，Herdr 重启后可用 `pi --session` 恢复 |
+| Herdr | `terminal` 主题跟随 Ghostty，主要面板使用终端默认背景；没有独立的透明度或模糊数值 | 自动保存布局；保留 `resume_agents_on_restore = true` 和 `pane_history = true`，覆盖已接入的 Pi／Claude Code／Codex |
+| Gas City | CLI 使用宿主终端外观；Dashboard 未找到原生窗口透明／模糊设置，跳过 | 通过 `GC_SESSION=herdr` 选择官方 Herdr 后端；`GC_SUPERVISOR_ENV=GC_SESSION` 让上游安装 supervisor 时保留该选择 |
+| Delta | 官方设置未列出透明／模糊接口，跳过 | 自有线程持久化与默认跨设备同步；未找到官方 Herdr 集成，不添加恢复钩子 |
+| Vibex | 暂未纳入安装，跳过 | 暂不配置 |
+
+80% 指背景不透明度，文字不随之降低透明度。Pi／Herdr 本身不创建带毛玻璃的 macOS 窗口，实际效果由宿主终端决定；Ghostty 已启用 `background-opacity-cells`，有色单元格也应用背景不透明度。其他终端不保证相同效果。
+
+Herdr 退出客户端（`Ctrl+B` 后按 `Q`）仍保留后台进程；服务器重启后恢复的是布局、受支持 Agent 的对话，或保存的屏幕历史，不是任意进程的内存状态。原生 Agent 恢复优先于屏幕历史重放。Nix 安装不使用 `herdr update --handoff`；版本更新由 Nix 管理。
+
+Gas City 的环境变量由 `apps/development.nix` 声明，激活后需新登录环境。首次使用按[官方指南](https://github.com/gastownhall/gascity#get-it-running)设置 Dolt 身份并初始化 city；`gc init` 会启动后台 supervisor，本配置不自动创建 city 或启动 Agent。已经安装的 supervisor 需在新环境执行 `gc supervisor install` 同步环境；现有进程不会因 Nix 声明自动切换后端。
+
+`GC_SESSION` 优先于各 city 的 `[session].provider`，当前默认全部使用 Herdr；ACP Agent 仍走独立 ACP 后端。Gas City 管理每个 city 的专用 Herdr server，提供按 rig／Agent 分组的工作区与标签页。会话事件尚未直接驱动其调度器，状态仍通过周期检查发现；上游记录了版本兼容限制，首次使用需验证完整工作流程，参见[集成说明](https://github.com/gastownhall/gascity/blob/v1.5.1/docs/reference/herdr-provider.md)。这些配置不等于已经完成 Agent 联调。
+
+Delta 新版设置由账号同步并保存在加密缓存中，官方建议使用设置界面；旧 `settings.json` 只在账号无设置时导入，不通过 Nix 写入该缓存或添加未经支持的字段。参见 [Delta 设置](https://delta.dev/docs/configuration/settings)、[Herdr 会话恢复](https://herdr.dev/docs/session-state/)。
+
+Delta 对齐 Zed 的目标是浅色外观使用 `GitHub Dark Dimmed`、深色外观使用 `IR Black`。目前官方只说明应用内外观与深色主题选择，未找到导入这两个 Zed 主题扩展或按系统外观分别配置它们的接口，因此尚未应用。语言扩展会按需自动下载，但[目前仅用于语法高亮](https://delta.dev/docs/agents/language-support)，不运行语言服务器，不提供诊断、补全或跳转；也未找到保存时格式化接口。暂不复制 Zed 的 `theme_overrides`、`lsp`、`languages` 或 `format_on_save` 字段；需要完整编辑功能时可使用 Delta 文件菜单的 `Open in Zed`，沿用现有配置。
+
+包支持核对于 2026-11-19：[Vibex 安装说明](https://github.com/vibex-ai/vibex#quick-start)、[Delta cask](https://formulae.brew.sh/cask/zed-delta)。Delta 官方 Nix flake 当前仅支持 Linux，本机使用 Homebrew。
 
 ## 补丁清单
 
@@ -135,13 +170,16 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 | nix-homebrew 上游默认 `patchBrew` | 修改 Homebrew `update.sh`，跳过本体自更新 | 保留上游默认集成，Homebrew 本体由 Nix 更新 |
 | nix-homebrew 上游默认 `patchBrew` | 适配 Ruby 路径与 `fiddle` gem 加载 | 保留，使用 Nix 提供的 Ruby 运行环境 |
 | nix-homebrew 上游默认 `patchBrew` | 嵌入版本号并调整 Git revision 缓存识别 | 保留，适配 Nix store 中的 Homebrew 源码 |
+| nixpkgs 的 Pi 打包 | 从同版本 npm 发布包补充模型目录，整理 workspace 依赖并包装 CLI | 上游离线构建与安装处理，本仓库无额外补丁 |
 | nixpkgs 的 Herdr 打包 | macOS 下将内嵌 libghostty 的 `xcrun`、`ln`、`cp`、`ranlib` 绝对路径改为 PATH 查找 | 上游构建适配，本仓库无额外补丁 |
 | nixpkgs 的 Helix 打包 | `mdbook-0.5-support.patch`，并移除旧文档主题模板 | 上游文档构建兼容处理，未在本仓库覆盖 |
 | nixpkgs 的 Helix 语法包集合 | Haskell 解析器添加 `-fno-strict-aliasing`；Perl 解析器移除冲突的 `bsearch` 实现 | 上游构建／源码兼容处理，未在本仓库覆盖 |
 
-本仓库无自行维护的源码／构建补丁。上述三项 Homebrew 处理由上游同一个 `patchBrew` 开关控制，默认开启；Ruby 适配按文件结构判断，版本处理要求包提供 `version`。Obsidian 扩展 overlay 是插件／主题包集合，Herdr 钩子链接安装包内的上游脚本，Rift plist 是服务配置，Zed `theme_overrides` 是主题设置，均不属于源码补丁。
+本仓库无自行维护的源码／构建补丁。上述三项 Homebrew 处理由上游同一个 `patchBrew` 开关控制，默认开启；Ruby 适配按文件结构判断，版本处理要求包提供 `version`。Herdr 钩子链接安装包内的上游脚本，Rift plist 是服务配置，Zed `theme_overrides` 是主题设置，均不属于源码补丁。
 
-## 配置验证（2026-11-18）
+## 配置验证（2026-11-18 基线）
+
+2026-11-19 增补：Pi 原生模块与 Herdr 扩展已加入，Gas City／Delta 已写入 Brewfile；`nixfmt`、`nix flake check --no-build` 和完整系统构建通过，Home Manager 无模块警告。笔记应用改用 Anytype，移除 Obsidian 及扩展依赖；当前 Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目。随后启用 Pi／Herdr 终端配色及 Gas City 原生 Herdr 后端，完整构建和 Herdr 原生 `config check` 均通过。未执行 `switch`、视觉验证或 Agent 联调，以下保留此前验证基线。
 
 | 检查 | 结果 |
 | --- | --- |
@@ -154,7 +192,7 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 登录项由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 与 Shottr 用 `open -g`，不抢前台。五项均不常驻重启；另有 Rift 常驻服务和每周 tealdeer 更新任务。
 
-目录整理保留系统和用户软件集合、Brewfile、launchd 服务、应用设置及 Homebrew PATH 优先级；包列表顺序变化使部分生成路径改变。随后新增的 Obsidian 原生半透明与主题面板设置见前文。
+目录整理保留系统和用户软件集合、Brewfile、launchd 服务、应用设置及 Homebrew PATH 优先级；包列表顺序变化使部分生成路径改变。
 
 这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。本次未执行 `switch`、更新锁定依赖或穷举运行时冲突；未发现配置层重复安装、服务冲突或弃用选项警告。
 
@@ -178,7 +216,6 @@ Homebrew 使用默认 API 安装官方软件，不把庞大的 `homebrew-core`�
 
 ## 已知限制
 
-- Obsidian 1.15.1／Electron 43.8.9 在本机 macOS 27.3 上，原生半透明已开启、Border 面板背景已透明，但仍未透出桌面；重新启用原生半透明也无效。疑似原生窗口合成问题，未确认根因；[上游类似报告](https://forum.obsidian.md/t/115493) 涉及不同版本，帖子自动关闭不代表已修复。降低背景不透明度未改善，浅色已恢复默认 `0.8`，不添加补丁。
 - Rift 0.8.3 为 0.x 阶段，配置字段与 CLI 可能变化；升级后如配置不再生效，用 `rift-cli execute config reload` 查看具体报错。
 - Rift 依赖 macOS 私有窗口 API，系统大版本更新后建议先确认它是否仍正常工作。
 - Herdr 已启用 Kitty 图片协议，但 Agent pane 中的图片显示仍需上游终端识别支持。

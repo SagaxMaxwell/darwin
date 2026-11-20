@@ -19,11 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    obsidian-extensions = {
-      url = "git+https://github.com/karaolidis/nix-obsidian-extensions?shallow=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Install Homebrew through Nix.
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
@@ -34,7 +29,6 @@
       nix-darwin,
       home-manager,
       nix-index-database,
-      obsidian-extensions,
       nix-homebrew,
       ...
     }:
@@ -58,9 +52,6 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [
-              obsidian-extensions.overlays.default
-            ];
             system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
           }
           ./darwin.nix

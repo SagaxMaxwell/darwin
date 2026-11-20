@@ -33,18 +33,20 @@
 
       # Manage the service in apps/rift.nix.
       "acsandmann/tap/rift"
+      "gascity"
       "mas"
     ];
 
     casks = [
+      "anytype"
       "blender"
       "ghostty"
       "google-chrome"
-      "obsidian"
       "shottr"
       "sfm"
       "tabularis"
       "zed"
+      "zed-delta"
     ];
   };
 
