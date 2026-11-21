@@ -130,6 +130,23 @@ in
     ];
   };
 
+  chiron-hei = mkFont {
+    pname = "chiron-hei";
+    version = "2.609";
+    sources = [
+      {
+        name = "ChironHeiHKVF.otf";
+        url = "https://raw.githubusercontent.com/chiron-fonts/chiron-hei-hk/v2.609/VAR_OTF/ChironHeiHKVF.otf";
+        hash = "sha256-audsxR4DOouoPRO4JhGGcGtgGamezdhRlQC13aVqtT4=";
+      }
+      {
+        name = "ChironHeiHKItVF.otf";
+        url = "https://raw.githubusercontent.com/chiron-fonts/chiron-hei-hk/v2.609/VAR_OTF/ChironHeiHKItVF.otf";
+        hash = "sha256-dnXqPvJ5UN3nsmRZwu8C/W8p1nDCWXm0xJBUOXg0qDc=";
+      }
+    ];
+  };
+
   noto-colrv1 = mkFont {
     pname = "noto-colrv1";
     version = "2.051";

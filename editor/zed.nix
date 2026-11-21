@@ -19,10 +19,14 @@
     };
 
     userSettings.terminal = {
-      font_family = "Cascadia Code NF";
+      font_family = "Monaspace Neon Var";
       font_fallbacks = [
+        "Cascadia Code NF"
         "Maple Mono NF"
         "Maple Mono NF CN"
+        "Recursive"
+        "Sarasa Mono SC"
+        "Sarasa Term SC"
       ];
     };
 

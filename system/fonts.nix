@@ -11,10 +11,12 @@ in
       (google-fonts.override {
         fonts = [
           "Roboto Serif"
+          "Inter"
           "Recursive"
           "Shantell Sans"
           "Playwrite US Modern"
           "Nabla"
+          "Honk"
           "STIX Two Math"
         ];
       })

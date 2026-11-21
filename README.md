@@ -16,10 +16,11 @@
 | `apps/herdr.nix` | Herdr 及 Claude Code／Codex／Pi 会话集成 |
 | `apps/rift.nix` | Rift 原生 TOML 配置与 launchd 常驻服务 |
 | `system/homebrew.nix` | nix-homebrew 安装 Homebrew 本体，nix-darwin 声明软件清单 |
+| `system/fonts.nix` / `packages/fonts.nix` | Nix 声明系统字体与自定义字体包 |
 
 目录沿用 `~/nixos` 的分类：`system/` 由 `darwin.nix` 和 `flake.nix` 接入；`home.nix` 导入 `apps/` 和 `editor/`；`packages/` 定义自定义包。应用设置与服务集中在对应模块，Homebrew 保留原导入顺序和 PATH 优先级。
 
-Ghostty、Zed 随系统外观切换：浅色外观使用 GitHub Dark Dimmed（仍是深色主题），深色外观使用 IR Black；Zed 自动安装对应扩展。Helix 使用 `base16_terminal` 跟随终端配色。
+Ghostty、Zed 随系统外观切换：浅色外观使用 GitHub Dark Dimmed（仍是深色主题），深色外观使用 IR Black；Zed 自动安装对应扩展。Helix 使用 `base16_terminal` 跟随终端配色。Ghostty 与 Zed 内置终端使用 Monaspace Neon Var → Cascadia Code NF → Maple Mono NF → Maple Mono NF CN → Recursive → Sarasa Mono SC → Sarasa Term SC；macOS Terminal 的 Basic profile 仅支持单字体，保留系统当前字体。系统字体由 Nix 安装 Amstelvar、Roboto Serif、Roboto Flex、Google Sans Flex、Inter、Monaspace、Recursive、Maple Mono、昭源字体、思源字体、Noto Color Emoji、OpenMoji 等。
 
 `flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域；Ghostty、Zed 开启模糊。这不是全局窗口透明度，各应用效果不同。
 
@@ -63,7 +64,7 @@ brew bundle check --no-upgrade
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设数值强度。
 - Herdr 通过 `apps/herdr.nix` 接入 Claude Code／Codex 的 SessionStart 钩子及 Pi 扩展，直接链接包内上游文件，记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
-- 笔记使用 Anytype；现行规范位于 Anytype「知识星图」中的“Anytype 笔记规范”，`~/Documents/notes` 保留迁移源文件供回查。SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
+- 笔记使用 Anytype；现行规范位于 Anytype「知识星图」中的“Anytype 笔记规范”，旧的 Obsidian 仓库不属于 Darwin 配置。SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
 ## Rift 设置
 
@@ -111,7 +112,7 @@ nix-homebrew 将 Homebrew 本体固定在 Nix store，nix-darwin 按 Brewfile �
 | nixpkgs | Lix、Nix 工具、Git／gh、四种 Shell、终端 CLI、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、语言服务器／格式化器、WireGuard 工具 | 统一锁定依赖，适合声明式环境；编辑器引用 Nix 语言工具的绝对路径 |
 | nixpkgs | mpv | 同时作为 CLI 和播放器，保留 Home Manager 的配置与脚本集成 |
 | Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、SFM、Shottr、Tabularis、Zed、Delta | 使用上游 macOS 应用包，安装到 `/Applications`；Tabularis 使用上游 Apple Silicon DMG，避免维护 Nix 构建覆盖 |
-| Homebrew 官方 formula | Gas City（`gascity`） | 上游推荐的安装渠道，自动提供 Beads、Dolt、tmux、jq、flock 等依赖 |
+| Homebrew 官方 formula | Gas City（`gascity`）、`mas` | Gas City 使用上游推荐渠道并自动提供运行依赖；`mas` 管理 Mac App Store 声明 |
 | Homebrew 上游 tap | `acsandmann/tap/rift` | 上游 formula 提供应用和 CLI；避免自行维护打包，服务由 Home Manager 管理 |
 | nix-homebrew | Homebrew 本体及运行环境 | 由 Nix 配置安装、由 `flake.lock` 固定源码；不使用独立安装脚本，也不把 `pkgs.brew` 当作完整的前缀安装管理器 |
 
@@ -179,12 +180,12 @@ Delta 对齐 Zed 的目标是浅色外观使用 `GitHub Dark Dimmed`、深色外
 
 ## 配置验证（2026-11-18 基线）
 
-2026-11-19 增补：Pi 原生模块与 Herdr 扩展已加入，Gas City／Delta 已写入 Brewfile；`nixfmt`、`nix flake check --no-build` 和完整系统构建通过，Home Manager 无模块警告。笔记应用改用 Anytype，移除 Obsidian 及扩展依赖；当前 Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目。随后启用 Pi／Herdr 终端配色及 Gas City 原生 Herdr 后端，完整构建和 Herdr 原生 `config check` 均通过。未执行 `switch`、视觉验证或 Agent 联调，以下保留此前验证基线。
+2026-11-21 增补：字体清单同步到 Darwin，加入 Inter、Honk 与昭源黑体 VF；Ghostty 与 Zed 已声明完整等宽回退顺序；macOS Terminal 的 Home Manager 原生模块不支持其 NSKeyedArchiver 字体字段，因此未写入无效 plist 值。Pi 原生模块与 Herdr 扩展已加入，Gas City／Delta 已写入 Brewfile；`nixfmt`、`nix flake check --no-build` 和完整系统构建通过，Home Manager 无模块警告。笔记应用改用 Anytype，移除 Obsidian 及扩展依赖；当前 Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目。随后启用 Pi／Herdr 终端配色及 Gas City 原生 Herdr 后端，完整构建和 Herdr 原生 `config check` 均通过。未执行 `switch`、视觉验证或 Agent 联调，以下保留此前验证基线。
 
 | 检查 | 结果 |
 | --- | --- |
 | 格式与求值 | nixfmt、Flake、系统入口求值及完整构建通过；系统与 Home Manager 无模块警告、无失败断言 |
-| 安装来源 | 14 项系统包、40 项用户包，各清单内部无重复；Bash、Zsh 和补全包共享 store 路径；Brewfile 为 8 个 cask、2 个 formula、9 个 App Store 条目 |
+| 安装来源 | 系统包与用户包声明无重复；Bash、Zsh 和补全包共享 store 路径；Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目 |
 | 初始化与服务 | Homebrew Shell 初始化仅由 nix-homebrew 提供，Zsh 补全由 Home Manager 初始化；GUI 配置用 `package = null`；Homebrew 无启用的服务，与 Rift 的 Home Manager 服务不重复 |
 | 运行闭包 | Herdr 钩子改用包内相同脚本，移除约 49 MiB 源码引用；闭包路径数从 656 降至 655，旧代仍保留原引用 |
 | 应用配置 | 生成的 Ghostty 配置通过原生校验；编辑器语言服务路径与 Herdr 钩子已检查，Helix 的 nixd 改用 Nix 绝对路径 |
