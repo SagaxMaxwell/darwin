@@ -1,5 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
+let
+  exe = lib.getExe;
+in
 {
   programs.helix = {
     enable = true;
@@ -8,14 +11,12 @@
       theme = "base16_terminal";
 
       editor = {
-        "true-color" = true;
-        "line-number" = "relative";
+        true-color = true;
+        line-number = "relative";
         cursorline = true;
 
-        "end-of-line-diagnostics" = "hint";
-        "inline-diagnostics" = {
-          "cursor-line" = "warning";
-        };
+        end-of-line-diagnostics = "hint";
+        inline-diagnostics.cursor-line = "warning";
 
         statusline = {
           right = [
@@ -37,18 +38,14 @@
           };
         };
 
-        lsp = {
-          "display-inlay-hints" = true;
-        };
+        lsp.display-inlay-hints = true;
 
-        "cursor-shape" = {
+        cursor-shape = {
           insert = "bar";
           select = "underline";
         };
 
-        "file-picker" = {
-          hidden = false;
-        };
+        file-picker.hidden = false;
 
         gutters = [
           "diff"
@@ -57,9 +54,9 @@
           "spacer"
         ];
 
-        "soft-wrap" = {
+        soft-wrap = {
           enable = true;
-          "wrap-indicator" = "";
+          wrap-indicator = "";
         };
       };
     };
@@ -67,29 +64,29 @@
     languages.language = [
       {
         name = "nix";
-        "auto-format" = true;
-        "language-servers" = [ "nixd" ];
-        formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        auto-format = true;
+        language-servers = [ "nixd" ];
+        formatter.command = exe pkgs.nixfmt;
       }
       {
         name = "python";
-        "language-servers" = [
+        language-servers = [
           "ty"
           "ruff"
         ];
       }
       {
         name = "toml";
-        "language-servers" = [ "tombi" ];
+        language-servers = [ "tombi" ];
       }
     ];
 
-    languages.language-server.nixd.command = "${pkgs.nixd}/bin/nixd";
-
-    languages.language-server.ty.command = "${pkgs.ty}/bin/ty";
-
-    languages.language-server.ruff.command = "${pkgs.ruff}/bin/ruff";
-
-    languages.language-server.tombi.command = "${pkgs.tombi}/bin/tombi";
+    languages.language-server = {
+      nixd.command = exe pkgs.nixd;
+      rust-analyzer.command = exe pkgs.rust-analyzer;
+      ty.command = exe pkgs.ty;
+      ruff.command = exe pkgs.ruff;
+      tombi.command = exe pkgs.tombi;
+    };
   };
 }

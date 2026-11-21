@@ -25,63 +25,50 @@ let
         platforms = lib.platforms.all;
       };
     };
+
+  # Install upstream font archives.
+  mkFontArchive =
+    {
+      pname,
+      version,
+      url,
+      hash,
+    }:
+    pkgs.stdenvNoCC.mkDerivation {
+      inherit pname version;
+      src = pkgs.fetchurl { inherit url hash; };
+      nativeBuildInputs = [
+        pkgs.unzip
+        pkgs.installFonts
+      ];
+      sourceRoot = ".";
+      dontBuild = true;
+      meta = {
+        license = lib.licenses.ofl;
+        platforms = lib.platforms.all;
+      };
+    };
 in
 {
-  maple-mono-nf = pkgs.stdenvNoCC.mkDerivation {
+  maple-mono-nf = mkFontArchive {
     pname = "maple-mono-nf";
     version = "8.0-beta.3";
-    src = pkgs.fetchurl {
-      url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-VF.zip";
-      hash = "sha256-uzydYW868FVeuC6/wC28FqssWdLNVHHS+BXFU6+YPUE=";
-    };
-    nativeBuildInputs = [
-      pkgs.unzip
-      pkgs.installFonts
-    ];
-    sourceRoot = ".";
-    dontBuild = true;
-    meta = {
-      license = lib.licenses.ofl;
-      platforms = lib.platforms.all;
-    };
+    url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-VF.zip";
+    hash = "sha256-uzydYW868FVeuC6/wC28FqssWdLNVHHS+BXFU6+YPUE=";
   };
 
-  maple-mono-nf-cn = pkgs.stdenvNoCC.mkDerivation {
+  maple-mono-nf-cn = mkFontArchive {
     pname = "maple-mono-nf-cn";
     version = "8.0-beta.3";
-    src = pkgs.fetchurl {
-      url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-CN-VF.zip";
-      hash = "sha256-BVd6/BuJZpw2Qr8OK+dkpZGWeE4ODqfkRPcDwpUPpps=";
-    };
-    nativeBuildInputs = [
-      pkgs.unzip
-      pkgs.installFonts
-    ];
-    sourceRoot = ".";
-    dontBuild = true;
-    meta = {
-      license = lib.licenses.ofl;
-      platforms = lib.platforms.all;
-    };
+    url = "https://github.com/subframe7536/maple-font/releases/download/v8.0-beta.3/MapleMono-NF-CN-VF.zip";
+    hash = "sha256-BVd6/BuJZpw2Qr8OK+dkpZGWeE4ODqfkRPcDwpUPpps=";
   };
 
-  zhuque-fangsong = pkgs.stdenvNoCC.mkDerivation {
+  zhuque-fangsong = mkFontArchive {
     pname = "zhuque-fangsong";
     version = "0.212";
-    src = pkgs.fetchurl {
-      url = "https://github.com/TrionesType/zhuque/releases/download/v0.212/ZhuqueFangsong-v0.212.zip";
-      hash = "sha256-u4tmGnZD0ilqctnRBTCgCUlBnE5Sf7YXg/c8K6GowGI=";
-    };
-    nativeBuildInputs = [
-      pkgs.unzip
-      pkgs.installFonts
-    ];
-    sourceRoot = ".";
-    dontBuild = true;
-    meta = {
-      license = lib.licenses.ofl;
-      platforms = lib.platforms.all;
-    };
+    url = "https://github.com/TrionesType/zhuque/releases/download/v0.212/ZhuqueFangsong-v0.212.zip";
+    hash = "sha256-u4tmGnZD0ilqctnRBTCgCUlBnE5Sf7YXg/c8K6GowGI=";
   };
 
   alimama-fangyuan = mkFont {

@@ -49,6 +49,8 @@
 
     atuin.enable = true;
 
+    bottom.enable = true;
+
     yazi.enable = true;
 
     zoxide.enable = true;

@@ -20,6 +20,12 @@
 
 目录沿用 `~/nixos` 的分类：`system/` 由 `darwin.nix` 和 `flake.nix` 接入；`home.nix` 导入 `apps/` 和 `editor/`；`packages/` 定义自定义包。应用设置与服务集中在对应模块，Homebrew 保留原导入顺序和 PATH 优先级。
 
+## 与 `~/nixos` 对照
+
+已采用适用于 macOS 的部分：`packages/fonts.nix` 使用共享的归档字体构建函数，终端启用 `bottom`，Nushell 沿用 Home Manager 26.11 的会话环境默认值，Helix 和 Zed 共用 Nix 提供的 `rust-analyzer` 与诊断辅助设置。应用仍按平台选择来源：macOS 使用 Homebrew cask，Linux 专属的 Umbriel、Flatpak、Wayland、ROCm、XDG MIME 和 `wl-clipboard` 不迁移；Delta、Anytype、Tabularis 等同类应用保留各自平台的安装方式，避免重复声明。
+
+两边都只保留一份编辑器、Agent、字体和终端配置入口。Home Manager 管理用户设置，nix-darwin 管理系统项，Homebrew 只管理应用包；不把 Linux 服务、桌面组件或第二套包管理器带入 Darwin。
+
 Ghostty、Zed 随系统外观切换：浅色外观使用 GitHub Dark Dimmed（仍是深色主题），深色外观使用 IR Black；Zed 自动安装对应扩展。Helix 使用 `base16_terminal` 跟随终端配色。Ghostty 与 Zed 内置终端使用 Monaspace Neon Var → Cascadia Code NF → Maple Mono NF → Maple Mono NF CN → Recursive → Sarasa Mono SC → Sarasa Term SC；macOS Terminal 的 Basic profile 仅支持单字体，保留系统当前字体。系统字体由 Nix 安装 Amstelvar、Roboto Serif、Roboto Flex、Google Sans Flex、Inter、Monaspace、Recursive、Maple Mono、昭源字体、思源字体、Noto Color Emoji、OpenMoji 等。
 
 `flake.nix` 的 `opacity = 0.8`（80% 不透明）控制 Ghostty、Zed 指定主题的背景及 mpv 视频外空白区域；Ghostty、Zed 开启模糊。这不是全局窗口透明度，各应用效果不同。
@@ -59,11 +65,13 @@ brew bundle check --no-upgrade
 
 - Home Manager 管理用户配置，nix-darwin 管理系统设置；软件来源与更新边界见后文。
 - Nix 使用锁定的 Flake 输入，关闭旧 channel 机制；激活后在新终端中不再引用不存在的 root channel 路径。
+- `nixpkgs` 跟踪 `nixpkgs-unstable`，实际版本由 `flake.lock` 固定；更新全部输入使用 `nix flake update`，更新后先运行 Flake 检查和系统求值。
 - Zed、Herdr、Claude Code、Codex、Pi 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 菜单栏在普通桌面下不自动隐藏，由 `darwin.nix` 声明；全屏模式沿用系统默认行为。
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设数值强度。
 - Herdr 通过 `apps/herdr.nix` 接入 Claude Code／Codex 的 SessionStart 钩子及 Pi 扩展，直接链接包内上游文件，记录和恢复 Agent 会话。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
+- 终端工具由 Home Manager 管理，包含 `bottom`、`nix-tree`、`nix-output-monitor`、`xh` 和 WireGuard CLI；Nushell 使用 Home Manager 的会话环境。
 - 笔记使用 Anytype；现行规范位于 Anytype「知识星图」中的“Anytype 笔记规范”，旧的 Obsidian 仓库不属于 Darwin 配置。SSH 服务已启用，WireGuard 工具已安装但连接参数待配置。
 
 ## Rift 设置
@@ -178,24 +186,24 @@ Delta 对齐 Zed 的目标是浅色外观使用 `GitHub Dark Dimmed`、深色外
 
 本仓库无自行维护的源码／构建补丁。上述三项 Homebrew 处理由上游同一个 `patchBrew` 开关控制，默认开启；Ruby 适配按文件结构判断，版本处理要求包提供 `version`。Herdr 钩子链接安装包内的上游脚本，Rift plist 是服务配置，Zed `theme_overrides` 是主题设置，均不属于源码补丁。
 
-## 配置验证（2026-11-18 基线）
+## 配置验证（2026-11-21；保留 2026-11-18 基线）
 
-2026-11-21 增补：字体清单同步到 Darwin，加入 Inter、Honk 与昭源黑体 VF；Ghostty 与 Zed 已声明完整等宽回退顺序；macOS Terminal 的 Home Manager 原生模块不支持其 NSKeyedArchiver 字体字段，因此未写入无效 plist 值。Pi 原生模块与 Herdr 扩展已加入，Gas City／Delta 已写入 Brewfile；`nixfmt`、`nix flake check --no-build` 和完整系统构建通过，Home Manager 无模块警告。笔记应用改用 Anytype，移除 Obsidian 及扩展依赖；当前 Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目。随后启用 Pi／Herdr 终端配色及 Gas City 原生 Herdr 后端，完整构建和 Herdr 原生 `config check` 均通过。未执行 `switch`、视觉验证或 Agent 联调，以下保留此前验证基线。
+2026-11-21 增补：字体清单同步到 Darwin，加入 Inter、Honk 与昭源黑体 VF；Ghostty 与 Zed 已声明完整等宽回退顺序；macOS Terminal 的 Home Manager 原生模块不支持其 NSKeyedArchiver 字体字段，因此未写入无效 plist 值。Pi 原生模块与 Herdr 扩展已加入，Gas City／Delta 已写入 Brewfile；`nixfmt`、`nix flake check --no-build` 和完整系统构建曾在包含上游修复的临时锁定版本上通过，Home Manager 无模块警告。笔记应用改用 Anytype，移除 Obsidian 及扩展依赖；当前 Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目。随后启用 Pi／Herdr 终端配色及 Gas City 原生 Herdr 后端，完整构建和 Herdr 原生 `config check` 均通过。当前 `flake.nix` 仍跟踪 `nixpkgs-unstable`；Swift Collections 的 Darwin 修复已在上游合并，但尚未进入此锁定分支，本次新增配置已通过 Flake 检查和系统求值，未执行 `switch`、视觉验证或 Agent 联调，以下保留此前验证基线。
 
 | 检查 | 结果 |
 | --- | --- |
-| 格式与求值 | nixfmt、Flake、系统入口求值及完整构建通过；系统与 Home Manager 无模块警告、无失败断言 |
+| 格式与求值 | nixfmt、Flake、系统入口求值通过；完整构建曾在包含上游 Swift 修复的锁定版本通过；系统与 Home Manager 无模块警告、无失败断言 |
 | 安装来源 | 系统包与用户包声明无重复；Bash、Zsh 和补全包共享 store 路径；Brewfile 为 9 个 cask、3 个 formula、9 个 App Store 条目 |
 | 初始化与服务 | Homebrew Shell 初始化仅由 nix-homebrew 提供，Zsh 补全由 Home Manager 初始化；GUI 配置用 `package = null`；Homebrew 无启用的服务，与 Rift 的 Home Manager 服务不重复 |
 | 运行闭包 | Herdr 钩子改用包内相同脚本，移除约 49 MiB 源码引用；闭包路径数从 656 降至 655，旧代仍保留原引用 |
-| 应用配置 | 生成的 Ghostty 配置通过原生校验；编辑器语言服务路径与 Herdr 钩子已检查，Helix 的 nixd 改用 Nix 绝对路径 |
+| 应用配置 | 生成的 Ghostty 配置通过原生校验；编辑器语言服务路径与 Herdr 钩子已检查，Helix 和 Zed 使用 Nix 解析出的可执行路径 |
 | 注释与补丁 | 简短英文注释，上方空行、无同行注释；未新增自定义激活脚本、轮询任务或源码补丁 |
 
 登录项由 Home Manager 管理：AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 与 Shottr 用 `open -g`，不抢前台。五项均不常驻重启；另有 Rift 常驻服务和每周 tealdeer 更新任务。
 
 目录整理保留系统和用户软件集合、Brewfile、launchd 服务、应用设置及 Homebrew PATH 优先级；包列表顺序变化使部分生成路径改变。
 
-这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。本次未执行 `switch`、更新锁定依赖或穷举运行时冲突；未发现配置层重复安装、服务冲突或弃用选项警告。
+这是包含多 Shell、编辑器和开发工具的个人环境，不是最小安装。`stateVersion` 是兼容基线，不随版本更新。构建不等于激活或交互测试；Homebrew 安装与权限检查在 `switch` 阶段进行。本次未执行 `switch` 或穷举运行时冲突；已检查包、服务和配置入口，没有发现重复安装、服务冲突、失败断言或模块警告。
 
 ## 激活故障排查
 
