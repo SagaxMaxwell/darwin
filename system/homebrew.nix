@@ -15,6 +15,12 @@
     enable = true;
     global.brewfile = true;
 
+    onActivation = {
+      autoUpdate = false;
+      upgrade = false;
+      cleanup = "none";
+    };
+
     masApps = {
       "AdGuard Mini" = 1440147259;
       Developer = 640199958;

@@ -33,6 +33,7 @@
     # Shell environment.
     direnv = {
       enable = true;
+      enableGitIntegration = true;
 
       nix-direnv.enable = true;
     };
@@ -42,7 +43,10 @@
     # Command-line tools.
     bat.enable = true;
 
-    eza.enable = true;
+    eza = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
 
     fd.enable = true;
 

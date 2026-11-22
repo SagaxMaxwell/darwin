@@ -76,7 +76,7 @@ Homebrew 使用默认 API，不把完整 `homebrew-core`/`homebrew-cask` 仓库�
 
 nix-darwin 会为声明的软件生成 `trusted: true`；Rift 使用完整 formula 名称，不需要重复信任配置或信任整个 tap。
 
-Homebrew 的 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"` 保持不变。移除声明不会自动卸载，先用 `brew bundle cleanup` 查看，再按需加 `--force`；不启用会删除应用数据的 `zap`。cask 的 `auto_updates` 由应用自行处理，不启用全局 greedy。
+Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，激活不会偷偷更新、升级或删除未声明的软件。移除声明不会自动卸载，先用 `brew bundle cleanup` 查看，再按需加 `--force`；不启用会删除应用数据的 `zap`。cask 的 `auto_updates` 由应用自行处理，不启用全局 greedy。
 
 应用配置和运行约定：
 
@@ -90,7 +90,8 @@ Homebrew 的 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"` 保�
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
 - 终端工具包含 `bottom`、`nix-tree`、`nix-output-monitor`、`xh` 和 WireGuard CLI；笔记使用 Anytype，旧 Obsidian 仓库不属于本配置。
 - SSH 服务已启用；WireGuard 工具已安装，但连接参数待配置。
-- Git 启用 `rerere`；bottom 的文字、边框和图表颜色设为 `reset`，跟随终端配色；Nushell 读取 Home Manager 会话变量；Claude Code 主题设为 `auto`。
+- Git 启用 `rerere`、远程分支引用自动清理（`fetch.prune`）、`zdiff3` 冲突上下文和首次推送自动设置 upstream（`push.autoSetupRemote`）；direnv 启用 Git 集成和 nix-direnv，进入 Nix 项目时自动加载环境并忽略 `.direnv/`。bottom 的文字、边框和图表颜色设为 `reset`，跟随终端配色；Nushell 读取 Home Manager 会话变量，并启用 eza 集成；Claude Code 主题设为 `auto`。
+- Dock 不按最近使用的空间自动重排（`mru-spaces = false`），不显示最近使用的应用（`show-recents = false`）。Nix 启用 XDG 基础目录（`use-xdg-base-directories = true`），让 Nix 的用户缓存和状态使用 XDG 路径。
 - Tabularis 在激活时将 `followSystemTheme = true` 合并到 `~/Library/Application Support/tabularis/config.json`，保留数据库和其他用户设置。
 - Nix 每周日 03:15 自动清理 30 天前的旧内容，04:15 运行 store 优化；两项任务分开执行。
 - Flake 和 Nix daemon 追加 `nix-community.cachix.org` 及其公钥，保留官方 `cache.nixos.org`。不接入只针对 Linux 的 lantian 缓存。

@@ -37,6 +37,7 @@ in
       "nix-command"
       "flakes"
     ];
+    settings.use-xdg-base-directories = true;
     settings.substituters = lib.mkAfter [
       "https://nix-community.cachix.org"
     ];
@@ -96,6 +97,8 @@ in
       dock.autohide = true;
       dock.autohide-delay = 0.5;
       dock.tilesize = 48;
+      dock.mru-spaces = false;
+      dock.show-recents = false;
       dock.showMissionControlGestureEnabled = true;
       dock.showAppExposeGestureEnabled = true;
 
