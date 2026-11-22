@@ -19,7 +19,10 @@
 
     fish.enable = true;
 
-    nushell.enable = true;
+    nushell = {
+      enable = true;
+      loadSessionVariables = true;
+    };
 
     zsh = {
       enable = true;
@@ -49,7 +52,20 @@
 
     atuin.enable = true;
 
-    bottom.enable = true;
+    bottom = {
+      enable = true;
+      settings.styles = {
+        widgets = {
+          text = "reset";
+          widget_title = "reset";
+          border_color = "reset";
+        };
+        graphs = {
+          graph_color = "reset";
+          legend_text = "reset";
+        };
+      };
+    };
 
     yazi.enable = true;
 

@@ -1,5 +1,7 @@
 {
+  config,
   lib,
+  pkgs,
   alpha,
   ...
 }:
@@ -7,13 +9,37 @@
 {
   imports = [ ./rift.nix ];
 
+  home.activation.tabularisAppearance = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    lib.hm.generators.mkImpureConfigMerger {
+      inherit pkgs;
+      format = "json";
+      empty = "{}";
+      jqOperation = "$dynamic * $static";
+      path = "${config.home.homeDirectory}/Library/Application Support/tabularis/config.json";
+      staticSettings = (pkgs.formats.json { }).generate "tabularis-appearance.json" {
+        followSystemTheme = true;
+      };
+    }
+  );
+
   programs = {
     mpv = {
       enable = true;
       config = {
         hwdec = "auto";
+        vo = "gpu-next";
+        gpu-api = "auto";
+        osc = false;
         background-color = "#${alpha}000000";
       };
+      scripts = with pkgs.mpvScripts; [
+        autosubsync-mpv
+        skipsilence
+        smartskip
+        sponsorblock-minimal
+        uosc
+        thumbfast
+      ];
     };
 
     google-chrome = {
@@ -27,6 +53,11 @@
       ];
     };
   };
+
+  home.packages = with pkgs; [
+    anime4k
+    syncplay
+  ];
 
   launchd.agents =
     lib.mapAttrs
