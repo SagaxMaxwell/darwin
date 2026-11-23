@@ -6,13 +6,13 @@
 
 - Home Manager 管理用户配置和用户服务，nix-darwin 管理系统设置，Homebrew 管理 macOS 应用。
 - `nixpkgs` 跟踪 `nixpkgs-unstable`，实际版本由 `flake.lock` 固定；不使用旧 channel。
-- macOS 使用 Homebrew cask 的原生应用包，Linux 专属的 Umbriel、Flatpak、Wayland、ROCm、XDG MIME 和 `wl-clipboard` 不迁移。
+- macOS 使用 Homebrew cask 的原生应用包，Linux 专属的 Umbriel、Flatpak、Wayland、ROCm、XDG MIME、Ringboard、lsr、nvtop 和 `wl-clipboard-rs` 不迁移。
 - 编辑器、Agent、字体和终端各保留一份配置入口，不重复安装或声明服务。
 - Zed、Herdr、Claude Code、Codex、Pi 保留可变配置，Nix 声明优先；删除声明字段后需手动清理用户配置中的旧值。
 - macOS 普通桌面不自动隐藏菜单栏，由 `darwin.nix` 声明；全屏沿用系统默认行为。
 - `stateVersion` 是兼容基线，不随版本更新。这个仓库是完整的个人工作环境，不追求最小安装。
 
-`~/nixos` 中已经验证适合 macOS 的内容会同步到这里：归档字体构建函数、`bottom`、Nushell 会话环境、Helix 和 Zed 的 Nix 语言工具。Delta、Anytype、Tabularis 等同类应用按平台保留各自的安装方式。
+`~/nixos` 中已经验证适合 macOS 的内容会同步到这里：`mcat`、`ast-grep`、`fd`、`ripgrep`、`resterm`、`sendme`、`devenv`、`mvs`、Difftastic、`bottom`、Nushell 会话环境、Git 现代设置、Helix 和 Zed 的语言工具。Linux-only 的 `lsr`、Ringboard、`nvtop` 和 `wl-clipboard-rs` 不迁移。
 
 ## 文件结构
 
@@ -66,7 +66,8 @@ brew bundle check --no-upgrade
 
 | 来源 | 组件 | 规则 |
 | --- | --- | --- |
-| nixpkgs | Lix、Nix 工具、Git/gh、Shell、终端 CLI、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、语言服务器、格式化器、WireGuard、mpv、mpv 脚本、Syncplay、Anime4K | 统一锁定依赖；编辑器使用 Nix 提供的绝对路径 |
+| nixpkgs | Lix、Nix 工具、Git/gh、Shell、`mcat`、`ast-grep`、`fd`、`ripgrep`、`resterm`、`sendme`、`zstd`、`devenv`、Difftastic、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、语言服务器、格式化器、WireGuard、mpv、mpv 脚本、Syncplay、Anime4K | 统一锁定依赖；编辑器使用 Nix 提供的绝对路径 |
+| nixpkgs-multiverse | `mvs` | 通过 Flake 输入安装，不使用已移除的 comma |
 | Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、SFM、Shottr、Tabularis、Zed、Delta | 使用上游 macOS 包，安装到 `/Applications` |
 | Homebrew 官方 formula | Gas City（`gascity`）、`mas` | 使用上游推荐渠道及运行依赖 |
 | Homebrew 上游 tap | `acsandmann/tap/rift` | 提供 Rift 应用和 CLI；服务仍由 Home Manager 管理 |
@@ -78,6 +79,8 @@ nix-darwin 会为声明的软件生成 `trusted: true`；Rift 使用完整 formu
 
 Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，激活不会偷偷更新、升级或删除未声明的软件。移除声明不会自动卸载，先用 `brew bundle cleanup` 查看，再按需加 `--force`；不启用会删除应用数据的 `zap`。cask 的 `auto_updates` 由应用自行处理，不启用全局 greedy。
 
+工具替换已与 NixOS 对齐：`bat` → `mcat`，`eza` → `lsr`（Linux-only，Darwin 不安装），`xh` → `resterm`，`direnv + nix-direnv` → `devenv 2.x`，`comma` → `mvs`，OmniDiff → Difftastic。`fd` 和 `ripgrep` 仍保留，供 Yazi 等工具搜索；`zstd` 同步到两边。Linux-only 的 Ringboard、`nvtopPackages.amd`、`lsr`、Impression、Ventoy 和 `wl-clipboard-rs` 不同步。OpenGrep、LEKTRA、OmniDiff、all-smi、FluxDown 没有当前可用的 nixpkgs 包；Darwin 不部署 Papers、Loupe、Scrutiny、Noctalia、Umbriel 或 Flatpak 应用。
+
 应用配置和运行约定：
 
 - Ghostty、Chrome、Zed 使用 `package = null`，Home Manager 只管理配置，避免重复安装；Chrome 保留 AdGuard 扩展。
@@ -88,9 +91,8 @@ Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false
 - `opacity = 0.8` 控制 Ghostty、Zed 和 mpv 视频外空白区域的背景不透明度；Ghostty、Zed 开启模糊。这不是全局窗口透明度。
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设置数值强度。
 - Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
-- 终端工具包含 `bottom`、`nix-tree`、`nix-output-monitor`、`xh` 和 WireGuard CLI；笔记使用 Anytype，旧 Obsidian 仓库不属于本配置。
 - SSH 服务已启用；WireGuard 工具已安装，但连接参数待配置。
-- Git 启用 `rerere`、远程分支引用自动清理（`fetch.prune`）、`zdiff3` 冲突上下文和首次推送自动设置 upstream（`push.autoSetupRemote`）；direnv 启用 Git 集成和 nix-direnv，进入 Nix 项目时自动加载环境并忽略 `.direnv/`。bottom 的文字、边框和图表颜色设为 `reset`，跟随终端配色；Nushell 读取 Home Manager 会话变量，并启用 eza 集成；Claude Code 主题设为 `auto`。
+- Git 启用 `rerere`、远程分支引用自动清理（`fetch.prune`）、`zdiff3` 冲突上下文和首次推送自动设置 upstream（`push.autoSetupRemote`）；devenv 启用 Nushell 集成。bottom 的文字、边框和图表颜色设为 `reset`，跟随终端配色；Nushell 读取 Home Manager 会话变量；Claude Code 主题设为 `auto`。
 - Dock 不按最近使用的空间自动重排（`mru-spaces = false`），不显示最近使用的应用（`show-recents = false`）。Nix 启用 XDG 基础目录（`use-xdg-base-directories = true`），让 Nix 的用户缓存和状态使用 XDG 路径。
 - Tabularis 在激活时将 `followSystemTheme = true` 合并到 `~/Library/Application Support/tabularis/config.json`，保留数据库和其他用户设置。
 - Nix 每周日 03:15 自动清理 30 天前的旧内容，04:15 运行 store 优化；两项任务分开执行。
@@ -151,11 +153,27 @@ Anime4K 只提供着色器资源，不会自动改变解码或画质。
 
 | 工具 | 配置与使用 |
 | --- | --- |
-| Pi | `apps/development.nix` 启用 `programs.pi-coding-agent`；运行 `pi`，首次用 `/login` 登录并选择模型 |
+| Pi | `apps/development.nix` 启用 `programs.pi-coding-agent`，通过原生 `settings.packages` 声明 11 个 npm 插件；运行 `pi`，首次用 `/login` 登录并选择模型 |
 | Herdr | `apps/herdr.nix` 接入 Claude Code、Codex、Pi 的 SessionStart 钩子和扩展；在 Herdr 窗格运行 `pi` |
 | Gas City | `system/homebrew.nix` 安装 `gascity`，命令为 `gc`；Herdr 是默认会话后端 |
 | Delta | Homebrew cask `zed-delta`，安装 `Delta.app` 和 `delta` CLI；与 `pkgs.delta` 不同，登录与协作空间在应用内设置 |
 | Vibex | 暂不纳入；当前锁定的 nixpkgs 和官方 Homebrew 仓库没有包，上游仅提供 macOS DMG |
+
+## 软件取舍
+
+| 项目 | 当前选择或原因 |
+| --- | --- |
+| Hickory DNS | 虽有包，但接入代理 TUN/DNS 需要额外适配；macOS 继续使用系统网络栈和现有代理工具 |
+| Meta oomd / MetaOOM | Linux 服务，macOS 不适用；内存管理由 macOS 负责 |
+| Cassotis、Rime 万象及独立语法模型 | 没有稳定的跨平台 Nix 来源；保留当前 Fcitx/Rime 仅在 NixOS 使用 |
+| Spacedrive 2.x | 当前版本和索引兼容性不足；macOS 使用 Homebrew 文件管理器或 Finder |
+| Ringboard | Wayland 剪贴板服务，macOS 不适用；系统剪贴板由 macOS 管理 |
+| mimalloc、LLVM libc | 不做全局 libc 或分配器替换，避免破坏应用运行时 |
+| mdevd、替换 journald、替换 systemd | macOS 不使用这些 Linux 系统服务；保留 Darwin 原生 launchd 和日志机制 |
+| Gas City | 通过 Homebrew 安装 `gascity`，由 Herdr 提供会话后端 |
+| Vibex | 没有当前可用的 nixpkgs 或 Homebrew 包；暂不安装 |
+| OpenGrep、LEKTRA、OmniDiff、all-smi、FluxDown | 当前没有可用的 nixpkgs 包；分别使用 ast-grep、Papers（仅 NixOS）、Difftastic、nvtop（仅 NixOS）；FluxDown 暂不安装 |
+| Home Assistant + SMART Sniffer / Scrutiny | 两者都是 NixOS 磁盘健康监测方案；Darwin 不部署 Linux 服务 | 仅 NixOS 使用 Scrutiny + InfluxDB |
 
 - Pi 使用用户自己的登录凭据和模型选择，密钥不写入 Nix；Herdr 扩展由 Nix 管理，不执行 `herdr integration install pi`。
 - Pi 使用终端 `system` 主题；Herdr 使用 `terminal` 主题；Gas City CLI 使用宿主终端外观。透明度和模糊由 Ghostty 决定，Agent 工具本身不创建毛玻璃窗口。

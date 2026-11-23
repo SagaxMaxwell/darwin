@@ -23,13 +23,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Install Homebrew through Nix.
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    multiverse.url = "github:fzakaria/nixpkgs-multiverse";
   };
 
   outputs =
@@ -37,8 +34,8 @@
       nixpkgs,
       nix-darwin,
       home-manager,
-      nix-index-database,
       nix-homebrew,
+      multiverse,
       ...
     }:
     let
@@ -57,7 +54,7 @@
       };
 
       darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit opacity alpha; };
+        specialArgs = { inherit inputs opacity alpha; };
         modules = [
           {
             nixpkgs.hostPlatform = system;
@@ -67,11 +64,6 @@
           nix-homebrew.darwinModules.nix-homebrew
           ./system/homebrew.nix
           home-manager.darwinModules.home-manager
-          {
-            home-manager.sharedModules = [
-              nix-index-database.homeModules.nix-index
-            ];
-          }
         ];
       };
     };

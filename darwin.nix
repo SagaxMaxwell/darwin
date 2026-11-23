@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   opacity,
   alpha,
   ...
@@ -18,7 +19,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "hm-backup";
-    extraSpecialArgs = { inherit opacity alpha; };
+    extraSpecialArgs = { inherit inputs opacity alpha; };
 
     users.${userName} = {
       imports = [
@@ -38,6 +39,10 @@ in
       "flakes"
     ];
     settings.use-xdg-base-directories = true;
+    settings.http3 = true;
+    settings.http2 = true;
+    settings.http-connections = 50;
+    settings.max-substitution-jobs = 32;
     settings.substituters = lib.mkAfter [
       "https://nix-community.cachix.org"
     ];

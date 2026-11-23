@@ -1,4 +1,9 @@
-{ pkgs, opacity, ... }:
+{
+  inputs,
+  pkgs,
+  opacity,
+  ...
+}:
 
 {
 
@@ -8,8 +13,15 @@
   home.packages = with pkgs; [
     nix-output-monitor
     nix-tree
-    xh
+    ast-grep
+    fd
+    mcat
+    resterm
+    ripgrep
+    sendme
+    zstd
     wireguard-tools
+    inputs.multiverse.packages.${pkgs.stdenv.hostPlatform.system}.mvs
   ];
 
   programs = {
@@ -31,27 +43,14 @@
     };
 
     # Shell environment.
-    direnv = {
+    devenv = {
       enable = true;
-      enableGitIntegration = true;
-
-      nix-direnv.enable = true;
+      enableNushellIntegration = true;
     };
 
     starship.enable = true;
 
     # Command-line tools.
-    bat.enable = true;
-
-    eza = {
-      enable = true;
-      enableNushellIntegration = true;
-    };
-
-    fd.enable = true;
-
-    ripgrep.enable = true;
-
     tealdeer.enable = true;
 
     atuin.enable = true;
@@ -98,8 +97,5 @@
       };
     };
 
-    nix-index-database = {
-      comma.enable = true;
-    };
   };
 }
