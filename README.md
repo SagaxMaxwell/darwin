@@ -153,7 +153,6 @@ Anime4K 只提供着色器资源，不会自动改变解码或画质。
 
 | 工具 | 配置与使用 |
 | --- | --- |
-| Pi | `apps/development.nix` 启用 `programs.pi-coding-agent`，通过原生 `settings.packages` 声明 11 个 npm 插件；运行 `pi`，首次用 `/login` 登录并选择模型 |
 | Herdr | `apps/herdr.nix` 接入 Claude Code、Codex、Pi 的 SessionStart 钩子和扩展；在 Herdr 窗格运行 `pi` |
 | Gas City | `system/homebrew.nix` 安装 `gascity`，命令为 `gc`；Herdr 是默认会话后端 |
 | Delta | Homebrew cask `zed-delta`，安装 `Delta.app` 和 `delta` CLI；与 `pkgs.delta` 不同，登录与协作空间在应用内设置 |
