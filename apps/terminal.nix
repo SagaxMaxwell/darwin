@@ -13,6 +13,7 @@
   home.packages = with pkgs; [
     nix-output-monitor
     nix-tree
+    broot
     ast-grep
     fd
     mcat

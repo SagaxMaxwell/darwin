@@ -50,6 +50,7 @@
       "google-chrome"
       "shottr"
       "sfm"
+      "steam"
       "tabularis"
       "zed"
       "zed-delta"
