@@ -6,24 +6,27 @@
   ...
 }:
 
+let
+  inherit (pkgs.stdenv.hostPlatform) system;
+in
 {
 
   # Expose the bundled Ghostty CLI.
   home.sessionPath = [ "/Applications/Ghostty.app/Contents/MacOS" ];
 
-  home.packages = with pkgs; [
-    nix-output-monitor
-    nix-tree
-    broot
-    ast-grep
-    fd
-    mcat
-    resterm
-    ripgrep
-    sendme
-    zstd
-    wireguard-tools
-    inputs.multiverse.packages.${pkgs.stdenv.hostPlatform.system}.mvs
+  home.packages = [
+    pkgs.nix-output-monitor
+    pkgs.nix-tree
+    pkgs.broot
+    pkgs.ast-grep
+    pkgs.fd
+    pkgs.mcat
+    pkgs.resterm
+    pkgs.ripgrep
+    pkgs.sendme
+    pkgs.zstd
+    pkgs.wireguard-tools
+    inputs.multiverse.packages.${system}.mvs
   ];
 
   programs = {
@@ -90,6 +93,5 @@
         background-blur = true;
       };
     };
-
   };
 }

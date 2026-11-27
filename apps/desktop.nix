@@ -32,13 +32,13 @@
         osc = false;
         background-color = "#${alpha}000000";
       };
-      scripts = with pkgs.mpvScripts; [
-        autosubsync-mpv
-        skipsilence
-        smartskip
-        sponsorblock-minimal
-        uosc
-        thumbfast
+      scripts = [
+        pkgs.mpvScripts.autosubsync-mpv
+        pkgs.mpvScripts.skipsilence
+        pkgs.mpvScripts.smartskip
+        pkgs.mpvScripts.sponsorblock-minimal
+        pkgs.mpvScripts.uosc
+        pkgs.mpvScripts.thumbfast
       ];
     };
 
@@ -54,9 +54,9 @@
     };
   };
 
-  home.packages = with pkgs; [
-    anime4k
-    syncplay
+  home.packages = [
+    pkgs.anime4k
+    pkgs.syncplay
   ];
 
   launchd.agents =

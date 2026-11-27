@@ -29,27 +29,27 @@ let
 
     # Desktop shortcuts.
     modifier_combinations = {
-      "comb1" = "Alt + Shift";
+      comb1 = "Alt + Shift";
     };
     keys = {
       "Alt + 0" = {
-        "switch_to_workspace" = 0;
+        switch_to_workspace = 0;
       };
       "Alt + 1" = {
-        "switch_to_workspace" = 1;
+        switch_to_workspace = 1;
       };
       "Alt + 2" = {
-        "switch_to_workspace" = 2;
+        switch_to_workspace = 2;
       };
       "Alt + 3" = {
-        "switch_to_workspace" = 3;
+        switch_to_workspace = 3;
       };
       "Alt + Comma" = "toggle_stack";
       "Alt + Ctrl + E" = "unjoin_windows";
       "Alt + Ctrl + Q" = "save_and_exit";
       "Alt + Ctrl + S" = "serialize";
       "Alt + Enter" = {
-        "exec" = [
+        exec = [
           "/usr/bin/open"
           "-n"
           "-a"
@@ -58,61 +58,61 @@ let
       };
       "Alt + F" = "toggle_fullscreen";
       "Alt + H" = {
-        "move_focus" = "left";
+        move_focus = "left";
       };
       "Alt + J" = {
-        "move_focus" = "down";
+        move_focus = "down";
       };
       "Alt + K" = {
-        "move_focus" = "up";
+        move_focus = "up";
       };
       "Alt + L" = {
-        "move_focus" = "right";
+        move_focus = "right";
       };
       "Alt + Shift + D" = "debug";
       "Alt + Shift + Down" = {
-        "join_window" = "down";
+        join_window = "down";
       };
       "Alt + Shift + Equal" = "resize_window_grow";
       "Alt + Shift + F" = "toggle_fullscreen_within_gaps";
       "Alt + Shift + Left" = {
-        "join_window" = "left";
+        join_window = "left";
       };
       "Alt + Shift + Minus" = "resize_window_shrink";
       "Alt + Shift + Right" = {
-        "join_window" = "right";
+        join_window = "right";
       };
       "Alt + Shift + Space" = "toggle_window_floating";
       "Alt + Shift + Up" = {
-        "join_window" = "up";
+        join_window = "up";
       };
       "Alt + Slash" = "toggle_orientation";
       "Alt + Tab" = "switch_to_last_workspace";
       "Alt + Z" = "toggle_space_activated";
       "comb1 + 0" = {
-        "move_window_to_workspace" = 0;
+        move_window_to_workspace = 0;
       };
       "comb1 + 1" = {
-        "move_window_to_workspace" = 1;
+        move_window_to_workspace = 1;
       };
       "comb1 + 2" = {
-        "move_window_to_workspace" = 2;
+        move_window_to_workspace = 2;
       };
       "comb1 + 3" = {
-        "move_window_to_workspace" = 3;
+        move_window_to_workspace = 3;
       };
       "comb1 + Ctrl + Space" = "toggle_focus_floating";
       "comb1 + H" = {
-        "move_node" = "left";
+        move_node = "left";
       };
       "comb1 + J" = {
-        "move_node" = "down";
+        move_node = "down";
       };
       "comb1 + K" = {
-        "move_node" = "up";
+        move_node = "up";
       };
       "comb1 + L" = {
-        "move_node" = "right";
+        move_node = "right";
       };
     };
   };

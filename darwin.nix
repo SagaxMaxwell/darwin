@@ -21,11 +21,7 @@ in
     backupFileExtension = "hm-backup";
     extraSpecialArgs = { inherit inputs opacity alpha; };
 
-    users.${userName} = {
-      imports = [
-        ./home.nix
-      ];
-    };
+    users.${userName}.imports = [ ./home.nix ];
   };
 
   nix = {
@@ -121,7 +117,5 @@ in
     };
   };
 
-  users.users.${userName} = {
-    home = "/Users/${userName}";
-  };
+  users.users.${userName}.home = "/Users/${userName}";
 }

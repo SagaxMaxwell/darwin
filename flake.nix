@@ -38,12 +38,13 @@
       ...
     }:
     let
+      inherit (nixpkgs) lib;
       system = "aarch64-darwin";
 
       # Share background opacity and hex alpha.
       opacity = 0.8;
-      alpha = nixpkgs.lib.fixedWidthString 2 "0" (
-        nixpkgs.lib.toLower (nixpkgs.lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
+      alpha = lib.fixedWidthString 2 "0" (
+        lib.toLower (lib.toHexString (builtins.floor (opacity * 255 + 0.5)))
       );
     in
     {
@@ -52,7 +53,7 @@
         program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
       };
 
-      darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations.MacBook = nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs opacity alpha; };
         modules = [
           {

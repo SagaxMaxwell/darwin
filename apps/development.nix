@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports = [ ./herdr.nix ];
@@ -9,15 +9,15 @@
     GC_SUPERVISOR_ENV = "GC_SESSION";
   };
 
-  home.packages = with pkgs; [
-    nixd
-    tix
-    nixfmt
-    gh
-    oxfmt
-    ruff
-    ty
-    rustup
+  home.packages = [
+    pkgs.nixd
+    pkgs.tix
+    pkgs.nixfmt
+    pkgs.gh
+    pkgs.oxfmt
+    pkgs.ruff
+    pkgs.ty
+    pkgs.rustup
   ];
 
   programs = {
@@ -43,10 +43,10 @@
         theme = "system";
         defaultProvider = "openrouter";
         defaultModel = "openrouter/free";
-        shellPath = "${pkgs.bash}/bin/bash";
-        externalEditor = "${pkgs.helix}/bin/hx";
+        shellPath = lib.getExe' pkgs.bash "bash";
+        externalEditor = lib.getExe' pkgs.helix "hx";
         defaultTools = [ "+codemode" ];
-        npmCommand = [ "${pkgs.bun}/bin/bun" ];
+        npmCommand = [ (lib.getExe' pkgs.bun "bun") ];
         packages = [
           "npm:billion-context"
           "npm:pi-total-recall"

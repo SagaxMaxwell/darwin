@@ -13,7 +13,7 @@ let
     pkgs.stdenvNoCC.mkDerivation {
       inherit pname version;
       src = pkgs.linkFarm "${pname}-sources" (
-        map (source: {
+        builtins.map (source: {
           inherit (source) name;
           path = pkgs.fetchurl source;
         }) sources
