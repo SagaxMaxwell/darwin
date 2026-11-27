@@ -20,7 +20,7 @@
 | --- | --- |
 | `flake.nix` / `flake.lock` | `MacBook` 入口、输入锁定、共享主题参数 |
 | `darwin.nix` | 系统服务、macOS 默认项、Home Manager 接入 |
-| `home.nix` | Home Manager 入口、模块导入、基础 XDG 设置 |
+| `home.nix` | Home Manager 入口、共享终端字体、基础 XDG 设置 |
 | `apps/desktop.nix` | 浏览器、Tabularis、mpv、同步观影、Anime4K、登录项、Rift 接入 |
 | `apps/terminal.nix` | Ghostty、Shell、终端工具 |
 | `apps/development.nix` | Git、开发工具、AI 工具、Herdr/Gas City 接入 |
@@ -37,7 +37,7 @@
 
 | 来源 | 组件 | 规则 |
 | --- | --- | --- |
-| nixpkgs | Lix、Nix 工具、Git/gh、Shell、`broot`、`mcat`、`ast-grep`、`fd`、`ripgrep`、`resterm`、`sendme`、`zstd`、`devenv`、Difftastic、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、`nixd`、`nixfmt`、`oxfmt`、`oxlint`、`ruff`、`ty`、`rust-analyzer`、`tombi`、`wireguard-tools`、mpv、mpv 脚本、Syncplay、Anime4K | 统一锁定依赖；编辑器使用 Nix 提供的绝对路径 |
+| nixpkgs | Lix、Nix 工具、Git/gh、Shell、`broot`、`mcat`、`ast-grep`、`fd`、`ripgrep`、`resterm`、`sendme`、`zstd`、`devenv`、Difftastic、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、`nixd`、`tix`、`nixfmt`、`oxfmt`、`oxlint`、`ruff`、`ty`、`rust-analyzer`、`tombi`、`wireguard-tools`、mpv、mpv 脚本、Syncplay、Anime4K | 统一锁定依赖；编辑器使用 Nix 提供的绝对路径 |
 | nixpkgs-multiverse | `mvs` | 通过 Flake 输入安装，不使用已移除的 comma |
 | Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、SFM、Shottr、Steam、Tabularis、Zed、`zed-delta` | 使用上游 macOS 包，安装到 `/Applications` |
 | Homebrew 官方 formula | Gas City（`gascity`）、`mas` | 使用上游推荐渠道及运行依赖 |
@@ -95,10 +95,10 @@ Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false
 - Nix 安装 Amstelvar、Roboto Serif、Roboto Flex、Google Sans Flex、Inter、Monaspace、Recursive、Maple Mono、昭源字体、思源字体、Noto Color Emoji、OpenMoji 等字体。
 - `opacity = 0.8` 控制 Ghostty、Zed 和 mpv 视频外空白区域的背景不透明度；Ghostty、Zed 开启模糊。这不是全局窗口透明度。
 - 关闭系统“减少透明度”，保留原生玻璃效果；液态玻璃不设置数值强度。
-- Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 使用 nixd＋nixfmt。
+- Python 使用 ty＋ruff，TOML 使用 Tombi，Nix 在 Helix 使用 Tix，在 Zed 使用 nixd，两者都用 nixfmt 格式化。
 - SSH 服务已启用；WireGuard 工具已安装，但连接参数待配置。
 - Git 启用 `rerere`、远程分支引用自动清理（`fetch.prune`）、`zdiff3` 冲突上下文和首次推送自动设置 upstream（`push.autoSetupRemote`）；devenv 启用 Nushell 集成。bottom 的文字、边框和图表颜色设为 `reset`，跟随终端配色；Nushell 读取 Home Manager 会话变量；Claude Code 主题设为 `auto`。
-- Dock 不按最近使用的空间自动重排（`mru-spaces = false`），不显示最近使用的应用（`show-recents = false`）。Nix 启用 XDG 基础目录（`use-xdg-base-directories = true`），让 Nix 的用户缓存和状态使用 XDG 路径。
+- Nix 启用 XDG 基础目录（`use-xdg-base-directories = true`），用户缓存和状态使用 XDG 路径。
 - Tabularis 在激活时将 `followSystemTheme = true` 合并到 `~/Library/Application Support/tabularis/config.json`，保留数据库和其他用户设置。
 - Nix 每周日 03:15 自动清理 30 天前的旧内容；store 优化按每周计划运行。
 - Flake 和 Nix daemon 追加 `nix-community.cachix.org` 及其公钥，保留官方 `cache.nixos.org`。不接入只针对 Linux 的 lantian 缓存。
@@ -111,7 +111,7 @@ Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false
 | 文件与文本 | `broot`、`mcat`、`ast-grep`、`fd`、`ripgrep`、Yazi |
 | 网络与 Nix | `resterm`、`sendme`、`zstd`、`wireguard-tools`、`nix-output-monitor`、`nix-tree`、`mvs` |
 | 日常工具 | `tealdeer`、`atuin`、`bottom`、`zoxide` |
-| 开发 | `nixd`、`nixfmt`、`oxfmt`、`oxlint`、`ruff`、`ty`、`rust-analyzer`、`tombi`、`rustup`、Bun、`uv`、`gh`、Difftastic、Delta |
+| 开发 | `nixd`、`tix`、`nixfmt`、`oxfmt`、`oxlint`、`ruff`、`ty`、`rust-analyzer`、`tombi`、`rustup`、Bun、`uv`、`gh`、Difftastic、Delta |
 
 NixOS 中的 `lsr`、Ringboard、`nvtop`、`wl-clipboard-rs`、Impression、Ventoy、`ddcutil`、Mesa/VA-API 工具和 Linux 虚拟化服务不在 Darwin 配置中；这些差异统一记录在“软件取舍”。
 
@@ -164,7 +164,6 @@ Anime4K 只提供着色器资源，不会自动改变解码或画质。
 | Ringboard | Wayland 剪贴板服务，macOS 不适用；系统剪贴板由 macOS 管理 |
 | mimalloc、LLVM libc | 不做全局 libc 或分配器替换，避免破坏应用运行时 |
 | mdevd、替换 journald、替换 systemd | macOS 不使用这些 Linux 系统服务；保留 Darwin 原生 launchd 和日志机制 |
-| Gas City | 通过 Homebrew 安装 `gascity`，由 Herdr 提供会话后端 |
 | Vibex | 没有当前可用的 nixpkgs 或 Homebrew 包；暂不安装 |
 | OpenGrep、LEKTRA、OmniDiff、all-smi、FluxDown | 当前没有可用的 nixpkgs 包；分别使用 ast-grep、Papers（仅 NixOS）、Difftastic、nvtop（仅 NixOS）；FluxDown 暂不安装 |
 | lsr、Ringboard、nvtop、wl-clipboard-rs | Linux/Wayland 专用，Darwin 不适用 | 使用 macOS 原生窗口、剪贴板和硬件工具 |
@@ -196,7 +195,7 @@ Agent 工具的透明度由宿主终端决定。Ghostty 已启用 `background-op
 最近一次基线检查（2026-11-21，保留 2026-11-18 记录）：
 
 - `nixfmt`、`git diff --check`、`nix flake check --no-build`、系统入口求值通过；完整构建曾在包含 Swift Collections 上游修复的锁定版本通过。
-- Home Manager 无模块警告或失败断言；系统包和用户包无重复声明，Homebrew 为 10 个 cask、3 个 formula、9 个 App Store 条目。
+- 基线求值时，Home Manager 无模块警告或失败断言。
 - Ghostty 配置、编辑器语言服务路径、Herdr 钩子、Helix/Zed 解析出的可执行路径已检查；没有新增自定义激活脚本、轮询任务或源码补丁。
 - Herdr 使用包内脚本后移除约 49 MiB 源码引用，闭包路径数从 656 降至 655；旧 generation 仍可能保留旧引用。
 - 尚未完成 `switch`、视觉验证、穷举运行时冲突检查或 Agent 完整联调；构建不等于激活和交互测试。

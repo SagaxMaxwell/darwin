@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   opacity,
+  terminalFonts,
   ...
 }:
 
@@ -82,15 +83,7 @@
       package = null;
 
       settings = {
-        font-family = [
-          "Monaspace Neon Var"
-          "Cascadia Code NF"
-          "Maple Mono NF"
-          "Maple Mono NF CN"
-          "Recursive"
-          "Sarasa Mono SC"
-          "Sarasa Term SC"
-        ];
+        font-family = terminalFonts;
         theme = "light:GitHub Dark Dimmed,dark:IR Black";
         background-opacity = opacity;
         background-opacity-cells = true;

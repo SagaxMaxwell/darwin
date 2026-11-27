@@ -65,7 +65,7 @@ in
       {
         name = "nix";
         auto-format = true;
-        language-servers = [ "nixd" ];
+        language-servers = [ "tix" ];
         formatter.command = exe pkgs.nixfmt;
       }
       {
@@ -82,7 +82,10 @@ in
     ];
 
     languages.language-server = {
-      nixd.command = exe pkgs.nixd;
+      tix = {
+        command = exe pkgs.tix;
+        args = [ "lsp" ];
+      };
       rust-analyzer.command = exe pkgs.rust-analyzer;
       ty.command = exe pkgs.ty;
       ruff.command = exe pkgs.ruff;

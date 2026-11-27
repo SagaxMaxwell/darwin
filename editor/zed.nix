@@ -2,6 +2,7 @@
   alpha,
   lib,
   pkgs,
+  terminalFonts,
   ...
 }:
 
@@ -23,15 +24,8 @@ in
       };
 
       terminal = {
-        font_family = "Monaspace Neon Var";
-        font_fallbacks = [
-          "Cascadia Code NF"
-          "Maple Mono NF"
-          "Maple Mono NF CN"
-          "Recursive"
-          "Sarasa Mono SC"
-          "Sarasa Term SC"
-        ];
+        font_family = builtins.head terminalFonts;
+        font_fallbacks = builtins.tail terminalFonts;
       };
 
       # Set outer surface opacity.

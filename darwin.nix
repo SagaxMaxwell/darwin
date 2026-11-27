@@ -8,8 +8,8 @@
 }:
 
 let
+  inherit (import ./flake.nix) nixConfig;
   hostName = "MacBook";
-  computerName = "MacBook";
   userName = "maxwellsagax";
 in
 {
@@ -43,12 +43,8 @@ in
     settings.http2 = true;
     settings.http-connections = 50;
     settings.max-substitution-jobs = 32;
-    settings.substituters = lib.mkAfter [
-      "https://nix-community.cachix.org"
-    ];
-    settings.trusted-public-keys = lib.mkAfter [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
+    settings.substituters = lib.mkAfter nixConfig.extra-substituters;
+    settings.trusted-public-keys = lib.mkAfter nixConfig.extra-trusted-public-keys;
 
     gc = {
       automatic = true;
@@ -78,7 +74,8 @@ in
   nixpkgs.config.allowUnfree = true;
 
   networking = {
-    inherit computerName hostName;
+    inherit hostName;
+    computerName = hostName;
   };
 
   services.openssh.enable = true;

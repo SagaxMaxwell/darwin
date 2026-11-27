@@ -35,7 +35,6 @@
       nix-darwin,
       home-manager,
       nix-homebrew,
-      multiverse,
       ...
     }:
     let
