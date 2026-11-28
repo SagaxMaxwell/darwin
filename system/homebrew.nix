@@ -33,12 +33,18 @@
       "Screens 5" = 1663047912;
     };
 
-    taps = [ "acsandmann/tap" ];
+    taps = [
+      "acsandmann/tap"
+      "cloudflare/cloudflare"
+    ];
 
     brews = [
 
       # Manage the service in apps/rift.nix.
       "acsandmann/tap/rift"
+
+      "chrome-devtools-mcp"
+      "cloudflare/cloudflare/kitesurf"
       "gascity"
       "mas"
     ];
@@ -48,6 +54,7 @@
       "blender"
       "ghostty"
       "google-chrome"
+      "iloader"
       "shottr"
       "sfm"
       "steam"

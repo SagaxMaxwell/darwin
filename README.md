@@ -39,15 +39,17 @@
 | --- | --- | --- |
 | nixpkgs | Lix、Nix 工具、Git/gh、Shell、`broot`、`mcat`、`ast-grep`、`fd`、`ripgrep`、`resterm`、`sendme`、`zstd`、`devenv`、Difftastic、Herdr、Claude Code、Codex、Pi、Bun、uv、rustup、Helix、`nixd`、`tix`、`nixfmt`、`oxfmt`、`oxlint`、`ruff`、`ty`、`rust-analyzer`、`tombi`、`wireguard-tools`、mpv、mpv 脚本、Syncplay、Anime4K | 统一锁定依赖；编辑器使用 Nix 提供的绝对路径 |
 | nixpkgs-multiverse | `mvs` | 通过 Flake 输入安装，不使用已移除的 comma |
-| Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、SFM、Shottr、Steam、Tabularis、Zed、`zed-delta` | 使用上游 macOS 包，安装到 `/Applications` |
-| Homebrew 官方 formula | Gas City（`gascity`）、`mas` | 使用上游推荐渠道及运行依赖 |
-| Homebrew 上游 tap | `acsandmann/tap/rift` | 提供 Rift 应用和 CLI；服务仍由 Home Manager 管理 |
+| Homebrew 官方 cask | Anytype、Blender、Ghostty、Google Chrome、iloader、SFM、Shottr、Steam、Tabularis、Zed、`zed-delta` | 使用上游 macOS 包，安装到 `/Applications` |
+| Homebrew 官方 formula | `chrome-devtools-mcp`、Gas City（`gascity`）、`mas` | 使用上游推荐渠道及运行依赖 |
+| Homebrew 上游 tap | `acsandmann/tap/rift`、`cloudflare/cloudflare/kitesurf` | 提供 Rift 应用、Rift CLI 与 Kitesurf 终端浏览器 |
 | Mac App Store | AdGuard Mini、Developer、GarageBand、iMovie、Keynote、Numbers、Pages、Quantumult X、Screens 5 | 由 nix-darwin 的 `masApps` 声明 |
 | nix-homebrew | Homebrew 本体及运行环境 | 由 Nix 安装和固定，不把 `pkgs.brew` 当作完整前缀管理器 |
 
-Homebrew 使用默认 API，不把完整 `homebrew-core`/`homebrew-cask` 仓库加入 Flake，只保留 Rift 的第三方 tap。Apple Silicon 使用 `/opt/homebrew`，不启用 Intel/Rosetta 前缀。`/opt/homebrew` 保存 Cellar、Caskroom 和 Taps 状态。`homebrew.global.brewfile = true` 让手工 `brew bundle` 使用同一份清单；analytics 由 nix-homebrew 统一关闭。nix-homebrew 提供 Bash、Zsh、Fish 集成，系统 PATH 补充 Homebrew 路径供 Nushell 等入口继承。
+Homebrew 使用默认 API，不把完整 `homebrew-core`/`homebrew-cask` 仓库加入 Flake。第三方 tap 由 Brewfile 管理。Apple Silicon 使用 `/opt/homebrew`，不启用 Intel/Rosetta 前缀。`/opt/homebrew` 保存 Cellar、Caskroom 和 Taps 状态。`homebrew.global.brewfile = true` 让手工 `brew bundle` 使用同一份清单；analytics 由 nix-homebrew 统一关闭。nix-homebrew 提供 Bash、Zsh、Fish 集成，系统 PATH 补充 Homebrew 路径供 Nushell 等入口继承。
 
-nix-darwin 会为声明的软件生成 `trusted: true`；Rift 使用完整 formula 名称，不需要重复信任配置或信任整个 tap。
+nix-darwin 会为声明的软件生成 `trusted: true`。Rift 和 Kitesurf 使用完整 formula 名称，信任范围限定为各自的 formula。
+
+Kitesurf 默认连接 Cloudflare Browser Run，可通过 `kitesurf login` 登录。运行 `kitesurf --playground --mode=ansi https://example.com` 可在终端免登录试用。Ghostty 支持图形渲染，可省略 `--mode=ansi`。[Kitesurf 官方文档](https://kitesurf.dev/)
 
 Homebrew 的 `onActivation` 明确设置 `autoUpdate = false`、`upgrade = false`、`cleanup = "none"`，激活不会偷偷更新、升级或删除未声明的软件。移除声明不会自动卸载，先用 `brew bundle cleanup` 查看，再按需加 `--force`；不启用会删除应用数据的 `zap`。cask 的 `auto_updates` 由应用自行处理，不启用全局 greedy。
 
@@ -150,6 +152,8 @@ Anime4K 只提供着色器资源，不会自动改变解码或画质。
 | 工具 | 配置与使用 |
 | --- | --- |
 | Herdr | `apps/herdr.nix` 接入 Claude Code、Codex、Pi 的 SessionStart 钩子和扩展；在 Herdr 窗格运行 `pi` |
+| Kitesurf（Codex） | `apps/development.nix` 通过 `programs.codex.settings.mcp_servers.kitesurf` 声明用户级接入，共用 Homebrew 安装的 `chrome-devtools-mcp`，连接免登录的 Cloudflare Playground。可在 Codex 会话中用 `/mcp` 查看 |
+| Kitesurf（Pi） | Pi 内置 MCP 客户端。当前锁定的 Home Manager 模块没有 Pi 的 MCP 专用字段。如需手动接入，可在项目的 `.pi/mcp.json` 或用户的 `~/.pi/agent/mcp.json` 中设置 `chrome-devtools-mcp`，并传入 `--wsEndpoint=wss://kitesurf.dev/devtools/browser` |
 | Gas City | `system/homebrew.nix` 安装 `gascity`，命令为 `gc`；Herdr 是默认会话后端 |
 | Delta | Homebrew cask `zed-delta`，安装 `Delta.app` 和 `delta` CLI；与 `pkgs.delta` 不同，登录与协作空间在应用内设置 |
 
@@ -201,7 +205,7 @@ Agent 工具的透明度由宿主终端决定。Ghostty 已启用 `background-op
 - 尚未完成 `switch`、视觉验证、穷举运行时冲突检查或 Agent 完整联调；构建不等于激活和交互测试。
 - 生成的 Ghostty 配置通过原生校验；Helix/Zed 语言服务和 Herdr 钩子使用 Nix 解析出的可执行路径。Homebrew Shell 初始化仅由 nix-homebrew 提供，Zsh 补全由 Home Manager 初始化；GUI 配置使用 `package = null`。
 
-Home Manager 管理的登录项为 AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 和 Shottr 使用 `open -g`，不抢前台，五项均不常驻重启。另有 Rift 常驻服务。Brewfile 当前包含 10 个 cask、3 个 formula、9 个 App Store 条目。
+Home Manager 管理的登录项为 AdGuard Mini、Chrome、Ghostty、Quantumult X、Shottr；AdGuard Mini 和 Shottr 使用 `open -g`，不抢前台，五项均不常驻重启。另有 Rift 常驻服务。Brewfile 当前包含 11 个 cask、5 个 formula、9 个 App Store 条目。
 
 ## 已知限制
 

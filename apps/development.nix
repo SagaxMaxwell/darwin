@@ -34,6 +34,15 @@
     codex = {
       enable = true;
       mutableSettings = true;
+      settings.mcp_servers.kitesurf = {
+        command = "chrome-devtools-mcp";
+        args = [
+          "--wsEndpoint=wss://kitesurf.dev/devtools/browser"
+          "--no-usage-statistics"
+          "--no-performance-crux"
+        ];
+        env.CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
+      };
     };
 
     pi-coding-agent = {
